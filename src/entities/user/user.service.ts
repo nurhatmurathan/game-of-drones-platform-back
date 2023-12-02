@@ -62,7 +62,5 @@ export class UserService {
     const decodedToken = this.jwtService.verify(token)
 
     return {}
-
-
   }
 }

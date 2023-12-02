@@ -10,6 +10,9 @@ import { LigaService } from "./liga.service";
 import { LigaCreateDto } from "./dto/liga.create.dto";
 import { LigaListeDto } from "./dto/liga.list.dto";
 import { LigaRetrieveDto } from "./dto/liga.retrieve.dto";
+import { ApiTags } from "@nestjs/swagger";
+
+@ApiTags("Liga")
 
 @Controller("liga")
 export class LigaController {
