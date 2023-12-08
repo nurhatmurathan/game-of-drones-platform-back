@@ -6,11 +6,11 @@ export const databaseProviders = [
     useFactory: async () => {
       const dataSource = new DataSource({
         type: 'postgres',
-        host: process.env.CLOUD_DATABASE_HOST,
+        host: process.env.CLOUD_DATABASE_HOST || "34.170.190.94",
         port: 5432,
-        username: process.env.CLOUD_DATABASE,
-        password: process.env.CLOUD_DATABASE,
-        database: process.env.CLOUD_DATABASE,
+        username: process.env.CLOUD_DATABASE || "dron",
+        password: process.env.CLOUD_DATABASE || "dron",
+        database: process.env.CLOUD_DATABASE || "dron",
         entities: [
             __dirname + '/../**/*.entity{.ts,.js}',
         ],
