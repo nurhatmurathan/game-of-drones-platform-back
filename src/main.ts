@@ -6,6 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle("Game Of Drones")
     .setVersion("1.0")
     .build();
