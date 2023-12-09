@@ -1,7 +1,8 @@
 import { Liga } from '@entities/liga/liga.entity';
+import { Photo } from '@entities/photo/photo.entity';
 import { UserTournamentTime } from '@entities/user.tournament.time/user.tournament.time.entity';
 import { UserTrainingTime } from '@entities/user.training.time/user.training.time.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 
 @Entity("users")
 export class User {
@@ -28,6 +29,10 @@ export class User {
   
     @Column({ name: 'logo', type: 'varchar', length: 255, nullable: true })
     logo: string;
+
+    @OneToOne(() => Photo)
+    @JoinColumn()
+    avatar: Photo
 
     @ManyToOne(() => Liga, (liga) => liga.users)
     liga: Liga

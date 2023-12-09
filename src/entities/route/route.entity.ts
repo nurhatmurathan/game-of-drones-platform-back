@@ -1,6 +1,7 @@
+import { Multilingualtext } from '@entities/multilingualtext/multilingualtext.entity';
 import { Tournament } from '@entities/tournament/tournament.entity';
 import { Training } from '@entities/training/training.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 
 @Entity("route")
 export class Route {
@@ -10,8 +11,9 @@ export class Route {
     @Column({ name: 'name', type: 'varchar', length: 50 })
     name: string;
   
-    @Column({ name: 'description', type: 'varchar' })
-    description: string;
+    @OneToOne(() => Multilingualtext)
+    @JoinColumn()
+    description: Multilingualtext
   
     @Column({ name: 'length', type: 'varchar' })
     length: string;

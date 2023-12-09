@@ -29,7 +29,7 @@ export class LigaController {
   }
 
   @Post()
-  create(@Body() ligaCreateDto: LigaCreateDto): Promise<LigaRetrieveDto> {
+  create(@Body() ligaCreateDto: LigaCreateDto): Promise<LigaCreateDto> {
     return this.ligaService.create(ligaCreateDto);
   }
 }

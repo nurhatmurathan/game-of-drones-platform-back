@@ -5,6 +5,8 @@ import { LigaModule } from '@entities/liga/liga.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { Multilingualtext } from '@entities/multilingualtext/multilingualtext.entity';
+import { MultilingualtextModule } from '@entities/multilingualtext/multilingualtext.module';
 
 @Module({
   imports: [

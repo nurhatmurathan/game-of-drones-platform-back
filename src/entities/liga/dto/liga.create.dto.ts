@@ -1,3 +1,4 @@
+import { MultilingualtextDto } from './../../multilingualtext/dto/multilingualtext.dto';
 import { ApiProperty } from "@nestjs/swagger";
 
 export class LigaCreateDto{
@@ -5,5 +6,5 @@ export class LigaCreateDto{
     name: string
 
     @ApiProperty()
-    description: string
+    description: MultilingualtextDto
 }
