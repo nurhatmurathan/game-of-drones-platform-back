@@ -9,16 +9,12 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     DatabaseModule,
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_SECRET || "dron",
-      signOptions: { expiresIn: '5m' },
-    }),
   ],
   controllers: [UserController],
   providers: [
     ...userProviders,
     UserService],
+  exports: [UserService]
 
 })
 export class UserModule {}

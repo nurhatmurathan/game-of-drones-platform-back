@@ -16,24 +16,5 @@ export class UserController {
     return this.userService.create(userCreateDto)
   }
 
-  @Post("login")
-  login(
-    @Body() userData: UserLoginDto
-  ){
-    return this.userService.signIn(userData)
-  }
 
-  @Post("login/refresh")
-  refreshToken(
-    @Body() refreshTokenDto: UserRefreshDto
-  ){
-    return this.userService.refreshToken(refreshTokenDto.refresh)
-  }
-
-  @Post("login/verify")
-  verifyToken(
-    @Body() verifyTokenDto: UserVerifyDto
-  ){
-    return this.userService.verifyToken(verifyTokenDto.token)
-  }
 }
