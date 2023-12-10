@@ -1,6 +1,6 @@
-import { Multilingualtext } from '@entities/multilingualtext/multilingualtext.entity';
-import { Task } from '@entities/task/task.entity';
-import { UserTournamentTime } from '@entities/user.tournament.time/user.tournament.time.entity';
+import { Multilingualtext } from '../../entities/multilingualtext/multilingualtext.entity';
+import { Task } from '../../entities/task/task.entity';
+import { UserTournamentTime } from '../../entities/user.tournament.time/user.tournament.time.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
 
 @Entity("action")

@@ -1,6 +1,6 @@
-import { Liga } from '@entities/liga/liga.entity';
-import { Route } from '@entities/route/route.entity';
-import { TournamentTime } from '@entities/tournament.time/tournament.time.entity';
+import { Liga } from '../../entities/liga/liga.entity';
+import { Route } from '../../entities/route/route.entity';
+import { TournamentTime } from '../../entities/tournament.time/tournament.time.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, } from 'typeorm';
 
 @Entity("tournament")

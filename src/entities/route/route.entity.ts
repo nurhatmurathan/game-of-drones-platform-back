@@ -1,6 +1,6 @@
-import { Multilingualtext } from '@entities/multilingualtext/multilingualtext.entity';
-import { Tournament } from '@entities/tournament/tournament.entity';
-import { Training } from '@entities/training/training.entity';
+import { Multilingualtext } from '../../entities/multilingualtext/multilingualtext.entity';
+import { Tournament } from '../../entities/tournament/tournament.entity';
+import { Training } from '../../entities/training/training.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 
 @Entity("route")

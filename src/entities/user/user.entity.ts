@@ -1,7 +1,7 @@
-import { Liga } from '@entities/liga/liga.entity';
-import { Photo } from '@entities/photo/photo.entity';
-import { UserTournamentTime } from '@entities/user.tournament.time/user.tournament.time.entity';
-import { UserTrainingTime } from '@entities/user.training.time/user.training.time.entity';
+import { Liga } from '../../entities/liga/liga.entity';
+import { Photo } from '../../entities/photo/photo.entity';
+import { UserTournamentTime } from '../../entities/user.tournament.time/user.tournament.time.entity';
+import { UserTrainingTime } from '../../entities/user.training.time/user.training.time.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 
 @Entity("users")

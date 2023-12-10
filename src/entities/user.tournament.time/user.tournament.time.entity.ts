@@ -1,6 +1,6 @@
-import { Action } from '@entities/action/action.entity';
-import { TournamentTime } from '@entities/tournament.time/tournament.time.entity';
-import { User } from '@entities/user/user.entity';
+import { Action } from '../../entities/action/action.entity';
+import { TournamentTime } from '../../entities/tournament.time/tournament.time.entity';
+import { User } from '../../entities/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, } from 'typeorm';
 
 @Entity("user_tournamenttime")

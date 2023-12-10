@@ -1,4 +1,4 @@
-import { Action } from '@entities/action/action.entity';
+import { Action } from '../../entities/action/action.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, } from 'typeorm';
 
 @Entity("task")

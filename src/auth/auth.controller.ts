@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { UserLoginDto, UserRefreshDto, UserVerifyDto } from "@entities/user/user.dto";
+import { UserLoginDto, UserRefreshDto, UserVerifyDto } from "../entities/user/user.dto";
 import { AuthGuard } from "./auth.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 

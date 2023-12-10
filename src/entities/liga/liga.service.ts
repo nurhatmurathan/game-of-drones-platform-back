@@ -1,11 +1,11 @@
-import { Multilingualtext } from '@entities/multilingualtext/multilingualtext.entity';
+import { Multilingualtext } from '../../entities/multilingualtext/multilingualtext.entity';
 import { Inject, Injectable } from "@nestjs/common";
 import { Liga } from "./liga.entity";
 import { Repository } from "typeorm";
 import { LigaCreateDto } from "./dto/liga.create.dto";
 import { LigaListeDto } from "./dto/liga.list.dto";
 import { LigaRetrieveDto } from "./dto/liga.retrieve.dto";
-import { MultilingualtextService } from '@entities/multilingualtext/multilingualtext.service';
+import { MultilingualtextService } from '../../entities/multilingualtext/multilingualtext.service';
 
 @Injectable()
 export class LigaService{

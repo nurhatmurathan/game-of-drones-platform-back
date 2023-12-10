@@ -1,5 +1,5 @@
-import { Route } from '@entities/route/route.entity';
-import { UserTrainingTime } from '@entities/user.training.time/user.training.time.entity';
+import { Route } from '../../entities/route/route.entity';
+import { UserTrainingTime } from '../../entities/user.training.time/user.training.time.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, } from 'typeorm';
 
 @Entity("training")

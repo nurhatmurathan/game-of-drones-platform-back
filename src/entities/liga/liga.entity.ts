@@ -1,6 +1,6 @@
-import { Multilingualtext } from '@entities/multilingualtext/multilingualtext.entity';
-import { Tournament } from '@entities/tournament/tournament.entity';
-import { User } from '@entities/user/user.entity';
+import { Multilingualtext } from '../../entities/multilingualtext/multilingualtext.entity';
+import { Tournament } from '../../entities/tournament/tournament.entity';
+import { User } from '../../entities/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 
 @Entity("liga")
