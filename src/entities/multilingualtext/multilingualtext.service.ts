@@ -1,4 +1,4 @@
-import { Multilingualtext } from '@entities/multilingualtext/multilingualtext.entity';
+import { Multilingualtext } from '../../entities/multilingualtext/multilingualtext.entity';
 import { Inject, Injectable } from "@nestjs/common";
 import { Repository } from 'typeorm';
 import { MultilingualtextDto } from './dto/multilingualtext.dto';
