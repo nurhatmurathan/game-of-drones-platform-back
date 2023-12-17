@@ -21,4 +21,4 @@ export class Liga {
     @OneToMany(() => Tournament, (tournament) => tournament.liga)
     tournaments: Tournament[]
 
-  }
+}

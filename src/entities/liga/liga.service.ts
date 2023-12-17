@@ -21,15 +21,13 @@ export class LigaService{
         return await this.ligaRepository.find()
       }
 
-      async findOne(id: number): Promise<LigaRetrieveDto>{
-
+      async findOne(id: number, language: string): Promise<LigaRetrieveDto>{
         const ligaInstance = await this.ligaRepository.findOne({
           where: { id },
           relations: ['description'], 
         });
 
-        let ligaDesctiption = ligaInstance.description.en 
-        
+        var ligaDesctiption = ligaInstance.description[language]; 
         return {
           id: ligaInstance.id,
           name: ligaInstance.name,

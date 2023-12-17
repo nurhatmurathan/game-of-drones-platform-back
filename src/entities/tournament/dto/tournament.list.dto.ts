@@ -1,4 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { LigaRetrieveDto } from '../../liga/dto/liga.retrieve.dto';
+import { RouteRetrieveDto } from '../../route/dto/route.retrieve.dto';
+
 
 export class TournamentListDto {
     @ApiProperty()
@@ -12,4 +15,10 @@ export class TournamentListDto {
   
     @ApiProperty()
     price: number;
+
+    @ApiProperty()
+    liga: LigaRetrieveDto
+    
+    @ApiProperty()
+    route: RouteRetrieveDto
 }
