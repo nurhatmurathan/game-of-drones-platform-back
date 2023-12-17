@@ -13,6 +13,4 @@ export class MultilingualText {
     
     @Column({ name: 'kz', type: 'varchar' })
     kz: string;
-
-
-  }
+}

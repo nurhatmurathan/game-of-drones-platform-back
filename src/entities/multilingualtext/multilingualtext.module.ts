@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { MultilingualText } from './multilingualtext.entity';
-import { multilingualtextProviders } from './multilingualtext.providers';
 import { MultilingualtextService } from './multilingualtext.service';
 
 

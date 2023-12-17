@@ -1,19 +1,20 @@
-import { MultilingualText } from '../../entities/multilingualtext/multilingualtext.entity';
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
-import { Liga } from "./liga.entity";
 import { Repository } from "typeorm";
+
+import { Liga } from "./liga.entity";
 import { LigaCreateDto } from "./dto/liga.create.dto";
 import { LigaListeDto } from "./dto/liga.list.dto";
 import { LigaRetrieveDto } from "./dto/liga.retrieve.dto";
-import { MultilingualtextService } from '../../entities/multilingualtext/multilingualtext.service';
+import { MultilingualtextService } from '../multilingualtext/multilingualtext.service';
+
 
 @Injectable()
 export class LigaService{
     constructor(
         @InjectRepository(Liga)
         private readonly ligaRepository: Repository<Liga>,
-        private readonly multilingualtextRepository: MultilingualtextService
+        private readonly multilingualTextService: MultilingualtextService
       ) {}
 
       async findAll(): Promise<LigaListeDto[]> {
@@ -21,19 +22,23 @@ export class LigaService{
       }
 
       async findOne(id: number): Promise<LigaRetrieveDto>{
-        const { description, ...res } = await this.ligaRepository.findOne({where: { id }})
-        
+        const ligaInstance = await this.ligaRepository.findOne({
+          where: { id },
+          relations: ['description'], 
+        });
+
+        let ligaDesctiption = ligaInstance.description.en 
         return {
-          ...res,
-          description: description.ru
-        }
+          id: ligaInstance.id,
+          name: ligaInstance.name,
+          description: ligaDesctiption
+        };
       }
 
       async create(ligaData: LigaCreateDto): Promise<LigaCreateDto>{
-        
         const { description, ...liga } = ligaData
 
-        const multilingualtext = await this.multilingualtextRepository.create(description)
+        const multilingualtext = await this.multilingualTextService.create(description)
 
         const newLiga = this.ligaRepository.create({
           ...liga,

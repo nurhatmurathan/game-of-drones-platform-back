@@ -7,6 +7,8 @@ import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { MultilingualtextModule } from './entities/multilingualtext/multilingualtext.module';
+import { TournamentModule } from './entities/tournament/tournament.module';
+import { RouteModule } from './entities/route/route.module';
 
 @Module({
   imports: [
@@ -15,7 +17,9 @@ import { MultilingualtextModule } from './entities/multilingualtext/multilingual
     UserModule,
     LigaModule,
     AuthModule,
-    MultilingualtextModule
+    MultilingualtextModule,
+    TournamentModule,
+    RouteModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

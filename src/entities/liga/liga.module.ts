@@ -11,6 +11,7 @@ import { MultilingualtextModule } from '../../entities/multilingualtext/multilin
   imports: [TypeOrmModule.forFeature([Liga]), MultilingualtextModule],
   controllers: [LigaController],
   providers: [LigaService],
+  exports: [LigaService]
 
 })
 export class LigaModule {}
