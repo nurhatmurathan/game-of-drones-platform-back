@@ -22,12 +22,14 @@ export class LigaService{
       }
 
       async findOne(id: number): Promise<LigaRetrieveDto>{
+
         const ligaInstance = await this.ligaRepository.findOne({
           where: { id },
           relations: ['description'], 
         });
 
         let ligaDesctiption = ligaInstance.description.en 
+        
         return {
           id: ligaInstance.id,
           name: ligaInstance.name,
