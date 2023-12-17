@@ -11,8 +11,7 @@ export class UserController {
 
   @Post()
   create(
-    @Body() userCreateDto: UserCreateDto
-    ) {
+    @Body() userCreateDto: UserCreateDto) {
     return this.userService.create(userCreateDto)
   }
 

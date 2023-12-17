@@ -1,5 +1,6 @@
-import { Multilingualtext } from '../../entities/multilingualtext/multilingualtext.entity';
+import { MultilingualText } from '../../entities/multilingualtext/multilingualtext.entity';
 import { Inject, Injectable } from "@nestjs/common";
+import { InjectRepository } from '@nestjs/typeorm';
 import { Liga } from "./liga.entity";
 import { Repository } from "typeorm";
 import { LigaCreateDto } from "./dto/liga.create.dto";
@@ -10,7 +11,7 @@ import { MultilingualtextService } from '../../entities/multilingualtext/multili
 @Injectable()
 export class LigaService{
     constructor(
-        @Inject('LIGA_REPOSITORY')
+        @InjectRepository(Liga)
         private readonly ligaRepository: Repository<Liga>,
         private readonly multilingualtextRepository: MultilingualtextService
       ) {}
