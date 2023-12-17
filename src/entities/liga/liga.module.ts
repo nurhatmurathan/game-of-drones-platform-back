@@ -1,20 +1,16 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../../database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { Liga } from './liga.entity';
 import { LigaController } from './liga.controller';
-import { ligaProviders } from './liga.providers';
 import { LigaService } from './liga.service';
 import { MultilingualtextModule } from '../../entities/multilingualtext/multilingualtext.module';
 
 
 @Module({
-  imports: [
-    DatabaseModule,
-    MultilingualtextModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Liga]), MultilingualtextModule],
   controllers: [LigaController],
-  providers: [
-    ...ligaProviders,
-    LigaService],
+  providers: [LigaService],
 
 })
 export class LigaModule {}

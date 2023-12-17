@@ -1,18 +1,14 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../../database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { MultilingualText } from './multilingualtext.entity';
 import { multilingualtextProviders } from './multilingualtext.providers';
 import { MultilingualtextService } from './multilingualtext.service';
 
 
 @Module({
-  imports: [
-    DatabaseModule,
-  ],
-  controllers: [],
-  providers: [
-    ...multilingualtextProviders,
-    MultilingualtextService
-    ],
+  imports: [TypeOrmModule.forFeature([MultilingualText])],
+  providers: [ MultilingualtextService],
   exports: [MultilingualtextService]
 
 })

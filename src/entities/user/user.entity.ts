@@ -2,6 +2,7 @@ import { Liga } from '../../entities/liga/liga.entity';
 import { Photo } from '../../entities/photo/photo.entity';
 import { UserTournamentTime } from '../../entities/user.tournament.time/user.tournament.time.entity';
 import { UserTrainingTime } from '../../entities/user.training.time/user.training.time.entity';
+import { BillingAccount } from '../billing.account/billing.account.entity'
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 
 @Entity("users")
@@ -30,6 +31,10 @@ export class User {
     @OneToOne(() => Photo, {nullable: true})
     @JoinColumn()
     avatar: Photo
+
+    @OneToOne(() => BillingAccount)
+    @JoinColumn()
+    billingAccount: BillingAccount
 
     @ManyToOne(() => Liga, (liga) => liga.users)
     liga: Liga

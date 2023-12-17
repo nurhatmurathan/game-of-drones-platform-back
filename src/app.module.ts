@@ -5,15 +5,17 @@ import { LigaModule } from './entities/liga/liga.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { Multilingualtext } from './entities/multilingualtext/multilingualtext.entity';
+import { DatabaseModule } from './database/database.module';
 import { MultilingualtextModule } from './entities/multilingualtext/multilingualtext.module';
 
 @Module({
   imports: [
+    DatabaseModule,
     ConfigModule,
     UserModule,
     LigaModule,
-    AuthModule
+    AuthModule,
+    MultilingualtextModule
   ],
   controllers: [AuthController],
   providers: [AuthService],

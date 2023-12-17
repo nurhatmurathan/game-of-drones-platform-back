@@ -1,4 +1,4 @@
-import { Multilingualtext } from '../../entities/multilingualtext/multilingualtext.entity';
+import { MultilingualText } from '../../entities/multilingualtext/multilingualtext.entity';
 import { Task } from '../../entities/task/task.entity';
 import { UserTournamentTime } from '../../entities/user.tournament.time/user.tournament.time.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
@@ -11,9 +11,9 @@ export class Action {
     @Column({ name: 'name', type: 'varchar', length: 50 })
     name: string;
   
-    @OneToOne(() => Multilingualtext)
+    @OneToOne(() => MultilingualText)
     @JoinColumn()
-    description: Multilingualtext
+    description: MultilingualText
 
     @Column({ name: 'time', type: 'timestamp' })
     time: Date;
