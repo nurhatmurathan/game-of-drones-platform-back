@@ -1,8 +1,8 @@
-import { UserLoginDto } from '../entities/user/user.dto';
 import { UserService } from '../entities/user/user.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from "bcrypt";
+import { UserLoginDto } from './dto/auth.login.dto';
 
 
 @Injectable()
@@ -22,7 +22,7 @@ export class AuthService {
         return {
           access: await this.jwtService.signAsync(payload),
           refresh: await this.jwtService.signAsync(payload, {
-            expiresIn: "1h",
+            expiresIn: "1h"
           }),
         };
       }

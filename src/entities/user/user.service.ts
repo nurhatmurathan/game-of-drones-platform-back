@@ -3,9 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import * as bcrypt from "bcrypt";
-import { UserCreateDto } from "./user.dto";
-import { UserLoginDto, UserLoginResponseDto } from "./user.dto";
-import { JwtService } from "@nestjs/jwt";
+import { UserCreateDto } from "./dto/user.create.dto";
 
 @Injectable()
 export class UserService {
@@ -18,7 +16,7 @@ export class UserService {
     const { password, ...res } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await this.userRepository.create({
+    const newUser = this.userRepository.create({
       ...res,
       password: hashedPassword,
     });
@@ -30,5 +28,15 @@ export class UserService {
 
   async findOne(email: string): Promise<User | undefined> {
     return await this.userRepository.findOne({where: {email: email}});
+  }
+
+  async userProfileCover(tokenPayload: any) {
+    const user = await this.userRepository.findOne( { where: { id : tokenPayload.sub } } );
+
+    return {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatar: user.avatar || null
+    }
   }
 }

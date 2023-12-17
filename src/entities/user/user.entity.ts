@@ -26,11 +26,8 @@ export class User {
   
     @Column({ name: 'iin', type: 'varchar', length: 12 })
     iin: string;
-  
-    @Column({ name: 'logo', type: 'varchar', length: 255, nullable: true })
-    logo: string;
 
-    @OneToOne(() => Photo)
+    @OneToOne(() => Photo, {nullable: true})
     @JoinColumn()
     avatar: Photo
 

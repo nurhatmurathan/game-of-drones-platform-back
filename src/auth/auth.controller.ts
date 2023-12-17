@@ -9,9 +9,11 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { UserLoginDto, UserRefreshDto, UserVerifyDto } from "../entities/user/user.dto";
 import { AuthGuard } from "./auth.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { UserLoginDto } from "./dto/auth.login.dto";
+import { UserRefreshDto } from "./dto/auth.refresh.dto";
+import { UserVerifyDto } from "./dto/auth.verify.dto";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -42,6 +44,7 @@ export class AuthController {
     return this.authService.verifyToken(verifyTokenDto.token)
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
