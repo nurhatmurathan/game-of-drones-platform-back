@@ -1,34 +1,52 @@
 import {
+  Req,
   Body,
   Controller,
   Get,
   Param,
   ParseIntPipe,
   Post,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
+ 
 import { LigaService } from "./liga.service";
 import { LigaCreateDto } from "./dto/liga.create.dto";
 import { LigaListeDto } from "./dto/liga.list.dto";
 import { LigaRetrieveDto } from "./dto/liga.retrieve.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { GetLanguageFromHeaderService } from '../../utils/util.getlanguage.service';
+
 
 @ApiTags("Liga")
-
 @Controller("liga")
 export class LigaController {
-  constructor(private readonly ligaService: LigaService) {}
+  constructor(
+    private readonly ligaService: LigaService,
+    private readonly getLanguageFromHeaderService: GetLanguageFromHeaderService
+  ) {}
 
   @Get()
+  @HttpCode(HttpStatus.ACCEPTED)
   findAll(): Promise<LigaListeDto[]> {
     return this.ligaService.findAll();
   }
 
   @Get("/:id")
-  findOne(@Param("id", ParseIntPipe) id: number): Promise<LigaRetrieveDto> {
-    return this.ligaService.findOne(id);
+  @HttpCode(HttpStatus.ACCEPTED)
+  async findOne(@Param("id", ParseIntPipe) id: number, @Req() request): Promise<LigaRetrieveDto> {
+    const language = this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
+    const ligaRetrieveDtoInstance = await this.ligaService.findOne(id, language);
+  
+    return {
+      id: ligaRetrieveDtoInstance.id,
+      name: ligaRetrieveDtoInstance.name,
+      description: ligaRetrieveDtoInstance.description,
+    };
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() ligaCreateDto: LigaCreateDto): Promise<LigaCreateDto> {
     return this.ligaService.create(ligaCreateDto);
   }

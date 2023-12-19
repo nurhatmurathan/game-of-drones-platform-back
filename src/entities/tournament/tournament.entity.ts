@@ -25,4 +25,4 @@ export class Tournament {
 
     @OneToMany(() => TournamentTime, (tournamentTime) => tournamentTime.tournament)
     tournamentTimes: TournamentTime[]
-  }
+}

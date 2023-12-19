@@ -16,14 +16,14 @@ export class RouteService {
         private readonly multilingualTextService: MultilingualtextService
     ) {}
 
-    async findOne(id: number): Promise<RouteRetrieveDto>{
+    async findOne(id: number, language: string): Promise<RouteRetrieveDto>{
         const routeInstance = await this.routeRepository.findOne({
             where: { id },
             relations: ['description'], 
-          });
+        });
 
 
-        let routeDesctiption = routeInstance.description.en 
+        var routeDesctiption = routeInstance.description[language] 
         return {
             id: routeInstance.id,
             name: routeInstance.name,
