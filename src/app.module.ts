@@ -11,6 +11,8 @@ import { TournamentModule } from './entities/tournament/tournament.module';
 import { RouteModule } from './entities/route/route.module';
 import { UtilModule } from './utils/util.module';
 import { TournamentTimeModule } from './entities/tournament.time/tournament.time.module';
+import { TaskModule } from './entities/task/task.module';
+import { ActionModule } from './entities/action/action.module';
 
 @Module({
   imports: [
@@ -23,7 +25,9 @@ import { TournamentTimeModule } from './entities/tournament.time/tournament.time
     TournamentModule,
     RouteModule,
     UtilModule,
-    TournamentTimeModule
+    TournamentTimeModule,
+    TaskModule,
+    ActionModule
   ],
   controllers: [AuthController],
   providers: [AuthService],

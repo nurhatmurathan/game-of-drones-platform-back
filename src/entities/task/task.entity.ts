@@ -1,5 +1,6 @@
+import { MultilingualText } from '../../entities/multilingualtext/multilingualtext.entity';
 import { Action } from '../../entities/action/action.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, JoinColumn} from 'typeorm';
 
 @Entity("task")
 export class Task {
@@ -7,12 +8,18 @@ export class Task {
     id: number;
 
     @Column({ name: 'max_count', type: 'integer' })
-    name: string;
-  
+    maxCount: number;
+
+    @Column({name: 'name', type: 'varchar'})
+    name: string
+
+    @OneToOne(() => MultilingualText)
+    @JoinColumn()
+    description: MultilingualText
+
     @Column({ name: 'reward', type: 'varchar' })
     reward: string;
 
-    @ManyToOne(() => Action, (action) => action.tasks)
-    action: Action
-
-  }
+    @OneToMany(() => Action, (action) => action.task)
+    actions: Action[]
+}

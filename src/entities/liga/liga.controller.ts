@@ -9,7 +9,7 @@ import {
   HttpCode,
   HttpStatus,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
  
 import { LigaService } from "./liga.service";
 import { LigaCreateDto } from "./dto/liga.create.dto";
@@ -46,6 +46,7 @@ export class LigaController {
   }
 
   @Post()
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() ligaCreateDto: LigaCreateDto): Promise<LigaCreateDto> {
     return this.ligaService.create(ligaCreateDto);
