@@ -10,6 +10,9 @@ export class TaskCreateDto {
 
     @ApiProperty()
     description: MultilingualText;
+
+    @ApiProperty()
+    taskDescription: MultilingualText;
  
     @ApiProperty()
     reward: string;

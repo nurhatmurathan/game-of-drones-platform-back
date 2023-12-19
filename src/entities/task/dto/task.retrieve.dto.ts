@@ -11,6 +11,9 @@ export class TaskRetrieveDto {
     description: string;
 
     @ApiProperty()
+    taskDescription: string;
+
+    @ApiProperty()
     maxCount:  number;
     
     @ApiProperty()

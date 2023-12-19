@@ -17,6 +17,10 @@ export class Task {
     @JoinColumn()
     description: MultilingualText
 
+    @OneToOne(() => MultilingualText)
+    @JoinColumn()
+    taskDescription: MultilingualText;
+
     @Column({ name: 'reward', type: 'varchar' })
     reward: string;
 
