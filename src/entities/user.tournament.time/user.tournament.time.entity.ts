@@ -15,7 +15,7 @@ export class UserTournamentTime {
     id: number;
 
     @Column({ name: "place", type: "integer", default: null })
-    places: number;
+    place: number;
 
     @ManyToOne(
         () => TournamentTime,

@@ -16,10 +16,22 @@ export class UserTournamentTimeController {
         status: 200,
         description: "Response",
         type: UserFutureTournamnetDto,
+        isArray: true,
     })
     @UseGuards(AuthGuard)
     @Get("tournaments/future")
-    getProfile(@Request() req) {
-        return this.usertournamenttimeService.userTournamentTimes(req.user.sub);
+    userFutureTournamneTimes(@Request() req) {
+        return this.usertournamenttimeService.userFutureTournamentTimes(
+            req.user.sub
+        );
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    @Get("tournaments/pasted")
+    userPastedTournamneTimes(@Request() req) {
+        return this.usertournamenttimeService.userPastedTournamentTimes(
+            req.user.sub
+        );
     }
 }
