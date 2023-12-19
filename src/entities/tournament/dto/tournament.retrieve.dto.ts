@@ -3,7 +3,7 @@ import { LigaRetrieveDto } from '../../liga/dto/liga.retrieve.dto';
 import { RouteRetrieveDto } from '../../route/dto/route.retrieve.dto';
 import { TournamentTimeListDto } from '../../tournament.time/dto/tournament.time.list.dto';
 
-export class TournamentListDto {
+export class TournamentRetrieveDto {
     @ApiProperty()
     id: number
 
@@ -21,4 +21,7 @@ export class TournamentListDto {
     
     @ApiProperty()
     route: RouteRetrieveDto
+
+    @ApiProperty()
+    tournamentTimes: TournamentTimeListDto[]
 }

@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Param, ParseIntPipe, HttpCode, HttpStatus, Req, Body} from '@nestjs/common';
-import { Request } from 'express';
 import { ApiTags } from "@nestjs/swagger";
  
 import { RouteService } from './route.service';
@@ -18,7 +17,7 @@ export class RouteController {
 
     @Get('/:id')
     @HttpCode(HttpStatus.ACCEPTED)
-    async findOne(@Param('id', ParseIntPipe) id: number, @Req() request: Request): Promise<RouteRetrieveDto> {
+    async findOne(@Param('id', ParseIntPipe) id: number, @Req() request): Promise<RouteRetrieveDto> {
         const language = this.getLanguageFromHeaders.getLanguageFromHeaders(request);
         const routeRetrieveDtoInstance = await this.routeSerevice.findOne(id, language);
         

@@ -10,6 +10,7 @@ import { MultilingualtextModule } from './entities/multilingualtext/multilingual
 import { TournamentModule } from './entities/tournament/tournament.module';
 import { RouteModule } from './entities/route/route.module';
 import { UtilModule } from './utils/util.module';
+import { TournamentTimeModule } from './entities/tournament.time/tournament.time.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { UtilModule } from './utils/util.module';
     MultilingualtextModule,
     TournamentModule,
     RouteModule,
-    UtilModule
+    UtilModule,
+    TournamentTimeModule
   ],
   controllers: [AuthController],
   providers: [AuthService],

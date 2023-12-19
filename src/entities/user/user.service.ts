@@ -30,6 +30,13 @@ export class UserService {
     return await this.userRepository.findOne({where: {email: email}});
   }
 
+  async findOneById(id: number): Promise<User | undefined> {
+    return await this.userRepository.findOne({
+      where: {id: id},
+      relations: ['liga']
+    });
+  }
+
   async userProfileCover(tokenPayload: any) {
     const user = await this.userRepository.findOne( { where: { id : tokenPayload.sub } } );
 

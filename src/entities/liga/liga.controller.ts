@@ -10,7 +10,6 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { Request } from 'express';
  
 import { LigaService } from "./liga.service";
 import { LigaCreateDto } from "./dto/liga.create.dto";
@@ -35,7 +34,7 @@ export class LigaController {
 
   @Get("/:id")
   @HttpCode(HttpStatus.ACCEPTED)
-  async findOne(@Param("id", ParseIntPipe) id: number, @Req() request: Request): Promise<LigaRetrieveDto> {
+  async findOne(@Param("id", ParseIntPipe) id: number, @Req() request): Promise<LigaRetrieveDto> {
     const language = this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
     const ligaRetrieveDtoInstance = await this.ligaService.findOne(id, language);
   
