@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import * as bcrypt from "bcrypt";
 import { UserCreateDto } from "./dto/user.create.dto";
+import { UserProfileEditDto } from "./dto/user.profileedit.dto";
 
 @Injectable()
 export class UserService {
@@ -21,16 +22,14 @@ export class UserService {
       password: hashedPassword,
     });
 
-    await this.userRepository.save(newUser);
-
-    return { detail: "saved" };
+    return await this.userRepository.save(newUser);
   }
 
   async findOne(email: string): Promise<User | undefined> {
     return await this.userRepository.findOne({where: {email: email}});
   }
 
-  async userProfileCover(tokenPayload: any) {
+  async profileCover(tokenPayload: any) {
     const user = await this.userRepository.findOne( { where: { id : tokenPayload.sub } } );
 
     return {
@@ -39,4 +38,9 @@ export class UserService {
       avatar: user.avatar || null
     }
   }
+  
+  async profileEdit(userData){
+    return await this.userRepository.save(userData)
+  }
+
 }

@@ -14,6 +14,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UserLoginDto } from "./dto/auth.login.dto";
 import { UserRefreshDto } from "./dto/auth.refresh.dto";
 import { UserVerifyDto } from "./dto/auth.verify.dto";
+import { AuthRegisterDto } from "./dto/auth.register.dto";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -49,5 +50,12 @@ export class AuthController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Post("register")
+  register(
+    @Body() userData: AuthRegisterDto
+  ){
+    return this.authService.register(userData)
   }
 }
