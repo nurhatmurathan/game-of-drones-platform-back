@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { TournamentTime } from './tournament.time.entity';
-import { TournamentTimeListDto } from './dto/tournament.time.list.dto';
- 
+import { TournamentTime } from "./tournament.time.entity";
+import { TournamentTimeListDto } from "./dto/tournament.time.list.dto";
 
 @Injectable()
 export class TournamentTimeService {
@@ -13,12 +12,16 @@ export class TournamentTimeService {
         private readonly tournamentTimeRepository: Repository<TournamentTime>
     ) {}
 
-    async findAllByTournamentId(tournamentId: number): Promise<TournamentTimeListDto[]> {
+    async findAllByTournamentId(
+        tournamentId: number
+    ): Promise<TournamentTimeListDto[]> {
         const tournamentTimes = await this.tournamentTimeRepository.find({
-            where: {tournament: {id: tournamentId} }
+            where: { tournament: { id: tournamentId } },
         });
-        
-        return tournamentTimes.map((tournamentTime) => this.mapToDto(tournamentTime));
+
+        return tournamentTimes.map((tournamentTime) =>
+            this.mapToDto(tournamentTime)
+        );
     }
 
     private mapToDto(tournamentTime: TournamentTime): TournamentTimeListDto {
@@ -28,5 +31,5 @@ export class TournamentTimeService {
         dto.places = tournamentTime.places;
         dto.reserved = tournamentTime.reserved;
         return dto;
-      }
+    }
 }

@@ -9,25 +9,24 @@ import {
     HttpCode,
     HttpStatus,
     UseGuards,
-  } from "@nestjs/common";
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Request } from 'express';
+import { Request } from "express";
 
-import { GetLanguageFromHeaderService } from '../../utils/util.getlanguage.service';
-import { UserService } from '../user/user.service';
-import { TournamentService } from './tournament.service';
-import { TournamentListDto } from './dto/tournament.list.dto';
-import { TournamentRetrieveDto } from './dto/tournament.retrieve.dto';
+import { GetLanguageFromHeaderService } from "../../utils/util.getlanguage.service";
+import { UserService } from "../user/user.service";
+import { TournamentService } from "./tournament.service";
+import { TournamentListDto } from "./dto/tournament.list.dto";
+import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
 import { AuthGuard } from "../../auth/auth.guard";
 
-
-@ApiTags('Tournament')
-@Controller('tournament')
+@ApiTags("Tournament")
+@Controller("tournament")
 export class TournamentController {
     constructor(
         private readonly tournamentService: TournamentService,
         private readonly getLanguageFromHeaderService: GetLanguageFromHeaderService,
-        private readonly userService: UserService,
+        private readonly userService: UserService
     ) {}
 
     @Get()
@@ -35,23 +34,38 @@ export class TournamentController {
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.ACCEPTED)
     async findAll(@Req() request): Promise<TournamentListDto[]> {
-        const userInstance = await this.userService.findOneById(request.user.sub);
-        const language = this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
-        
-        const tournamentListDto = this.tournamentService.findAll(language, userInstance.liga.id);
+        const userInstance = await this.userService.findOneById(
+            request.user.sub
+        );
+        const language =
+            this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
+
+        const tournamentListDto = this.tournamentService.findLigaTournaments(
+            language,
+            userInstance.liga.id
+        );
         return tournamentListDto;
     }
 
-    @Get('/:id')
+    @Get("/:id")
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.ACCEPTED)
-    async findOne(@Param('id', ParseIntPipe) id: number, @Req() request): Promise<TournamentRetrieveDto> {
-        const userInstance = await this.userService.findOneById(request.user.sub);
-        const language = this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
+    async findOne(
+        @Param("id", ParseIntPipe) id: number,
+        @Req() request
+    ): Promise<TournamentRetrieveDto> {
+        const userInstance = await this.userService.findOneById(
+            request.user.sub
+        );
+        const language =
+            this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
 
-        const tournamentRetrieveDto = this.tournamentService.findOne(id, language, userInstance.liga.id);
+        const tournamentRetrieveDto = this.tournamentService.findOne(
+            id,
+            language,
+            userInstance.liga.id
+        );
         return tournamentRetrieveDto;
     }
-
 }

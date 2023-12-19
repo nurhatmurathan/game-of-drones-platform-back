@@ -9,6 +9,7 @@ import { DatabaseModule } from "./database/database.module";
 import { MultilingualtextModule } from "./entities/multilingualtext/multilingualtext.module";
 import { TournamentModule } from "./entities/tournament/tournament.module";
 import { RouteModule } from "./entities/route/route.module";
+import { UserTournamentTimeModule } from "./entities/user.tournament.time/user.tournament.time.module";
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { RouteModule } from "./entities/route/route.module";
         MultilingualtextModule,
         TournamentModule,
         RouteModule,
+        UserTournamentTimeModule,
     ],
     controllers: [AuthController],
     providers: [AuthService],
