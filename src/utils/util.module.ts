@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { GetLanguageFromHeaderService } from './util.getlanguage.service';
+import { UtilService } from './util.service';
 
 
 @Module({
-  providers: [GetLanguageFromHeaderService],
-  exports: [GetLanguageFromHeaderService]
+  providers: [UtilService],
+  exports: [UtilService]
 })
 export class UtilModule {}
 

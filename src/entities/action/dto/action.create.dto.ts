@@ -10,8 +10,8 @@ export class ActionCreateDto {
     time: Date;  
 
     @ApiProperty()
-    userTournamentTime: number;
+    userTournamentTimeId: number;
     
     @ApiProperty()
-    task: number;
+    taskId: number;
 }

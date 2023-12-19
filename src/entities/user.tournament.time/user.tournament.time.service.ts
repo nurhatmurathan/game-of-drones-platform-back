@@ -1,0 +1,96 @@
+import { UserFutureTournamnetDto } from "./dto/user.tournament.time.future.dto";
+import { Injectable } from "@nestjs/common";
+import { UserTournamentTime } from "./user.tournament.time.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { LessThan, MoreThan, Repository } from "typeorm";
+
+@Injectable()
+export class UserTournamentTimeService {
+    constructor(
+        @InjectRepository(UserTournamentTime)
+        private usertournamenttimeRepository: Repository<UserTournamentTime>
+    ) {}
+
+    async userFutureTournamentTimes(
+        userId: number
+    ): Promise<UserFutureTournamnetDto[]> {
+        return await Promise.all(
+            (await this.userTournamentTimes(userId, false)).map(
+                async (userTournamentTime) =>
+                    this.mapUserFutureTournamentTime(userTournamentTime)
+            )
+        );
+    }
+
+    async userPastedTournamentTimes(userId: number) {
+        return await Promise.all(
+            (await this.userTournamentTimes(userId, true)).map(
+                async (userTournamentTime) =>
+                    this.mapUserPastedTournamentTime(userTournamentTime)
+            )
+        );
+    }
+
+    async userTournamentTimes(
+        userId: number,
+        pasted: boolean
+    ): Promise<UserTournamentTime[]> {
+        const currentDate = new Date();
+
+        return await this.usertournamenttimeRepository.find({
+            where: {
+                user: { id: userId },
+                tournamentTime: {
+                    tournament: {
+                        startDate: pasted
+                            ? LessThan(currentDate)
+                            : MoreThan(currentDate),
+                    },
+                },
+            },
+            relations: ["tournamentTime", "tournamentTime.tournament"],
+        });
+    }
+
+    private mapUserFutureTournamentTime(
+        userTournamentTime: UserTournamentTime
+    ): UserFutureTournamnetDto {
+        return {
+            id: userTournamentTime.id,
+            tournamentTime: {
+                id: userTournamentTime.tournamentTime.id,
+                startTime: userTournamentTime.tournamentTime.startTime,
+                tournament: {
+                    id: userTournamentTime.tournamentTime.tournament.id,
+                    name: userTournamentTime.tournamentTime.tournament.name,
+                    startDate:
+                        userTournamentTime.tournamentTime.tournament.startDate,
+                },
+            },
+        };
+    }
+
+    private mapUserPastedTournamentTime(
+        userTournamentTime: UserTournamentTime
+    ) {
+        return {
+            id: userTournamentTime.id,
+            place: userTournamentTime.place,
+            tournamentTime: {
+                id: userTournamentTime.tournamentTime.id,
+                startTime: userTournamentTime.tournamentTime.startTime,
+                tournament: {
+                    id: userTournamentTime.tournamentTime.tournament.id,
+                    name: userTournamentTime.tournamentTime.tournament.name,
+                    startDate:
+                        userTournamentTime.tournamentTime.tournament.startDate,
+                },
+            },
+        };
+    }
+
+    findOneInstance(id: number): Promise<UserTournamentTime> {
+        return this.usertournamenttimeRepository.findOne({where: { id: id }});
+    }
+}
+

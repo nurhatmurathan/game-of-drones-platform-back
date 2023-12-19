@@ -14,29 +14,32 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 import { TaskService } from './task.service';
 import { UserService } from '../user/user.service';
-import { GetLanguageFromHeaderService } from '../../utils/util.getlanguage.service';
+import { UtilService } from '../../utils/util.service';
 import { TaskCreateDto } from './dto/task.create.dto';
 import { TaskListDto } from './dto/task.list.dto';
 import { TaskRetrieveDto } from './dto/task.retrieve.dto';
+import { User } from "../user/user.entity";
 
 
-@ApiTags()
+@ApiTags('Task')
 @Controller('task')
 export class TaskController {
     constructor(
         private readonly taskService: TaskService,
-        private readonly getLanguageFromHeaderService: GetLanguageFromHeaderService,
+        private readonly utilService: UtilService,
+        private readonly userService: UserService
     ) {}
     
     @Get()
     @ApiBearerAuth()
     @HttpCode(HttpStatus.ACCEPTED)
     async findAll(@Req() request): Promise<TaskListDto[]> {
-        const language = this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
+        const language = this.utilService.getLanguageFromHeaders(request);
         
         const taskListDto = this.taskService.findAll(language);
         return taskListDto;
     }
+    
     
     
     @Post()

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Param, ParseIntPipe, HttpCode, HttpStatus, Req, 
 import { ApiTags } from "@nestjs/swagger";
  
 import { RouteService } from './route.service';
-import { GetLanguageFromHeaderService } from '../../utils/util.getlanguage.service';
+import { UtilService } from '../../utils/util.service';
 import { RouteRetrieveDto } from './dto/route.retrieve.dto';
 import { RouteCreateDto } from './dto/route.create.dto';
 
@@ -12,13 +12,13 @@ import { RouteCreateDto } from './dto/route.create.dto';
 export class RouteController {
     constructor( 
         private readonly routeSerevice: RouteService, 
-        private readonly getLanguageFromHeaders: GetLanguageFromHeaderService
+        private readonly utilService: UtilService
     ) {}
 
     @Get('/:id')
     @HttpCode(HttpStatus.ACCEPTED)
     async findOne(@Param('id', ParseIntPipe) id: number, @Req() request): Promise<RouteRetrieveDto> {
-        const language = this.getLanguageFromHeaders.getLanguageFromHeaders(request);
+        const language = this.utilService.getLanguageFromHeaders(request);
         const routeRetrieveDtoInstance = await this.routeSerevice.findOne(id, language);
         
         return {

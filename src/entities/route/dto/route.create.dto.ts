@@ -1,4 +1,4 @@
-import { MultilingualtextDto } from '../../multilingualtext/dto/multilingualtext.dto';
+import { MultilingualtextDto } from "../../multilingualtext/dto/multilingualtext.dto";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class RouteCreateDto {
@@ -12,7 +12,7 @@ export class RouteCreateDto {
     length: string;
 
     @ApiProperty()
-    bestTime: string;
+    bestTime: number;
 
     @ApiProperty()
     map: string;

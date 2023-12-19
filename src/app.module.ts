@@ -13,6 +13,7 @@ import { UtilModule } from './utils/util.module';
 import { TournamentTimeModule } from './entities/tournament.time/tournament.time.module';
 import { TaskModule } from './entities/task/task.module';
 import { ActionModule } from './entities/action/action.module';
+import { UserTournamentTimeModule } from './entities/user.tournament.time/user.tournament.time.module'; 
 
 @Module({
   imports: [
@@ -26,13 +27,11 @@ import { ActionModule } from './entities/action/action.module';
     RouteModule,
     UtilModule,
     TournamentTimeModule,
+    UserTournamentTimeModule,
     TaskModule,
     ActionModule
   ],
   controllers: [AuthController],
   providers: [AuthService],
-
 })
 export class AppModule {}
-
-

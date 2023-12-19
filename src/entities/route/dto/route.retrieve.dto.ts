@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger'; 
+import { ApiProperty } from "@nestjs/swagger";
 
-export class RouteRetrieveDto{
+export class RouteRetrieveDto {
     @ApiProperty()
     id: number;
 
@@ -14,7 +14,7 @@ export class RouteRetrieveDto{
     length: string;
 
     @ApiProperty()
-    bestTime: string;
+    bestTime: number;
 
     @ApiProperty()
     map: string;
