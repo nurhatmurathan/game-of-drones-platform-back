@@ -1,20 +1,36 @@
-# Use an official Node.js runtime as the base image
-FROM node:14
+# Stage 1: Building the code
+FROM node:16-alpine as builder
 
-# Set the working directory in the container
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json (or yarn.lock if using yarn)
 COPY package*.json ./
 
-# Install Nest.js dependencies
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the application source code
+# Copy the rest of the code
 COPY . .
 
-# Expose the port your application is running on
+# Build the project
+RUN npm run build
+
+# Stage 2: Setting up the production environment
+FROM node:16-alpine
+
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json (or yarn.lock if using yarn)
+COPY package*.json ./
+
+# Install only production dependencies
+RUN npm install --only=production
+
+# Copy built assets from the builder stage
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Define the command to run your application
-CMD [ "npm", "start" ]
+# Command to run the application
+CMD ["node", "dist/main"]
