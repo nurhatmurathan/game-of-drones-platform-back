@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Repository, MoreThanOrEqual } from "typeorm";
 
 import { Tournament } from "./tournament.entity";
 import { TournamentListDto } from "./dto/tournament.list.dto";
 import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
+import { TournamnetCreateDto } from './dto/tournament.create.dto'; 
 import { LigaService } from "../liga/liga.service";
 import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
@@ -13,7 +14,7 @@ import { TournamentTimeService } from "../tournament.time/tournament.time.servic
 export class TournamentService {
     constructor(
         @InjectRepository(Tournament)
-        private readonly turnamentRepository: Repository<Tournament>,
+        private readonly tournamentRepository: Repository<Tournament>,
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly routeService: RouteService,
         private readonly ligaService: LigaService
@@ -23,9 +24,12 @@ export class TournamentService {
         language: string,
         ligaId: number
     ): Promise<TournamentListDto[]> {
-        const tournaments = await this.turnamentRepository.find({
+        const tournaments = await this.tournamentRepository.find({
             relations: ["liga", "route"],
-            where: { liga: { id: ligaId } },
+            where: { 
+                liga: { id: ligaId },
+                startDate: MoreThanOrEqual(new Date())
+            },
         });
 
         const tournamentListDtos = await Promise.all(
@@ -42,12 +46,28 @@ export class TournamentService {
         language: string,
         ligaId: number
     ): Promise<TournamentRetrieveDto> {
-        const tournament = await this.turnamentRepository.findOne({
+        const tournament = await this.tournamentRepository.findOne({
             relations: ["liga", "route"],
             where: { id: id, liga: { id: ligaId } },
         });
 
         return this.mapTournamentToRetrieveDto(tournament, language);
+    }
+
+
+    async create(createTournamentDto: TournamnetCreateDto): Promise<Tournament> {
+        const { ligaId, routeId, ...tournament} = createTournamentDto;
+        
+        const ligaInstance = await this.ligaService.getInstance(ligaId);
+        const routeInstance = await this.routeService.getInstance(routeId);
+    
+        const newTournaments = await this.tournamentRepository.create({
+            ...tournament,
+            liga: ligaInstance,
+            route: routeInstance
+        });
+        
+        return this.tournamentRepository.save(newTournaments);
     }
 
     private async mapTournamentToListDto(

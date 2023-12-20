@@ -9,5 +9,5 @@ export class TaskListDto {
     name: string;
 
     @ApiProperty()
-    description: string;
+    taskDescription: string;
 }

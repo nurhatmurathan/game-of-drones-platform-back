@@ -24,17 +24,17 @@ export class TaskService {
 
     async findAll(language: string): Promise<TaskListDto[]> {
         const taskList = await this.taskReposotory.find({
-            relations: ['description', 'taskDescription']
+            relations: ['taskDescription']
         });
 
         const taskListDto = taskList.map((task) => {
-            const description = task.description[language];
+            // const description = task.description[language];
             const taskDescription = task.taskDescription[language];
 
             return {
                 id: task.id,
                 name: task.name,
-                description: description,
+                // description: description,
                 taskDescription: taskDescription 
             }
         });
@@ -52,7 +52,7 @@ export class TaskService {
         
         let doneCount = 0;
         if (taskInstance.inOneGame) 
-            doneCount = await this.actionService.maxActionCountInOnOneTournament(taskInstance.id, listOfTournamentsIdsOfGivenUser); 
+            doneCount = await this.actionService.maxActionCountInOneTournament(taskInstance.id, listOfTournamentsIdsOfGivenUser); 
         else
             doneCount = await this.actionService.countActionsInAllTournaments(taskInstance.id, listOfTournamentsIdsOfGivenUser);
         
@@ -78,8 +78,7 @@ export class TaskService {
         const newTask = this.taskReposotory.create({
             ...task,
             description: multilingualTextDescription,
-            taskDescription: multilingualTexTaskDescription
-            
+            taskDescription: multilingualTexTaskDescription    
         });
 
         return await this.taskReposotory.save(newTask); 

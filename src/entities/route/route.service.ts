@@ -47,5 +47,8 @@ export class RouteService {
         return this.routeRepository.save(newRouteInstance);
     }
 
+    getInstance(id: number): Promise<Route> {
+        return this.routeRepository.findOne({where: {id: id}});
+    }
 
 }

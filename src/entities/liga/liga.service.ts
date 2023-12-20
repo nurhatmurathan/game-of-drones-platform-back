@@ -47,4 +47,8 @@ export class LigaService{
         
         return await this.ligaRepository.save(newLiga);
       }
+
+      getInstance(id: number): Promise<Liga> {
+        return this.ligaRepository.findOne({where: {id: id }});
+      }
 }

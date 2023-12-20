@@ -23,17 +23,18 @@ export class ActionService {
     async create(createActionDto: ActionCreateDto): Promise<Action> {
         const { description, time, userTournamentTimeId, taskId } = createActionDto;
     
-        const multilingualTextInstance = await this.multilingualTextService.create(description)
+        const multilingualDescriptionInstance = await this.multilingualTextService.create(description)
         const userTournamentTimeInstance = await this.userTournamentTimeService.getInstance(userTournamentTimeId);
         const taskInstance = await this.taskService.getInstance(taskId);
 
-        const action = new Action();
-        action.description = multilingualTextInstance;
-        action.userTournamentTime = userTournamentTimeInstance;
-        action.task = taskInstance;
-        action.time = time;
+        const newAction = await this.actionRepository.create({
+            time: time,
+            task: taskInstance,
+            description: multilingualDescriptionInstance,
+            userTournamentTime: userTournamentTimeInstance,
+        });
 
-        return this.actionRepository.save(action);
+        return this.actionRepository.save(newAction);
       }
 
 
@@ -48,7 +49,7 @@ export class ActionService {
         return count;
     }
 
-    async maxActionCountInOnOneTournament(taskId: number, listOfTournamentsIdsOfGivenUser: number[]): Promise<number> {
+    async maxActionCountInOneTournament(taskId: number, listOfTournamentsIdsOfGivenUser: number[]): Promise<number> {
         const counts = await this.actionRepository.createQueryBuilder('action')
             .select('action.userTournamentTimeId', 'tournamentTimeId')
             .addSelect('COUNT(action.id)', 'count')

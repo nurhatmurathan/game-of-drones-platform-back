@@ -29,10 +29,10 @@ export class UserService {
         return await this.userRepository.findOne({ where: { email: email } });
     }
 
-    async findOneById(id: number): Promise<User | undefined> {
-        return await this.userRepository.findOne({
+    findOneById(id: number): Promise<User | undefined> {
+        return this.userRepository.findOne({
             where: { id: id },
-            relations: ["liga"],
+            relations: ["liga", "billingAccount"],
         });
     }
 
