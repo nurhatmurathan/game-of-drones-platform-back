@@ -7,7 +7,7 @@ async function bootstrap() {
     dotenv.config();
 
     const app = await NestFactory.create(AppModule);
-    app.enableCors();
+    app.enableCors({ allowedHeaders: ["http://*", "https://*", "*"] });
 
     const config = new DocumentBuilder()
         .addBearerAuth()
