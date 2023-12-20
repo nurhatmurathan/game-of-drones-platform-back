@@ -1,6 +1,7 @@
 import { UserFutureTournamnetTimeDto } from "./dto/user.tournament.time.future.dto";
 import {
     BadRequestException,
+    ConflictException,
     HttpStatus,
     Injectable,
     NotFoundException,
@@ -9,6 +10,7 @@ import { UserTournamentTime } from "./user.tournament.time.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, MoreThan, Repository } from "typeorm";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
+import { TournamentTime } from "../tournament.time/tournament.time.entity";
 
 @Injectable()
 export class UserTournamentTimeService {
@@ -18,10 +20,53 @@ export class UserTournamentTimeService {
         private readonly tournamentTimeService: TournamentTimeService
     ) {}
 
-    async create(userId: number, tournamentTimeId: number) {
+    async create(
+        userId: number,
+        tournamentTimeId: number
+    ): Promise<{
+        userId: number;
+        tournamentTimeId: number;
+        reservedPlaces: number;
+    }> {
         const tournamentTimeInstance =
             await this.tournamentTimeService.findOne(tournamentTimeId);
+        this.validateTournamentTimeInstance(
+            tournamentTimeInstance,
+            tournamentTimeId
+        );
 
+        tournamentTimeInstance.reserved++;
+
+        try {
+            await this.userTournamentTimeRepository.manager.transaction(
+                async (entityManager) => {
+                    await entityManager.save(tournamentTimeInstance);
+                    await entityManager.save(UserTournamentTime, {
+                        user: { id: userId },
+                        tournamentTime: { id: tournamentTimeId },
+                    });
+                }
+            );
+
+            return {
+                userId,
+                tournamentTimeId,
+                reservedPlaces: tournamentTimeInstance.reserved,
+            };
+        } catch (error) {
+            if (error.code === "23505") {
+                throw new ConflictException(
+                    "This user is already registered for this tournament time."
+                );
+            }
+            throw error;
+        }
+    }
+
+    private validateTournamentTimeInstance(
+        tournamentTimeInstance: TournamentTime,
+        tournamentTimeId: number
+    ): void {
         if (!tournamentTimeInstance) {
             throw new NotFoundException(
                 `TournamentTime with ID ${tournamentTimeId} not found.`
@@ -31,24 +76,6 @@ export class UserTournamentTimeService {
         if (tournamentTimeInstance.places <= tournamentTimeInstance.reserved) {
             throw new BadRequestException("No available places.");
         }
-
-        tournamentTimeInstance.reserved++;
-
-        await this.userTournamentTimeRepository.manager.transaction(
-            async (entityManager) => {
-                await entityManager.save(tournamentTimeInstance);
-                await entityManager.save(UserTournamentTime, {
-                    user: { id: userId },
-                    tournamentTime: { id: tournamentTimeId },
-                });
-            }
-        );
-
-        return {
-            userId,
-            tournamentTimeId,
-            reservedPlaces: tournamentTimeInstance.reserved,
-        };
     }
 
     async userFutureTournamentTimes(

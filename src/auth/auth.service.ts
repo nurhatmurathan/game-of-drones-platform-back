@@ -25,7 +25,7 @@ export class AuthService {
         return {
             access: await this.jwtService.signAsync(payload),
             refresh: await this.jwtService.signAsync(payload, {
-                expiresIn: "1h",
+                expiresIn: "24h",
             }),
         };
     }

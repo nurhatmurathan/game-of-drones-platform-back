@@ -7,9 +7,11 @@ import {
     PrimaryGeneratedColumn,
     ManyToOne,
     OneToMany,
+    Unique,
 } from "typeorm";
 
 @Entity("user_tournamenttime")
+@Unique(["user", "tournamentTime"])
 export class UserTournamentTime {
     @PrimaryGeneratedColumn()
     id: number;
