@@ -9,13 +9,14 @@ async function bootstrap() {
     dotenv.config();
 
     const app = await NestFactory.create(AppModule);
-    app.enableCors({
-        origin: "*",
-        allowedHeaders: "Content-Type, Accept",
-        credentials: true,
-        methods: "GET,PUT,POST,DELETE,OPTIONS",
-        optionsSuccessStatus: 200,
-    });
+    // app.enableCors({
+    //     origin: "*",
+    //     allowedHeaders: "Content-Type, Accept",
+    //     credentials: true,
+    //     methods: "GET,PUT,POST,DELETE,OPTIONS",
+    //     optionsSuccessStatus: 200,
+    // });
+    // app.enableCors();
 
     const config = new DocumentBuilder()
         .addBearerAuth()
