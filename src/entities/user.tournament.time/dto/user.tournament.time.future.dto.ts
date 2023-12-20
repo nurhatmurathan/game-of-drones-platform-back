@@ -4,6 +4,7 @@ import { TournamnetTimeCoverDto } from "../../../entities/tournament.time/dto/to
 export class UserFutureTournamnetDto {
     @ApiProperty()
     id: number;
+    
     @ApiProperty()
     tournamentTime: TournamnetTimeCoverDto;
 }

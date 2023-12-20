@@ -11,9 +11,8 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Request } from "express";
 
-import { GetLanguageFromHeaderService } from "../../utils/util.getlanguage.service";
+import { UtilService } from "../../utils/util.service";
 import { UserService } from "../user/user.service";
 import { TournamentService } from "./tournament.service";
 import { TournamentListDto } from "./dto/tournament.list.dto";
@@ -25,7 +24,7 @@ import { AuthGuard } from "../../auth/auth.guard";
 export class TournamentController {
     constructor(
         private readonly tournamentService: TournamentService,
-        private readonly getLanguageFromHeaderService: GetLanguageFromHeaderService,
+        private readonly utilService: UtilService,
         private readonly userService: UserService
     ) {}
 
@@ -38,7 +37,7 @@ export class TournamentController {
             request.user.sub
         );
         const language =
-            this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
+            this.utilService.getLanguageFromHeaders(request);
 
         const tournamentListDto = this.tournamentService.findLigaTournaments(
             language,
@@ -59,7 +58,7 @@ export class TournamentController {
             request.user.sub
         );
         const language =
-            this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
+            this.utilService.getLanguageFromHeaders(request);
 
         const tournamentRetrieveDto = this.tournamentService.findOne(
             id,

@@ -4,11 +4,12 @@ import { UserTournamentTime } from "./user.tournament.time.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, MoreThan, Repository } from "typeorm";
 
+
 @Injectable()
 export class UserTournamentTimeService {
     constructor(
         @InjectRepository(UserTournamentTime)
-        private usertournamenttimeRepository: Repository<UserTournamentTime>
+        private userTournamentTimeRepository: Repository<UserTournamentTime>
     ) {}
 
     async userFutureTournamentTimes(
@@ -37,7 +38,7 @@ export class UserTournamentTimeService {
     ): Promise<UserTournamentTime[]> {
         const currentDate = new Date();
 
-        return await this.usertournamenttimeRepository.find({
+        return await this.userTournamentTimeRepository.find({
             where: {
                 user: { id: userId },
                 tournamentTime: {
@@ -88,5 +89,17 @@ export class UserTournamentTimeService {
             },
         };
     }
-    // async futureTournamentTimes
+
+    getInstance(id: number): Promise<UserTournamentTime> {
+        return this.userTournamentTimeRepository.findOne({where: { id: id }});
+    }
+
+    async getListOfTournamentsIdsOfGivenUser(userId: number): Promise<number[]> {
+        const userTournamentTimes = await this.userTournamentTimeRepository.find({
+          where: { user: { id: userId } },
+        });
+    
+        return userTournamentTimes.map((userTournamentTime) => userTournamentTime.tournamentTime.id);
+      }
 }
+

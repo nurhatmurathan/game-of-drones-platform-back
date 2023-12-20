@@ -27,11 +27,11 @@ export class LigaService{
           relations: ['description'], 
         });
 
-        var ligaDesctiption = ligaInstance.description[language]; 
+        var ligaDescription = ligaInstance.description[language]; 
         return {
           id: ligaInstance.id,
           name: ligaInstance.name,
-          description: ligaDesctiption
+          description: ligaDescription
         };
       }
 
@@ -43,9 +43,8 @@ export class LigaService{
         const newLiga = this.ligaRepository.create({
           ...liga,
           description: multilingualtext
-        })
+        });
         
-        return await this.ligaRepository.save(newLiga)
-
+        return await this.ligaRepository.save(newLiga);
       }
 }

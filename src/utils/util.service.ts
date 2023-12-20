@@ -1,8 +1,8 @@
-import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Request } from "express";
 
 @Injectable()
-export class GetLanguageFromHeaderService {
+export class UtilService {
     getLanguageFromHeaders(request: Request): string {
         const languageHeader = request.headers["language"];
 

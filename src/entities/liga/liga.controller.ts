@@ -9,13 +9,13 @@ import {
   HttpCode,
   HttpStatus,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
  
 import { LigaService } from "./liga.service";
 import { LigaCreateDto } from "./dto/liga.create.dto";
 import { LigaListeDto } from "./dto/liga.list.dto";
 import { LigaRetrieveDto } from "./dto/liga.retrieve.dto";
-import { GetLanguageFromHeaderService } from '../../utils/util.getlanguage.service';
+import { UtilService } from '../../utils/util.service';
 
 
 @ApiTags("Liga")
@@ -23,7 +23,7 @@ import { GetLanguageFromHeaderService } from '../../utils/util.getlanguage.servi
 export class LigaController {
   constructor(
     private readonly ligaService: LigaService,
-    private readonly getLanguageFromHeaderService: GetLanguageFromHeaderService
+    private readonly utilService: UtilService
   ) {}
 
   @Get()
@@ -35,7 +35,7 @@ export class LigaController {
   @Get("/:id")
   @HttpCode(HttpStatus.ACCEPTED)
   async findOne(@Param("id", ParseIntPipe) id: number, @Req() request): Promise<LigaRetrieveDto> {
-    const language = this.getLanguageFromHeaderService.getLanguageFromHeaders(request);
+    const language = this.utilService.getLanguageFromHeaders(request);
     const ligaRetrieveDtoInstance = await this.ligaService.findOne(id, language);
   
     return {
@@ -46,6 +46,7 @@ export class LigaController {
   }
 
   @Post()
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() ligaCreateDto: LigaCreateDto): Promise<LigaCreateDto> {
     return this.ligaService.create(ligaCreateDto);
