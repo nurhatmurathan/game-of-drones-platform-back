@@ -1,8 +1,18 @@
-import { UserFutureTournamnetDto } from "./dto/user.tournament.time.future.dto";
-import { Controller, Get, Request, UseGuards } from "@nestjs/common";
+import { UserFutureTournamnetTimeDto } from "./dto/user.tournament.time.future.dto";
+import {
+    Body,
+    Controller,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Post,
+    Request,
+    UseGuards,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserTournamentTimeService } from "./user.tournament.time.service";
 import { AuthGuard } from "src/auth/auth.guard";
+import { UserTournamnetTimeCreateDto } from "./dto/user.tournament.time.create.dto";
 
 @ApiTags("UserTournamentTime")
 @Controller("UserTournamentTime")
@@ -12,16 +22,28 @@ export class UserTournamentTimeController {
     ) {}
 
     @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    @Post()
+    @HttpCode(HttpStatus.CREATED)
+    async create(@Body() body: UserTournamnetTimeCreateDto, @Request() req) {
+        return await this.usertournamenttimeService.create(
+            req.user.sub,
+            body.tournamentTimeId
+        );
+    }
+
+    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         description: "Response",
-        type: UserFutureTournamnetDto,
+        type: UserFutureTournamnetTimeDto,
         isArray: true,
     })
     @UseGuards(AuthGuard)
     @Get("tournaments/future")
-    userFutureTournamneTimes(@Request() req) {
-        return this.usertournamenttimeService.userFutureTournamentTimes(
+    @HttpCode(HttpStatus.ACCEPTED)
+    async userFutureTournamneTimes(@Request() req) {
+        return await this.usertournamenttimeService.userFutureTournamentTimes(
             req.user.sub
         );
     }
@@ -29,8 +51,9 @@ export class UserTournamentTimeController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Get("tournaments/pasted")
-    userPastedTournamneTimes(@Request() req) {
-        return this.usertournamenttimeService.userPastedTournamentTimes(
+    @HttpCode(HttpStatus.ACCEPTED)
+    async userPastedTournamneTimes(@Request() req) {
+        return await this.usertournamenttimeService.userPastedTournamentTimes(
             req.user.sub
         );
     }

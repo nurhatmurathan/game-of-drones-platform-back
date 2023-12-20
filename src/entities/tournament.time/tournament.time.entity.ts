@@ -14,13 +14,13 @@ export class TournamentTime {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ name: "start_time", type: "time" })
+    @Column({ name: "start_time", type: "timestamp" })
     startTime: Date;
 
     @Column({ name: "places", type: "integer" })
     places: number;
 
-    @Column({ name: "reserved", type: "integer" })
+    @Column({ name: "reserved", type: "integer", default: 0 })
     reserved: number;
 
     @ManyToOne(() => Tournament, (tournament) => tournament.tournamentTimes)

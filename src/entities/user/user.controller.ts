@@ -22,15 +22,15 @@ export class UserController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Get("profile/cover")
-    getProfile(@Request() req) {
-        return this.userService.profileCover(req.user);
+    async getProfile(@Request() req) {
+        return await this.userService.profileCover(req.user);
     }
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Post("profile/edit")
-    egitProfile(@Request() req, @Body() userData: UserProfileEditDto) {
-        return this.userService.profileEdit({
+    async egitProfile(@Request() req, @Body() userData: UserProfileEditDto) {
+        return await this.userService.profileEdit({
             id: req.user.sub,
             email: req.user.email,
             ...userData,

@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 
 import { TournamentTime } from "./tournament.time.entity";
 import { TournamentTimeListDto } from "./dto/tournament.time.list.dto";
+import { TournamnetTimeCreateDto } from "./dto/tournament.time.create.dto";
 
 @Injectable()
 export class TournamentTimeService {
@@ -11,6 +12,16 @@ export class TournamentTimeService {
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>
     ) {}
+
+    async findOne(id: number) {
+        return await this.tournamentTimeRepository.findOne({ where: { id } });
+    }
+
+    async create(
+        tournamentTimeData: TournamnetTimeCreateDto
+    ): Promise<TournamentTime> {
+        return await this.tournamentTimeRepository.save(tournamentTimeData);
+    }
 
     async findAllByTournamentId(
         tournamentId: number
