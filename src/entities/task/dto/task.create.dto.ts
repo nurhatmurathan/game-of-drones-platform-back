@@ -9,6 +9,9 @@ export class TaskCreateDto {
     name: string;
 
     @ApiProperty()
+    inOneGame: boolean;
+
+    @ApiProperty()
     description: MultilingualText;
 
     @ApiProperty()

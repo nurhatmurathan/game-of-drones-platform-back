@@ -15,6 +15,9 @@ export class TaskRetrieveDto {
 
     @ApiProperty()
     maxCount:  number;
+
+    @ApiProperty()
+    doneCount:  number;
     
     @ApiProperty()
     reward: string;

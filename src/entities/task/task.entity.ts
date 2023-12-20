@@ -13,6 +13,9 @@ export class Task {
     @Column({name: 'name', type: 'varchar'})
     name: string
 
+    @Column({name: 'inOneGme', type: 'boolean'})
+    inOneGame: boolean;
+
     @OneToOne(() => MultilingualText)
     @JoinColumn()
     description: MultilingualText

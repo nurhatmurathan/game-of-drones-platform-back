@@ -20,4 +20,4 @@ export class Action {
 
     @ManyToOne(() => Task, (task) => task.actions)
     task: Task
-  }
+}
