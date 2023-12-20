@@ -1,24 +1,30 @@
-import { MultilingualText } from '../../entities/multilingualtext/multilingualtext.entity';
-import { Tournament } from '../../entities/tournament/tournament.entity';
-import { User } from '../../entities/user/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
+import { Tournament } from "../../entities/tournament/tournament.entity";
+import { User } from "../../entities/user/user.entity";
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    OneToMany,
+    OneToOne,
+    JoinColumn,
+} from "typeorm";
 
 @Entity("liga")
 export class Liga {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ name: 'name', type: 'varchar', length: 50 })
+    @Column({ name: "name", type: "varchar", length: 50 })
     name: string;
-  
+
     @OneToOne(() => MultilingualText)
     @JoinColumn()
-    description: MultilingualText
+    description: MultilingualText;
 
     @OneToMany(() => User, (user) => user.liga)
-    users: User[]
+    users: User[];
 
     @OneToMany(() => Tournament, (tournament) => tournament.liga)
-    tournaments: Tournament[]
-
+    tournaments: Tournament[];
 }

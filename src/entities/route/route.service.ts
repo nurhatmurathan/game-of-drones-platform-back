@@ -1,12 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { Route } from './route.entity';
-import { RouteRetrieveDto } from './dto/route.retrieve.dto';
-import { RouteCreateDto } from './dto/route.create.dto';
-import { MultilingualtextService } from '../multilingualtext/multilingualtext.service';
-
+import { Route } from "./route.entity";
+import { RouteRetrieveDto } from "./dto/route.retrieve.dto";
+import { RouteCreateDto } from "./dto/route.create.dto";
+import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 
 @Injectable()
 export class RouteService {
@@ -16,14 +15,13 @@ export class RouteService {
         private readonly multilingualTextService: MultilingualtextService
     ) {}
 
-    async findOne(id: number, language: string): Promise<RouteRetrieveDto>{
+    async findOne(id: number, language: string): Promise<RouteRetrieveDto> {
         const routeInstance = await this.routeRepository.findOne({
             where: { id },
-            relations: ['description'], 
+            relations: ["description"],
         });
 
-
-        var routeDesctiption = routeInstance.description[language] 
+        var routeDesctiption = routeInstance.description[language];
         return {
             id: routeInstance.id,
             name: routeInstance.name,
@@ -35,17 +33,16 @@ export class RouteService {
     }
 
     async create(routeData: RouteCreateDto): Promise<RouteCreateDto> {
-        const {description, ...routeInformation} = routeData;
+        const { description, ...routeInformation } = routeData;
 
-        const multilingualTextInstance = await this.multilingualTextService.create(description);
+        const multilingualTextInstance =
+            await this.multilingualTextService.create(description);
 
         const newRouteInstance = this.routeRepository.create({
             ...routeInformation,
-            description: multilingualTextInstance
+            description: multilingualTextInstance,
         });
 
         return this.routeRepository.save(newRouteInstance);
     }
-
-
 }

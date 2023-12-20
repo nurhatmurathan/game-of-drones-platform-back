@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class TaskRetrieveDto {
     @ApiProperty()
@@ -14,11 +14,11 @@ export class TaskRetrieveDto {
     taskDescription: string;
 
     @ApiProperty()
-    maxCount:  number;
+    maxCount: number;
 
     @ApiProperty()
-    doneCount:  number;
-    
+    doneCount: number;
+
     @ApiProperty()
     reward: string;
 }

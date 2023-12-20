@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class LigaRetrieveDto{
+export class LigaRetrieveDto {
     @ApiProperty()
-    id: number
+    id: number;
 
     @ApiProperty()
-    name: string
+    name: string;
 
     @ApiProperty()
-    description: string
+    description: string;
 }
