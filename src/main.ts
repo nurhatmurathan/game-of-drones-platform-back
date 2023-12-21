@@ -2,15 +2,18 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as dotenv from "dotenv";
+import { AllExceptionsFilter } from "./common/filters/all-exception.filter";
 import { get } from "http";
 import { createWriteStream } from "fs";
+
 
 async function bootstrap() {
     dotenv.config();
 
     const app = await NestFactory.create(AppModule);
-    
+
     app.enableCors();
+    app.useGlobalFilters(new AllExceptionsFilter());
 
     const config = new DocumentBuilder()
         .addBearerAuth()

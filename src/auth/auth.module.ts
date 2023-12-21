@@ -18,4 +18,4 @@ import { UserService } from "../entities/user/user.service";
     controllers: [AuthController],
     exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

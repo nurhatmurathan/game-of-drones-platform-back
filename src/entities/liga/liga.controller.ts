@@ -8,6 +8,8 @@ import {
     Post,
     HttpCode,
     HttpStatus,
+    BadRequestException,
+    NotFoundException,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
@@ -23,7 +25,7 @@ export class LigaController {
     constructor(
         private readonly ligaService: LigaService,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
     @Get()
     @HttpCode(HttpStatus.ACCEPTED)
