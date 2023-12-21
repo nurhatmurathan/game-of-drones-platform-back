@@ -3,7 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { UserTournamentTime } from "./user.tournament.time.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, MoreThan, Repository } from "typeorm";
-
+import { User } from "../user/user.entity";
+import { TournamentTime } from "../tournament.time/tournament.time.entity";
 
 @Injectable()
 export class UserTournamentTimeService {
@@ -53,6 +54,9 @@ export class UserTournamentTimeService {
         });
     }
 
+
+    // create(tournamentTime: TournamentTime, )
+
     private mapUserFutureTournamentTime(
         userTournamentTime: UserTournamentTime
     ): UserFutureTournamnetDto {
@@ -91,15 +95,28 @@ export class UserTournamentTimeService {
     }
 
     getInstance(id: number): Promise<UserTournamentTime> {
-        return this.userTournamentTimeRepository.findOne({where: { id: id }});
+        return this.userTournamentTimeRepository.findOne({ where: { id: id } });
     }
 
-    async getListOfTournamentsIdsOfGivenUser(userId: number): Promise<number[]> {
-        const userTournamentTimes = await this.userTournamentTimeRepository.find({
-          where: { user: { id: userId } },
-        });
-    
-        return userTournamentTimes.map((userTournamentTime) => userTournamentTime.tournamentTime.id);
-      }
-}
+    async getListOfTournamentsIdsOfGivenUser(
+        userId: number
+    ): Promise<number[]> {
+        const userTournamentTimes =
+            await this.userTournamentTimeRepository.find({
+                where: { user: { id: userId } },
+            });
 
+        return userTournamentTimes.map(
+            (userTournamentTime) => userTournamentTime.tournamentTime.id
+        );
+    }
+
+    create(userInstance: User, tournamentTimeInstance: TournamentTime): Promise<UserTournamentTime> {
+        const userTournamentTimeInstance = this.userTournamentTimeRepository.create({
+           user: userInstance,
+           tournamentTime: tournamentTimeInstance 
+        });
+
+        return this.userTournamentTimeRepository.save(userTournamentTimeInstance);
+    }
+}

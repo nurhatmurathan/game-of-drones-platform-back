@@ -14,7 +14,7 @@ export class UserTournamentTime {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ name: "place", type: "integer", default: null })
+    @Column({ name: "place", type: "integer", default: null, nullable: true })
     place: number;
 
     @ManyToOne(

@@ -36,8 +36,7 @@ export class TournamentController {
         const userInstance = await this.userService.findOneById(
             request.user.sub
         );
-        const language =
-            this.utilService.getLanguageFromHeaders(request);
+        const language = this.utilService.getLanguageFromHeaders(request);
 
         const tournamentListDto = this.tournamentService.findLigaTournaments(
             language,
@@ -57,8 +56,7 @@ export class TournamentController {
         const userInstance = await this.userService.findOneById(
             request.user.sub
         );
-        const language =
-            this.utilService.getLanguageFromHeaders(request);
+        const language = this.utilService.getLanguageFromHeaders(request);
 
         const tournamentRetrieveDto = this.tournamentService.findOne(
             id,

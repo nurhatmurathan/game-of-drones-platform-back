@@ -4,18 +4,19 @@ import { Repository } from "typeorm";
 
 import { TournamentTime } from "./tournament.time.entity";
 import { TournamentTimeListDto } from "./dto/tournament.time.list.dto";
-import { UserService } from "../user/user.service";  
+import { UserService } from "../user/user.service";
 import { User } from "../user/user.entity";
+import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
+
 
 @Injectable()
 export class TournamentTimeService {
     constructor(
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-        private readonly userService: UserService
-    ) {}
+        private readonly userService: UserService,
+        private readonly userTournamentTimeService: UserTournamentTimeService
+    ) { }
 
     async findAllByTournamentId(
         tournamentId: number
@@ -38,24 +39,25 @@ export class TournamentTimeService {
         return dto;
     }
 
-    async reservePlaceForTournaments(id: number, userId: number): Promise<string> {
+    async reservePlaceForTournaments(id: number, userId: number): Promise<TournamentTime | null> {
         const userInstance = await this.userService.findOneById(userId);
         const tournamentTimeInstance = await this.tournamentTimeRepository.findOne({
-            where: {id: id}
+            where: { id: id }
         });
         const tournamentInstance = tournamentTimeInstance.tournament;
-        
-        if (userInstance.billingAccount.balance < tournamentInstance.price 
-            || tournamentTimeInstance.places <= 0) {
-            return "Sorry, you can't reserve place";
-          }
 
-        (await userInstance).billingAccount.balance -= tournamentInstance.price;
+        if (userInstance.billingAccount.balance < tournamentInstance.price
+            || tournamentTimeInstance.places <= 0) {
+            return null;
+        }
+
+        userInstance.billingAccount.balance -= tournamentInstance.price;
         tournamentTimeInstance.places -= 1;
 
-        await this.userRepository.save(userInstance);
+        await this.userService.save(userInstance);
         await this.tournamentTimeRepository.save(tournamentTimeInstance);
-        
-        return "Ok";
+        await this.userTournamentTimeService.create(userInstance, tournamentTimeInstance);
+
+        return tournamentTimeInstance;
     }
 }

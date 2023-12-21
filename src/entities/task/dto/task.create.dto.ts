@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { MultilingualText } from '../../multilingualtext/multilingualtext.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { MultilingualText } from "../../multilingualtext/multilingualtext.entity";
 
 export class TaskCreateDto {
     @ApiProperty()
@@ -16,7 +16,7 @@ export class TaskCreateDto {
 
     @ApiProperty()
     taskDescription: MultilingualText;
- 
+
     @ApiProperty()
     reward: string;
 }

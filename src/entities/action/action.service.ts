@@ -1,23 +1,22 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Injectable, Inject, forwardRef } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { In, Repository } from "typeorm";
 
-
-import { Action } from './action.entity';
-import { ActionCreateDto } from './dto/action.create.dto';
-import { MultilingualtextService } from '../multilingualtext/multilingualtext.service';
-import { TaskService } from '../task/task.service'; 
-import { UserTournamentTimeService } from '../user.tournament.time/user.tournament.time.service'; 
+import { Action } from "./action.entity";
+import { ActionCreateDto } from "./dto/action.create.dto";
+import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
+import { TaskService } from "../task/task.service";
+import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
 
 @Injectable()
 export class ActionService {
-    constructor( 
+    constructor(
         @InjectRepository(Action)
         private readonly actionRepository: Repository<Action>,
-        @Inject(forwardRef((() => TaskService)))
+        @Inject(forwardRef(() => TaskService))
         private readonly taskService: TaskService,
-        private readonly multilingualTextService: MultilingualtextService, 
-        private readonly userTournamentTimeService: UserTournamentTimeService    
+        private readonly multilingualTextService: MultilingualtextService,
+        private readonly userTournamentTimeService: UserTournamentTimeService
     ) {}
 
     async create(createActionDto: ActionCreateDto): Promise<Action> {
@@ -25,6 +24,7 @@ export class ActionService {
     
         const multilingualDescriptionInstance = await this.multilingualTextService.create(description)
         const userTournamentTimeInstance = await this.userTournamentTimeService.getInstance(userTournamentTimeId);
+
         const taskInstance = await this.taskService.getInstance(taskId);
 
         const newAction = await this.actionRepository.create({
@@ -35,15 +35,17 @@ export class ActionService {
         });
 
         return this.actionRepository.save(newAction);
-      }
+    }
 
-
-    countActionsInAllTournaments(taskId: number, listOfTournamentsIdsOfGivenUser: number[]): Promise<number> {
+    countActionsInAllTournaments(
+        taskId: number,
+        listOfTournamentsIdsOfGivenUser: number[]
+    ): Promise<number> {
         const count = this.actionRepository.count({
             where: {
                 task: { id: taskId },
-                userTournamentTime: { id: In(listOfTournamentsIdsOfGivenUser) }
-            }
+                userTournamentTime: { id: In(listOfTournamentsIdsOfGivenUser) },
+            },
         });
 
         return count;
@@ -58,7 +60,9 @@ export class ActionService {
             .groupBy('action.userTournamentTimeId')
             .getRawMany();
 
-        return counts.reduce((max, current) => Math.max(max, parseInt(current.count)), 0);
+        return counts.reduce(
+            (max, current) => Math.max(max, parseInt(current.count)),
+            0
+        );
     }
-
 }

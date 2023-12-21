@@ -1,7 +1,14 @@
-import { MultilingualText } from '../../entities/multilingualtext/multilingualtext.entity';
-import { Task } from '../../entities/task/task.entity';
-import { UserTournamentTime } from '../../entities/user.tournament.time/user.tournament.time.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
+import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
+import { Task } from "../../entities/task/task.entity";
+import { UserTournamentTime } from "../../entities/user.tournament.time/user.tournament.time.entity";
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    ManyToOne,
+    OneToOne,
+    JoinColumn,
+} from "typeorm";
 
 @Entity("action")
 export class Action {
@@ -10,14 +17,17 @@ export class Action {
 
     @OneToOne(() => MultilingualText)
     @JoinColumn()
-    description: MultilingualText
+    description: MultilingualText;
 
-    @Column({ name: 'time', type: 'timestamp' })
+    @Column({ name: "time", type: "timestamp" })
     time: Date;
 
-    @ManyToOne(() => UserTournamentTime, (userTournamentTime) => userTournamentTime.actions)
-    userTournamentTime: UserTournamentTime
+    @ManyToOne(
+        () => UserTournamentTime,
+        (userTournamentTime) => userTournamentTime.actions
+    )
+    userTournamentTime: UserTournamentTime;
 
     @ManyToOne(() => Task, (task) => task.actions)
-    task: Task
+    task: Task;
 }

@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class LigaListeDto{
+export class LigaListeDto {
     @ApiProperty()
-    id: number
+    id: number;
 
     @ApiProperty()
-    name: string
+    name: string;
 }

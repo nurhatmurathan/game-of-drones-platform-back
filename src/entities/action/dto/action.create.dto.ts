@@ -1,17 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
-import { MultilingualtextDto } from '../../multilingualtext/dto/multilingualtext.dto';
+import { MultilingualtextDto } from "../../multilingualtext/dto/multilingualtext.dto";
 
 export class ActionCreateDto {
     @ApiProperty()
-    description: MultilingualtextDto
-  
+    description: MultilingualtextDto;
+
     @ApiProperty()
-    time: Date;  
+    time: Date;
 
     @ApiProperty()
     userTournamentTimeId: number;
-    
+
     @ApiProperty()
     taskId: number;
 }

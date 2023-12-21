@@ -1,50 +1,50 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { Liga } from "./liga.entity";
 import { LigaCreateDto } from "./dto/liga.create.dto";
 import { LigaListeDto } from "./dto/liga.list.dto";
 import { LigaRetrieveDto } from "./dto/liga.retrieve.dto";
-import { MultilingualtextService } from '../multilingualtext/multilingualtext.service';
-
+import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 
 @Injectable()
-export class LigaService{
+export class LigaService {
     constructor(
         @InjectRepository(Liga)
         private readonly ligaRepository: Repository<Liga>,
         private readonly multilingualTextService: MultilingualtextService
-      ) {}
+    ) {}
 
-      async findAll(): Promise<LigaListeDto[]> {
-        return await this.ligaRepository.find()
-      }
+    async findAll(): Promise<LigaListeDto[]> {
+        return await this.ligaRepository.find();
+    }
 
-      async findOne(id: number, language: string): Promise<LigaRetrieveDto>{
+    async findOne(id: number, language: string): Promise<LigaRetrieveDto> {
         const ligaInstance = await this.ligaRepository.findOne({
-          where: { id },
-          relations: ['description'], 
+            where: { id },
+            relations: ["description"],
         });
 
-        var ligaDescription = ligaInstance.description[language]; 
+        var ligaDescription = ligaInstance.description[language];
         return {
-          id: ligaInstance.id,
-          name: ligaInstance.name,
-          description: ligaDescription
+            id: ligaInstance.id,
+            name: ligaInstance.name,
+            description: ligaDescription,
         };
-      }
+    }
 
-      async create(ligaData: LigaCreateDto): Promise<LigaCreateDto>{
-        const { description, ...liga } = ligaData
+    async create(ligaData: LigaCreateDto): Promise<LigaCreateDto> {
+        const { description, ...liga } = ligaData;
 
-        const multilingualtext = await this.multilingualTextService.create(description)
+        const multilingualtext =
+            await this.multilingualTextService.create(description);
 
         const newLiga = this.ligaRepository.create({
-          ...liga,
-          description: multilingualtext
+            ...liga,
+            description: multilingualtext,
         });
-        
+
         return await this.ligaRepository.save(newLiga);
       }
 

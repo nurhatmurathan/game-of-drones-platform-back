@@ -11,7 +11,7 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>
-    ) {}
+    ) { }
 
     async create(userData: UserCreateDto) {
         const { password, ...res } = userData;
@@ -50,5 +50,9 @@ export class UserService {
 
     async profileEdit(userData) {
         return await this.userRepository.save(userData);
+    }
+
+    save(userInstance: User): void {
+        this.userRepository.save(userInstance);
     }
 }
