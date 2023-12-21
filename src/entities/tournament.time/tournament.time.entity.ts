@@ -17,7 +17,7 @@ export class TournamentTime {
     @Column({ name: "start_time", type: "timestamp" })
     startTime: Date;
 
-    @Column({ name: "places", type: "integer", default: 0 })
+    @Column({ name: "places", type: "integer" })
     places: number;
 
     @Column({ name: "reserved", type: "integer", default: 0 })
