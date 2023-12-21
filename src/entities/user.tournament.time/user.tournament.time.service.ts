@@ -1,21 +1,81 @@
-import { UserFutureTournamnetDto } from "./dto/user.tournament.time.future.dto";
-import { Injectable } from "@nestjs/common";
+import { UserFutureTournamnetTimeDto } from "./dto/user.tournament.time.future.dto";
+import {
+    BadRequestException,
+    ConflictException,
+    HttpStatus,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { UserTournamentTime } from "./user.tournament.time.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, MoreThan, Repository } from "typeorm";
 import { User } from "../user/user.entity";
+
+import { TournamentTimeService } from "../tournament.time/tournament.time.service";
 import { TournamentTime } from "../tournament.time/tournament.time.entity";
 
 @Injectable()
 export class UserTournamentTimeService {
     constructor(
         @InjectRepository(UserTournamentTime)
-        private userTournamentTimeRepository: Repository<UserTournamentTime>
-    ) {}
+        private readonly userTournamentTimeRepository: Repository<UserTournamentTime>,
+        private readonly tournamentTimeService: TournamentTimeService
+    ) { }
+
+    async create(
+        userId: number,
+        tournamentTimeId: number
+    ): Promise<{
+        userId: number;
+        tournamentTimeId: number;
+        reservedPlaces: number;
+    }> {
+
+        const reserved = await this.tournamentTimeService.reservePlaceInTheTournament(tournamentTimeId, userId);
+
+        try {
+            await this.userTournamentTimeRepository.manager.transaction(
+                async (entityManager) => {
+                    await entityManager.save(UserTournamentTime, {
+                        user: { id: userId },
+                        tournamentTime: { id: tournamentTimeId },
+                    });
+                }
+            );
+
+            return {
+                userId,
+                tournamentTimeId,
+                reservedPlaces: reserved,
+            };
+        } catch (error) {
+            if (error.code === "23505") {
+                throw new ConflictException(
+                    "This user is already registered for this tournament time."
+                );
+            }
+            throw error;
+        }
+    }
+
+    private validateTournamentTimeInstance(
+        tournamentTimeInstance: TournamentTime,
+        tournamentTimeId: number
+    ): void {
+        if (!tournamentTimeInstance) {
+            throw new NotFoundException(
+                `TournamentTime with ID ${tournamentTimeId} not found.`
+            );
+        }
+
+        if (tournamentTimeInstance.places <= tournamentTimeInstance.reserved) {
+            throw new BadRequestException("No available places.");
+        }
+    }
 
     async userFutureTournamentTimes(
         userId: number
-    ): Promise<UserFutureTournamnetDto[]> {
+    ): Promise<UserFutureTournamnetTimeDto[]> {
         return await Promise.all(
             (await this.userTournamentTimes(userId, false)).map(
                 async (userTournamentTime) =>
@@ -43,11 +103,9 @@ export class UserTournamentTimeService {
             where: {
                 user: { id: userId },
                 tournamentTime: {
-                    tournament: {
-                        startDate: pasted
-                            ? LessThan(currentDate)
-                            : MoreThan(currentDate),
-                    },
+                    startTime: pasted
+                        ? LessThan(currentDate)
+                        : MoreThan(currentDate),
                 },
             },
             relations: ["tournamentTime", "tournamentTime.tournament"],
@@ -55,11 +113,9 @@ export class UserTournamentTimeService {
     }
 
 
-    // create(tournamentTime: TournamentTime, )
-
     private mapUserFutureTournamentTime(
         userTournamentTime: UserTournamentTime
-    ): UserFutureTournamnetDto {
+    ): UserFutureTournamnetTimeDto {
         return {
             id: userTournamentTime.id,
             tournamentTime: {
@@ -109,14 +165,5 @@ export class UserTournamentTimeService {
         return userTournamentTimes.map(
             (userTournamentTime) => userTournamentTime.tournamentTime.id
         );
-    }
-
-    create(userInstance: User, tournamentTimeInstance: TournamentTime): Promise<UserTournamentTime> {
-        const userTournamentTimeInstance = this.userTournamentTimeRepository.create({
-           user: userInstance,
-           tournamentTime: tournamentTimeInstance 
-        });
-
-        return this.userTournamentTimeRepository.save(userTournamentTimeInstance);
     }
 }

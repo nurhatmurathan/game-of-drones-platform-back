@@ -1,12 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { TournamentTime } from "./tournament.time.entity";
 import { TournamentTimeListDto } from "./dto/tournament.time.list.dto";
 import { UserService } from "../user/user.service";
+import { TournamnetTimeCreateDto } from "./dto/tournament.time.create.dto";
 import { User } from "../user/user.entity";
-import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
+import { Tournament } from "../tournament/tournament.entity";
 
 
 @Injectable()
@@ -15,8 +16,17 @@ export class TournamentTimeService {
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
         private readonly userService: UserService,
-        private readonly userTournamentTimeService: UserTournamentTimeService
     ) { }
+
+    async findOne(id: number) {
+        return await this.tournamentTimeRepository.findOne({ where: { id } });
+    }
+
+    async create(
+        tournamentTimeData: TournamnetTimeCreateDto
+    ): Promise<TournamentTime> {
+        return await this.tournamentTimeRepository.save(tournamentTimeData);
+    }
 
     async findAllByTournamentId(
         tournamentId: number
@@ -39,25 +49,54 @@ export class TournamentTimeService {
         return dto;
     }
 
-    async reservePlaceForTournaments(id: number, userId: number): Promise<TournamentTime | null> {
+    async reservePlaceInTheTournament(id: number, userId: number): Promise<number> {
         const userInstance = await this.userService.findOneById(userId);
         const tournamentTimeInstance = await this.tournamentTimeRepository.findOne({
             where: { id: id }
         });
         const tournamentInstance = tournamentTimeInstance.tournament;
 
-        if (userInstance.billingAccount.balance < tournamentInstance.price
-            || tournamentTimeInstance.places <= 0) {
-            return null;
-        }
+
+        this.validateTournamentTimeInstance(tournamentTimeInstance, tournamentTimeInstance.id,
+            userInstance.billingAccount.balance, tournamentInstance.price);
+        this.takeThePlaceAndSubtractBalance(userInstance, tournamentTimeInstance, tournamentInstance);
+
+        return tournamentTimeInstance.reserved;
+    }
+
+    private async takeThePlaceAndSubtractBalance(
+        userInstance: User,
+        tournamentTimeInstance: TournamentTime,
+        tournamentInstance: Tournament
+    ): Promise<void> {
 
         userInstance.billingAccount.balance -= tournamentInstance.price;
-        tournamentTimeInstance.places -= 1;
+        tournamentTimeInstance.places++;
+        tournamentTimeInstance.reserved--;
 
-        await this.userService.save(userInstance);
+        this.userService.save(userInstance);
         await this.tournamentTimeRepository.save(tournamentTimeInstance);
-        await this.userTournamentTimeService.create(userInstance, tournamentTimeInstance);
-
-        return tournamentTimeInstance;
     }
+
+
+    private validateTournamentTimeInstance(
+        tournamentTimeInstance: TournamentTime,
+        tournamentTimeId: number,
+        userBalance: number,
+        tournamentPrice: number
+    ): void {
+        if (!tournamentTimeInstance) {
+            throw new NotFoundException(
+                `TournamentTime with ID ${tournamentTimeId} not found.`
+            );
+        }
+
+        if (userBalance < tournamentPrice)
+            throw new BadRequestException("You don't have enough balance.");
+
+
+        if (tournamentTimeInstance.places <= tournamentTimeInstance.reserved)
+            throw new BadRequestException("No available places.");
+    }
+
 }

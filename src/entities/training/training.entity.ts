@@ -16,6 +16,12 @@ export class Training {
     @Column({ name: "start_time", type: "time", nullable: true })
     startTime: Date;
 
+    @Column({ name: "places", type: "integer" })
+    places: number;
+
+    @Column({ name: "reserved", type: "integer", default: 0 })
+    reserved: number;
+
     @ManyToOne(() => Route, (route) => route.trainings)
     route: Route;
 

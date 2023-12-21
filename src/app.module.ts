@@ -14,6 +14,7 @@ import { TournamentTimeModule } from "./entities/tournament.time/tournament.time
 import { TaskModule } from "./entities/task/task.module";
 import { ActionModule } from "./entities/action/action.module";
 import { UserTournamentTimeModule } from "./entities/user.tournament.time/user.tournament.time.module";
+import { TrainingModule } from "./entities/training/training.module";
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import { UserTournamentTimeModule } from "./entities/user.tournament.time/user.t
         UserTournamentTimeModule,
         TaskModule,
         ActionModule,
+        TrainingModule,
     ],
     controllers: [AuthController],
     providers: [AuthService],
