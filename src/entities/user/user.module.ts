@@ -1,3 +1,4 @@
+import { IsEmailAlreadyExistConstraint } from "./../../common/validations/is-email-exist.constraint";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./user.entity";

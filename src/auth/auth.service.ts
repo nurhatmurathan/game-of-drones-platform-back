@@ -13,7 +13,7 @@ export class AuthService {
     ) {}
 
     async signIn(userData: UserLoginDto) {
-        const user = await this.userService.findOne(userData.email);
+        const user = await this.userService.findOneByEmail(userData.email);
 
         if (
             !user ||

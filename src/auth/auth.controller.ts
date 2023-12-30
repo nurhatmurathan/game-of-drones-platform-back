@@ -48,6 +48,7 @@ export class AuthController {
 
     @Post("register")
     register(@Body() userData: AuthRegisterDto) {
+        console.log(userData);
         return this.authService.register(userData);
     }
 }

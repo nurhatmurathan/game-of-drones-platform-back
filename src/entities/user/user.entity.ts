@@ -31,17 +31,20 @@ export class User {
     })
     middleName: string;
 
-    @Column({ name: "email", type: "varchar", length: 100 })
+    @Column({ name: "email", type: "varchar", length: 100, unique: true })
     email: string;
 
     @Column({ name: "password", type: "varchar" })
     password: string;
 
-    @Column({ name: "iin", type: "varchar", length: 12 })
+    @Column({ name: "iin", type: "varchar", length: 12, unique: true })
     iin: string;
 
     @Column({ name: "avatar", type: "varchar", nullable: true })
-    avatar: String;
+    avatar: string;
+
+    @Column({ name: "is_admin", type: "boolean", default: false })
+    isAdmin: boolean;
 
     @OneToOne(() => BillingAccount)
     @JoinColumn()
