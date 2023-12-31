@@ -1,3 +1,4 @@
+import { ValidatorModule } from "./common/validations/validator.module";
 import { Get, Module } from "@nestjs/common";
 import { UserModule } from "./entities/user/user.module";
 import { ConfigModule } from "./config.module";
@@ -20,6 +21,7 @@ import { TrainingModule } from "./entities/training/training.module";
     imports: [
         DatabaseModule,
         ConfigModule,
+        ValidatorModule,
         UserModule,
         LigaModule,
         AuthModule,

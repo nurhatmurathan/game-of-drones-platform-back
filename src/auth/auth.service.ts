@@ -10,7 +10,9 @@ export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService
-    ) {}
+    ) {
+        console.log("UserService in Auth:", this.userService);
+    }
 
     async signIn(userData: UserLoginDto) {
         const user = await this.userService.findOneByEmail(userData.email);

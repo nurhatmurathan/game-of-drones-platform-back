@@ -6,19 +6,19 @@ import {
 } from "class-validator";
 import { Injectable } from "@nestjs/common";
 
-@ValidatorConstraint({ name: "IsEmailAlreadyExist", async: true })
+@ValidatorConstraint({ name: "IsIINAlreadyExist", async: true })
 @Injectable()
-export class IsEmailAlreadyExist implements ValidatorConstraintInterface {
+export class IsIINAlreadyExist implements ValidatorConstraintInterface {
     constructor(private readonly userService: UserService) {}
 
-    async validate(email: string, args: ValidationArguments) {
-        return await this.userService.findOneByEmail(email).then((user) => {
+    async validate(iin: string, args: ValidationArguments) {
+        return await this.userService.findOneByIIN(iin).then((user) => {
             if (user) return false;
             return true;
         });
     }
 
     defaultMessage(validationArguments?: ValidationArguments): string {
-        return "Email is already in use";
+        return "IIN is already in use";
     }
 }

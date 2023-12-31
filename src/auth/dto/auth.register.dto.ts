@@ -1,4 +1,5 @@
-import { IsEmailAlreadyExistConstraint } from "./../../common/validations/is-email-exist.constraint";
+import { IsIINAlreadyExist } from "./../../common/validations/is-iin-exist.constraint";
+import { IsEmailAlreadyExist } from "./../../common/validations/is-email-exist.constraint";
 import { ApiProperty } from "@nestjs/swagger";
 import {
     IsEmail,
@@ -16,11 +17,13 @@ import { isInt8Array } from "util/types";
 export class AuthRegisterDto {
     @ApiProperty()
     @IsEmail()
+    @Validate(IsEmailAlreadyExist)
     email: string;
 
     @ApiProperty()
     @IsNumberString()
     @Length(12, 12, { message: "iin must be exactly 12 characters" })
+    @Validate(IsIINAlreadyExist)
     iin: string;
 
     @ApiProperty()
