@@ -46,9 +46,9 @@ export class LigaService {
         });
 
         return await this.ligaRepository.save(newLiga);
-      }
+    }
 
-      getInstance(id: number): Promise<Liga> {
-        return this.ligaRepository.findOne({where: {id: id }});
-      }
+    async getInstance(id: number): Promise<Liga> {
+        return await this.ligaRepository.findOne({ where: { id: id } });
+    }
 }
