@@ -7,7 +7,7 @@ import { error } from 'console';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-    catch(exception: any, host: ArgumentsHost) {
+    async catch(exception: any, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
 
         const response = ctx.getResponse<Response>();
@@ -18,26 +18,31 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
         if (exception instanceof HttpException) {
             status = exception.getStatus();
-            const errorResponse = exception.getResponse()
-            errorMessage = (errorResponse as HttpExceptionResponse).error || exception.message;
+            const errorResponse = exception.getResponse();
+
+            if (Array.isArray(errorResponse['message'])) {
+                errorMessage = errorResponse['message'].join(' | ');
+            } else {
+                errorMessage = exception.message ? exception.message : (errorResponse as HttpExceptionResponse)?.error;
+            }
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             errorMessage = 'Critical internal server error occured.';
         }
 
-        const errorResponse = this.getErrorResponse(status, errorMessage, request);
-        const errorLog = this.logError(errorResponse, request, exception);
-        this.writeErrorLogToFile(errorLog);
+        const errorResponse = await this.getErrorResponse(status, errorMessage, request);
+        const errorLog = await this.logError(errorResponse, request, exception);
+        await this.writeErrorLogToFile(errorLog);
 
         response.status(status).json(errorResponse);
     }
 
 
-    private getErrorResponse(
+    private async getErrorResponse(
         status: HttpStatus,
         errorMessage: string,
         request: Request
-    ): CustomHttpExceptionResponse {
+    ): Promise<CustomHttpExceptionResponse> {
 
         const errorResponse: CustomHttpExceptionResponse = {
             statusCode: status,
@@ -50,25 +55,27 @@ export class AllExceptionsFilter implements ExceptionFilter {
         return errorResponse;
     }
 
-    private logError(
+    private async logError(
         errorResponse: CustomHttpExceptionResponse,
         request: Request,
         exception: unknown
-    ): string {
+    ): Promise<string> {
         const { statusCode, error } = errorResponse;
         const { url, method } = request;
+
 
         const user = request['user'] ? JSON.stringify(request['user']) : 'User not available';
         const errorLog = `Response code: ${statusCode} - Method: ${method} - URL: ${url}\n
             User: ${JSON.stringify(user)}\n
             Exception: ${exception instanceof HttpException ? exception.stack : error}\n\n`;
 
+
         return errorLog;
     }
 
-    private writeErrorLogToFile(
+    private async writeErrorLogToFile(
         errorLog: string
-    ): void {
+    ): Promise<void> {
         fs.appendFile('error.log', errorLog, 'utf8', (error) => {
             if (error) throw error;
         });

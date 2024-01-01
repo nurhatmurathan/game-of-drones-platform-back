@@ -11,7 +11,7 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>
-    ) {}
+    ) { }
 
     async create(userData: UserCreateDto) {
         const { password, ...res } = userData;
@@ -48,6 +48,7 @@ export class UserService {
             firstName: user.firstName,
             lastName: user.lastName,
             avatar: user.avatar || null,
+            liga: user.liga
         };
     }
 
