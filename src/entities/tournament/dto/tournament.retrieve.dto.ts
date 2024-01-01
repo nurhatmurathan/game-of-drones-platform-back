@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { LigaRetrieveDto } from "../../liga/dto/liga.retrieve.dto";
 import { RouteRetrieveDto } from "../../route/dto/route.retrieve.dto";
 import { TournamentTimeListDto } from "../../tournament.time/dto/tournament.time.list.dto";
-import { IsDate, IsInt, IsString } from "class-validator";
+import { IsDate, IsInt, IsNumber, IsString } from "class-validator";
 
 
 export class TournamentRetrieveDto {
@@ -19,8 +19,8 @@ export class TournamentRetrieveDto {
     description: string
 
     @ApiProperty()
-    @IsDate()
-    startDate: Date;
+    @IsNumber()
+    startDate: number;
 
     @ApiProperty()
     @IsInt()

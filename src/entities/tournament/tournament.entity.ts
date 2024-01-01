@@ -9,7 +9,7 @@ import {
     ManyToOne,
     OneToMany,
     OneToOne,
-    JoinColumn
+    JoinColumn,
 } from "typeorm";
 
 @Entity("tournament")
@@ -20,10 +20,10 @@ export class Tournament {
     @Column({ name: "name", type: "varchar", length: 50 })
     name: string;
 
-    @Column({ name: "start_date", type: "date", nullable: true })
-    startDate: Date;
+    @Column({ name: "start_date", type: "bigint" })
+    startDate: number;
 
-    @Column({ name: "price", type: "money" })
+    @Column({ name: "price", type: "bigint" })
     price: number;
 
     @ManyToOne(() => Liga, (liga) => liga.tournaments)

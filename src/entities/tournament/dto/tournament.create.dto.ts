@@ -1,9 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MultilingualtextDto } from 'src/entities/multilingualtext/dto/multilingualtext.dto';
+import { IsNumber, IsString } from "class-validator";
+
 
 
 export class TournamentCreateDto {
     @ApiProperty()
+    @IsString()
     name: string;
 
     @ApiProperty()
@@ -13,7 +16,8 @@ export class TournamentCreateDto {
     coverDescription: MultilingualtextDto;
 
     @ApiProperty()
-    startDate: Date;
+    @IsNumber()
+    startDate: number;
 
     @ApiProperty()
     price: number;

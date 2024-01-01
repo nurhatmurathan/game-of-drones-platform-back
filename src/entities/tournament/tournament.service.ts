@@ -45,7 +45,7 @@ export class TournamentService {
             relations: ["liga", "route", "coverDescription"],
             where: {
                 liga: { id: userInstance.liga.id },
-                // startDate: MoreThanOrEqual(new Date())
+                startDate: MoreThanOrEqual(Date.now()),
             },
         });
 
@@ -78,8 +78,9 @@ export class TournamentService {
         return this.mapTournamentToRetrieveDto(tournament, language);
     }
 
-
-    async create(createTournamentDto: TournamentCreateDto): Promise<Tournament> {
+    async create(
+        createTournamentDto: TournamentCreateDto
+    ): Promise<Tournament> {
         const { ligaId, routeId, description, coverDescription, ...tournament } = createTournamentDto;
 
         const ligaInstance = await this.ligaService.getInstance(ligaId);
@@ -94,7 +95,7 @@ export class TournamentService {
             description: multilingualTextDescriptionInstance,
             coverDescription: multilingualTextCoverDescriptionInstance,
             liga: ligaInstance,
-            route: routeInstance
+            route: routeInstance,
         });
 
         return this.tournamentRepository.save(newTournaments);
