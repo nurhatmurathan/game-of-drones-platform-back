@@ -26,7 +26,7 @@ export class TournamentController {
         private readonly tournamentService: TournamentService,
         private readonly utilService: UtilService,
         private readonly userService: UserService
-    ) {}
+    ) { }
 
     @Get()
     @ApiBearerAuth()
@@ -64,5 +64,27 @@ export class TournamentController {
             userInstance.liga.id
         );
         return tournamentRetrieveDto;
+    }
+
+
+    @Get("liga/:id")
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.ACCEPTED)
+    async getTournamentsById(
+        @Param("id", ParseIntPipe) ligaId: number,
+        @Req() request
+    ): Promise<TournamentListDto[]> {
+        const userInstance = await this.userService.findOneById(
+            request.user.sub
+        );
+        const language = this.utilService.getLanguageFromHeaders(request);
+
+        const tournamentListDto = this.tournamentService.findLigaTournaments(
+            language,
+            ligaId
+        );
+        return tournamentListDto;
+
     }
 }
