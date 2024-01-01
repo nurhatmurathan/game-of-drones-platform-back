@@ -13,13 +13,14 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserTournamentTimeService } from "./user.tournament.time.service";
 import { AuthGuard } from "src/auth/auth.guard";
 import { UserTournamnetTimeCreateDto } from "./dto/user.tournament.time.create.dto";
+import { request } from "http";
 
 @ApiTags("UserTournamentTime")
 @Controller("UserTournamentTime")
 export class UserTournamentTimeController {
     constructor(
         private readonly usertournamenttimeService: UserTournamentTimeService
-    ) {}
+    ) { }
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
@@ -44,7 +45,7 @@ export class UserTournamentTimeController {
     @HttpCode(HttpStatus.ACCEPTED)
     async userFutureTournamneTimes(@Request() req) {
         return await this.usertournamenttimeService.userFutureTournamentTimes(
-            req.user.sub
+            req
         );
     }
 
@@ -54,7 +55,7 @@ export class UserTournamentTimeController {
     @HttpCode(HttpStatus.ACCEPTED)
     async userPastedTournamneTimes(@Request() req) {
         return await this.usertournamenttimeService.userPastedTournamentTimes(
-            req.user.sub
+            req
         );
     }
 }

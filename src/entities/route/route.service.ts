@@ -13,7 +13,7 @@ export class RouteService {
         @InjectRepository(Route)
         private readonly routeRepository: Repository<Route>,
         private readonly multilingualTextService: MultilingualtextService
-    ) {}
+    ) { }
 
     async findOne(id: number, language: string): Promise<RouteRetrieveDto> {
         const routeInstance = await this.routeRepository.findOne({
@@ -47,7 +47,7 @@ export class RouteService {
     }
 
     getInstance(id: number): Promise<Route> {
-        return this.routeRepository.findOne({where: {id: id}});
+        return this.routeRepository.findOne({ where: { id: id } });
     }
 
 }

@@ -22,7 +22,7 @@ export class RouteController {
     constructor(
         private readonly routeSerevice: RouteService,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
     @Get("/:id")
     @HttpCode(HttpStatus.ACCEPTED)

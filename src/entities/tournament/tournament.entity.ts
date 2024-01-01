@@ -1,12 +1,15 @@
 import { Liga } from "../../entities/liga/liga.entity";
 import { Route } from "../../entities/route/route.entity";
 import { TournamentTime } from "../../entities/tournament.time/tournament.time.entity";
+import { MultilingualText } from "../multilingualtext/multilingualtext.entity";
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
     ManyToOne,
     OneToMany,
+    OneToOne,
+    JoinColumn
 } from "typeorm";
 
 @Entity("tournament")
@@ -17,7 +20,7 @@ export class Tournament {
     @Column({ name: "name", type: "varchar", length: 50 })
     name: string;
 
-    @Column({ name: "start_date", type: "date" })
+    @Column({ name: "start_date", type: "date", nullable: true })
     startDate: Date;
 
     @Column({ name: "price", type: "money" })
@@ -28,6 +31,14 @@ export class Tournament {
 
     @ManyToOne(() => Route, (route) => route.tournaments)
     route: Route;
+
+    @OneToOne(() => MultilingualText)
+    @JoinColumn()
+    coverDescription: MultilingualText;
+
+    @OneToOne(() => MultilingualText)
+    @JoinColumn()
+    description: MultilingualText;
 
     @OneToMany(
         () => TournamentTime,

@@ -12,20 +12,18 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-import { UtilService } from "../../utils/util.service";
-import { UserService } from "../user/user.service";
 import { TournamentService } from "./tournament.service";
 import { TournamentListDto } from "./dto/tournament.list.dto";
 import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
+import { TournamentCreateDto } from "./dto/tournament.create.dto";
 import { AuthGuard } from "../../auth/auth.guard";
+import { Tournament } from "./tournament.entity";
 
 @ApiTags("Tournament")
 @Controller("tournament")
 export class TournamentController {
     constructor(
         private readonly tournamentService: TournamentService,
-        private readonly utilService: UtilService,
-        private readonly userService: UserService
     ) { }
 
     @Get()
@@ -33,14 +31,9 @@ export class TournamentController {
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.ACCEPTED)
     async findAll(@Req() request): Promise<TournamentListDto[]> {
-        const userInstance = await this.userService.findOneById(
-            request.user.sub
-        );
-        const language = this.utilService.getLanguageFromHeaders(request);
-
+        console.log("Step in Controller");
         const tournamentListDto = this.tournamentService.findLigaTournaments(
-            language,
-            userInstance.liga.id
+            request
         );
         return tournamentListDto;
     }
@@ -53,38 +46,33 @@ export class TournamentController {
         @Param("id", ParseIntPipe) id: number,
         @Req() request
     ): Promise<TournamentRetrieveDto> {
-        const userInstance = await this.userService.findOneById(
-            request.user.sub
-        );
-        const language = this.utilService.getLanguageFromHeaders(request);
-
         const tournamentRetrieveDto = this.tournamentService.findOne(
             id,
-            language,
-            userInstance.liga.id
+            request
         );
         return tournamentRetrieveDto;
     }
 
 
-    @Get("liga/:id")
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard)
-    @HttpCode(HttpStatus.ACCEPTED)
-    async getTournamentsById(
-        @Param("id", ParseIntPipe) ligaId: number,
-        @Req() request
-    ): Promise<TournamentListDto[]> {
-        const userInstance = await this.userService.findOneById(
-            request.user.sub
-        );
-        const language = this.utilService.getLanguageFromHeaders(request);
-
-        const tournamentListDto = this.tournamentService.findLigaTournaments(
-            language,
-            ligaId
-        );
-        return tournamentListDto;
-
+    @Post()
+    @HttpCode(HttpStatus.CREATED)
+    create(@Body() tournamentData: TournamentCreateDto): Promise<Tournament> {
+        return this.tournamentService.create(tournamentData)
     }
+
+
+    // @Get("liga/:id")
+    // @ApiBearerAuth()
+    // @UseGuards(AuthGuard)
+    // @HttpCode(HttpStatus.ACCEPTED)
+    // async getTournamentsByLigaId(
+    //     @Param("id", ParseIntPipe) ligaId: number,
+    //     @Req() request
+    // ): Promise<TournamentListDto[]> {
+    //     const tournamentListDto = this.tournamentService.findLigaTournaments(
+    //         request
+    //     );
+    //     return tournamentListDto;
+
+    // }
 }

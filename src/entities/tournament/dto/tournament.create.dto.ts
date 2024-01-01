@@ -1,8 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { MultilingualtextDto } from 'src/entities/multilingualtext/dto/multilingualtext.dto';
 
-export class TournamnetCreateDto {
+
+export class TournamentCreateDto {
     @ApiProperty()
     name: string;
+
+    @ApiProperty()
+    description: MultilingualtextDto;
+
+    @ApiProperty()
+    coverDescription: MultilingualtextDto;
 
     @ApiProperty()
     startDate: Date;

@@ -9,6 +9,7 @@ import { TournamentService } from "./tournament.service";
 import { UtilModule } from "../../utils/util.module";
 import { UserModule } from "../user/user.module";
 import { TournamentTimeModule } from "../tournament.time/tournament.time.module";
+import { MultilingualtextModule } from "../multilingualtext/multilingualtext.module";
 
 @Module({
     imports: [
@@ -18,8 +19,9 @@ import { TournamentTimeModule } from "../tournament.time/tournament.time.module"
         UtilModule,
         UserModule,
         TournamentTimeModule,
+        MultilingualtextModule
     ],
     controllers: [TournamentController],
     providers: [TournamentService],
 })
-export class TournamentModule {}
+export class TournamentModule { }
