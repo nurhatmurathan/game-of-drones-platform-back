@@ -17,8 +17,8 @@ export class Tournament {
     @Column({ name: "name", type: "varchar", length: 50 })
     name: string;
 
-    @Column({ name: "start_date", type: "date" })
-    startDate: Date;
+    @Column({ name: "start_date", type: "bigint" })
+    startDate: number;
 
     @Column({ name: "price", type: "money" })
     price: number;

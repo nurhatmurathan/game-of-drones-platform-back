@@ -5,7 +5,7 @@ import { Repository, MoreThanOrEqual } from "typeorm";
 import { Tournament } from "./tournament.entity";
 import { TournamentListDto } from "./dto/tournament.list.dto";
 import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
-import { TournamnetCreateDto } from './dto/tournament.create.dto'; 
+import { TournamnetCreateDto } from "./dto/tournament.create.dto";
 import { LigaService } from "../liga/liga.service";
 import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
@@ -26,9 +26,9 @@ export class TournamentService {
     ): Promise<TournamentListDto[]> {
         const tournaments = await this.tournamentRepository.find({
             relations: ["liga", "route"],
-            where: { 
+            where: {
                 liga: { id: ligaId },
-                startDate: MoreThanOrEqual(new Date())
+                startDate: MoreThanOrEqual(Date.now()),
             },
         });
 
@@ -54,19 +54,20 @@ export class TournamentService {
         return this.mapTournamentToRetrieveDto(tournament, language);
     }
 
+    async create(
+        createTournamentDto: TournamnetCreateDto
+    ): Promise<Tournament> {
+        const { ligaId, routeId, ...tournament } = createTournamentDto;
 
-    async create(createTournamentDto: TournamnetCreateDto): Promise<Tournament> {
-        const { ligaId, routeId, ...tournament} = createTournamentDto;
-        
         const ligaInstance = await this.ligaService.getInstance(ligaId);
         const routeInstance = await this.routeService.getInstance(routeId);
-    
+
         const newTournaments = await this.tournamentRepository.create({
             ...tournament,
             liga: ligaInstance,
-            route: routeInstance
+            route: routeInstance,
         });
-        
+
         return this.tournamentRepository.save(newTournaments);
     }
 

@@ -17,8 +17,6 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
     // app.useGlobalFilters(new AllExceptionsFilter());
 
-    useContainer(app.select(AppModule), { fallbackOnErrors: true });
-
     const config = new DocumentBuilder()
         .addBearerAuth()
         .setTitle("Game Of Drones")

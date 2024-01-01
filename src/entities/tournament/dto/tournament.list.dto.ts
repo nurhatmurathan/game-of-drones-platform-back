@@ -11,7 +11,7 @@ export class TournamentListDto {
     name: string;
 
     @ApiProperty()
-    startDate: Date;
+    startDate: number;
 
     @ApiProperty()
     price: number;

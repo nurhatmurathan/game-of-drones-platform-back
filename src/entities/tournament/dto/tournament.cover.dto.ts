@@ -6,5 +6,5 @@ export class TournamnetCoverDto {
     @ApiProperty()
     name: string;
     @ApiProperty()
-    startDate: Date;
+    startDate: number;
 }

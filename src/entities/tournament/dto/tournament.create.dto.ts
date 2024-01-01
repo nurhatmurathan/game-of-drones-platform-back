@@ -1,11 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNumber, IsString } from "class-validator";
 
 export class TournamnetCreateDto {
     @ApiProperty()
+    @IsString()
     name: string;
 
     @ApiProperty()
-    startDate: Date;
+    @IsNumber()
+    startDate: number;
 
     @ApiProperty()
     price: number;
