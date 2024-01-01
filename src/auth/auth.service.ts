@@ -49,10 +49,7 @@ export class AuthService {
     }
 
     async register(userData: AuthRegisterDto) {
-        console.log("Step 1");
         await this.userService.create(userData);
-
-        console.log("Step 2");
         return this.signIn(userData);
     }
 }

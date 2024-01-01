@@ -42,6 +42,7 @@ export class UserService {
     async profileCover(tokenPayload: any) {
         const user = await this.userRepository.findOne({
             where: { id: tokenPayload.sub },
+            relations: ["liga"],
         });
 
         return {
