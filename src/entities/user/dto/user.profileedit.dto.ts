@@ -1,6 +1,6 @@
+import { Liga } from "./../../liga/liga.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsString, IsUrl } from "class-validator";
-import { Liga } from "src/entities/liga/liga.entity";
 
 export class UserProfileEditDto {
     @ApiProperty()

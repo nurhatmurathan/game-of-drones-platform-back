@@ -1,3 +1,4 @@
+import { AuthGuard } from "./../../auth/auth.guard";
 import {
     Body,
     Controller,
@@ -11,7 +12,6 @@ import {
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UserCreateDto } from "./dto/user.create.dto";
-import { AuthGuard } from "src/auth/auth.guard";
 import { UserProfileEditDto } from "./dto/user.profileedit.dto";
 
 @ApiTags("User")
