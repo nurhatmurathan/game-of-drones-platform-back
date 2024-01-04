@@ -1,17 +1,20 @@
 import { Liga } from "./../../liga/liga.entity";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsString, IsUrl } from "class-validator";
+import { IsInt, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class UserProfileEditDto {
-    @ApiProperty()
+    @ApiProperty({ required: false })
+    @IsOptional()
     @IsString()
     lastName: string;
 
-    @ApiProperty()
+    @ApiProperty({ required: false })
+    @IsOptional()
     @IsString()
     firstName: string;
 
-    @ApiProperty()
+    @ApiProperty({ required: false })
+    @IsOptional()
     @IsString()
     middleName: string;
 
@@ -19,7 +22,8 @@ export class UserProfileEditDto {
     @IsInt()
     liga: Liga;
 
-    @ApiProperty()
+    @ApiProperty({ required: false })
+    @IsOptional()
     @IsUrl()
     avatar: string;
 }
