@@ -50,7 +50,9 @@ export class User {
     @JoinColumn()
     billingAccount: BillingAccount;
 
-    @ManyToOne(() => Liga, (liga) => liga.users)
+    @ManyToOne(() => Liga, (liga) => liga.users, {
+        onDelete: 'SET NULL'
+    })
     liga: Liga;
 
     @OneToMany(

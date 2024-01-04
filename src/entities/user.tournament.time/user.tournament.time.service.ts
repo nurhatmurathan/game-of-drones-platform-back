@@ -62,21 +62,6 @@ export class UserTournamentTimeService {
         }
     }
 
-    private validateTournamentTimeInstance(
-        tournamentTimeInstance: TournamentTime,
-        tournamentTimeId: number
-    ): void {
-        if (!tournamentTimeInstance) {
-            throw new NotFoundException(
-                `TournamentTime with ID ${tournamentTimeId} not found.`
-            );
-        }
-
-        if (tournamentTimeInstance.places <= tournamentTimeInstance.reserved) {
-            throw new BadRequestException("No available places.");
-        }
-    }
-
     async userFutureTournamentTimes(
         @Req() request
     ): Promise<UserFutureTournamnetTimeDto[]> {

@@ -17,17 +17,17 @@ export class ActionService {
         private readonly taskService: TaskService,
         private readonly multilingualTextService: MultilingualtextService,
         private readonly userTournamentTimeService: UserTournamentTimeService
-    ) {}
+    ) { }
 
     async create(createActionDto: ActionCreateDto): Promise<Action> {
         const { description, time, userTournamentTimeId, taskId } = createActionDto;
-    
+
         const multilingualDescriptionInstance = await this.multilingualTextService.create(description)
         const userTournamentTimeInstance = await this.userTournamentTimeService.getInstance(userTournamentTimeId);
 
         const taskInstance = await this.taskService.getInstance(taskId);
 
-        const newAction = await this.actionRepository.create({
+        const newAction = this.actionRepository.create({
             time: time,
             task: taskInstance,
             description: multilingualDescriptionInstance,

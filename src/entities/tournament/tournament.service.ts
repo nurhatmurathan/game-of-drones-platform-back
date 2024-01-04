@@ -31,16 +31,16 @@ export class TournamentService {
     ): Promise<TournamentListDto[]> {
 
         console.log("Step in Service");
-
         console.log("User: " + request.user.sub);
+
         const userInstance = await this.userService.findOneById(
             request.user.sub
         );
         const language = this.utilService.getLanguageFromHeaders(request);
 
-
         console.log("User liga: " + userInstance.liga.id);
         console.log("Language: " + language);
+
         const tournaments = await this.tournamentRepository.find({
             relations: ["liga", "route", "coverDescription"],
             where: {
@@ -57,7 +57,7 @@ export class TournamentService {
             )
         );
 
-        console.log("Exit in service");
+        console.log("Exit from service");
         return tournamentListDtos;
     }
 
@@ -106,32 +106,26 @@ export class TournamentService {
         language: string
     ): Promise<TournamentListDto> {
 
-        console.log("Step in function 1");
+        console.log("Step in DTO function 1");
         const tournamentDto = new TournamentListDto();
-        console.log("Step in function 1 sub");
+        console.log("Step in DTO function 1 sub 2");
         tournamentDto.id = tournament.id;
-        console.log("Step in function 2 sub");
+        console.log("Step in DTO function 1 sub 3");
         tournamentDto.name = tournament.name;
-        console.log("Step in function 3 sub");
+        console.log("Step in DTO function 1 sub 4");
         tournamentDto.description = tournament.coverDescription[language]
-        console.log("Step in function 4 sub");
+        console.log("Step in DTO function 1 sub 5");
         tournamentDto.startDate = tournament.startDate;
-        console.log("Step in function 5 sub");
+        console.log("Step in DTO function 1 sub 5");
         tournamentDto.price = tournament.price;
 
-        console.log("Step in function 2");
-        if (tournament.liga)
-            tournamentDto.liga = await this.ligaService.findOne(
-                tournament.liga.id,
-                language
-            );
-
-        console.log("Step in function 3");
-        if (tournament.route)
+        console.log("Step in DTO function 2");
+        if (tournament.route) {
             tournamentDto.route = await this.routeService.findOne(
                 tournament.route.id,
                 language
             );
+        }
 
         console.log("Step in function 4");
         return tournamentDto;

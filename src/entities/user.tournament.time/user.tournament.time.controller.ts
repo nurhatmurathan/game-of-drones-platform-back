@@ -20,7 +20,7 @@ import { request } from "http";
 export class UserTournamentTimeController {
     constructor(
         private readonly usertournamenttimeService: UserTournamentTimeService
-    ) {}
+    ) { }
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
@@ -43,9 +43,9 @@ export class UserTournamentTimeController {
     @UseGuards(AuthGuard)
     @Get("tournaments/future")
     @HttpCode(HttpStatus.ACCEPTED)
-    async userFutureTournamneTimes(@Request() req) {
+    async userFutureTournamneTimes(@Request() request) {
         return await this.usertournamenttimeService.userFutureTournamentTimes(
-            req
+            request
         );
     }
 
@@ -53,9 +53,9 @@ export class UserTournamentTimeController {
     @UseGuards(AuthGuard)
     @Get("tournaments/pasted")
     @HttpCode(HttpStatus.ACCEPTED)
-    async userPastedTournamneTimes(@Request() req) {
+    async userPastedTournamneTimes(@Request() request) {
         return await this.usertournamenttimeService.userPastedTournamentTimes(
-            req
+            request
         );
     }
 }

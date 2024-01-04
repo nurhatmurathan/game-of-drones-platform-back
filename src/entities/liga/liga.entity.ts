@@ -22,7 +22,10 @@ export class Liga {
     @JoinColumn()
     description: MultilingualText;
 
-    @OneToMany(() => User, (user) => user.liga)
+    @OneToMany(() => User, (user) => user.liga, {
+        cascade: true,
+        nullable: true
+    })
     users: User[];
 
     @OneToMany(() => Tournament, (tournament) => tournament.liga)

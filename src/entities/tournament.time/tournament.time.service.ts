@@ -22,12 +22,6 @@ export class TournamentTimeService {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
     }
 
-    async create(
-        tournamentTimeData: TournamnetTimeCreateDto
-    ): Promise<TournamentTime> {
-        return await this.tournamentTimeRepository.save(tournamentTimeData);
-    }
-
     async findAllByTournamentId(
         tournamentId: number
     ): Promise<TournamentTimeListDto[]> {
