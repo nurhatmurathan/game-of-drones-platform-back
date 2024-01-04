@@ -55,7 +55,7 @@ export class LigaAdminController {
         return this.ligaAdminService.update(id, ligaUpdateDto);
     }
 
-    @Delete(':id')
+    @Delete('/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     remove(@Param('id', ParseIntPipe) id: number) {
         return this.ligaAdminService.delete(id);

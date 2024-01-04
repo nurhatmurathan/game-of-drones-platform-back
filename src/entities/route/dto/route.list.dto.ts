@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsString, isString } from "class-validator";
 
-export class RouteCoverDto {
+export class RouteListDto {
     @ApiProperty()
     id: number;
 

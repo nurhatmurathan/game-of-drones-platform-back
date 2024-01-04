@@ -18,10 +18,7 @@ export class Liga {
     @Column({ name: "name", type: "varchar", length: 50 })
     name: string;
 
-    @OneToOne(() => MultilingualText, (multilingualText) => multilingualText.liga, {
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
+    @OneToOne(() => MultilingualText)
     @JoinColumn()
     description: MultilingualText;
 

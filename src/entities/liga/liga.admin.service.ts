@@ -50,22 +50,28 @@ export class LigaAdminService {
         Object.assign(ligaInstance, ligaData);
 
         const updatedLiga = await this.ligaRepository.save(ligaInstance);
-        return this.mapEntityToDto(updatedLiga, ligaData);
+        return this.mapEntityToDto(updatedLiga);
     }
 
-    private mapEntityToDto(entity: Liga, dto: LigaUpdateDto): LigaRetrieveAdminDto {
+    private mapEntityToDto(entity: Liga): LigaRetrieveAdminDto {
         return {
             id: entity.id,
             name: entity.name,
-            description: dto.description,
+            description: entity.description,
         };
     }
 
-    async delete(id: number): Promise<void> {
-        const ligaInstance = await this.ligaRepository.findOne({ where: { id } });
+    async delete(id: number): Promise<any> {
+        const ligaInstance = await this.ligaRepository.findOne({
+            where: { id },
+            relations: ["description"]
+        });
 
+        const multilingualtextId = ligaInstance.description.id;
         this.isExists(ligaInstance, id);
+
         await this.ligaRepository.remove(ligaInstance);
+        await this.multilingualTextService.delete(multilingualtextId);
     }
 
     private isExists(instance: Liga, id: number): void {

@@ -3,16 +3,16 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { Route } from "./route.entity";
-import { RouteCoverDto, RouteRetrieveDto } from "./dto/index";
+import { RouteListDto, RouteRetrieveDto } from "./dto/index";
 
 @Injectable()
 export class RouteService {
     constructor(
         @InjectRepository(Route)
         private readonly routeRepository: Repository<Route>
-    ) {}
+    ) { }
 
-    async findAll(): Promise<RouteCoverDto[]> {
+    async findAll(): Promise<RouteListDto[]> {
         const routeInstances = await this.routeRepository.find();
 
         return routeInstances.map((route) => ({

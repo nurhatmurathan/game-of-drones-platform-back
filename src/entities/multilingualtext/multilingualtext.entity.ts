@@ -14,7 +14,4 @@ export class MultilingualText {
 
     @Column({ name: "kz", type: "varchar" })
     kz: string;
-
-    @OneToOne(() => Liga, liga => liga.description)
-    liga: Liga;
 }

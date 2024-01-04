@@ -27,12 +27,22 @@ export class MultilingualtextService {
         const { id, ...updatedMultilingualtextData } = multilingualtextData;
         const multilingualtextInstance = await this.multilingualtextRepository.findOne({ where: { id } });
 
-        if (!multilingualtextInstance)
-            throw new NotFoundException(`MultilingualText instance with id: ${id} not found.`);
+        this.isExists(multilingualtextInstance, id);
 
         Object.assign(multilingualtextInstance, updatedMultilingualtextData);
         return await this.multilingualtextRepository.save(multilingualtextInstance);
     }
 
+    async delete(id: number): Promise<any> {
+        const multilingualtextInstance = await this.multilingualtextRepository.findOne({ where: { id } });
+
+        this.isExists(multilingualtextInstance, id);
+        this.multilingualtextRepository.remove(multilingualtextInstance);
+    }
+
+    private isExists(instance: MultilingualText, id: number): void {
+        if (!instance)
+            throw new NotFoundException(`MultilingualText instance with id: ${id} not found.`);
+    }
 
 }
