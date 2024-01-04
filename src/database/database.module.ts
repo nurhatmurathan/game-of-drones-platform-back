@@ -5,4 +5,4 @@ import * as config from "../../ormconfig";
 @Module({
     imports: [TypeOrmModule.forRoot(config)],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}
