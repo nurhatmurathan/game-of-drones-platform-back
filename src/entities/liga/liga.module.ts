@@ -17,6 +17,6 @@ import { LigaAdminService } from "./liga.admin.service";
     ],
     controllers: [LigaController, LigaAdminController],
     providers: [LigaService, LigaAdminService],
-    exports: [LigaService],
+    exports: [LigaService, LigaAdminService],
 })
 export class LigaModule {}

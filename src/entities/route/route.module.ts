@@ -6,6 +6,8 @@ import { RouteController } from "./route.controller";
 import { RouteService } from "./route.service";
 import { MultilingualtextModule } from "../../entities/multilingualtext/multilingualtext.module";
 import { UtilModule } from "../../utils/util.module";
+import { RouteAdminController } from "./route.admin.controller";
+import { RouteAdminService } from "./route.admin.service";
 
 @Module({
     imports: [
@@ -13,8 +15,8 @@ import { UtilModule } from "../../utils/util.module";
         MultilingualtextModule,
         UtilModule,
     ],
-    controllers: [RouteController],
-    providers: [RouteService],
-    exports: [RouteService],
+    controllers: [RouteController, RouteAdminController],
+    providers: [RouteService, RouteAdminService],
+    exports: [RouteService, RouteAdminService],
 })
 export class RouteModule {}

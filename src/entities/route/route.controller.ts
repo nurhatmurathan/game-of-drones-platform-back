@@ -13,8 +13,7 @@ import { ApiTags } from "@nestjs/swagger";
 
 import { RouteService } from "./route.service";
 import { UtilService } from "../../utils/util.service";
-import { RouteRetrieveDto } from "./dto/route.retrieve.dto";
-import { RouteCreateDto } from "./dto/route.create.dto";
+import { RouteCoverDto, RouteRetrieveDto } from "./dto";
 
 @ApiTags("Route")
 @Controller("route")
@@ -22,7 +21,13 @@ export class RouteController {
     constructor(
         private readonly routeSerevice: RouteService,
         private readonly utilService: UtilService
-    ) { }
+    ) {}
+
+    @Get()
+    @HttpCode(HttpStatus.ACCEPTED)
+    async findAll(): Promise<RouteCoverDto[]> {
+        return await this.routeSerevice.findAll();
+    }
 
     @Get("/:id")
     @HttpCode(HttpStatus.ACCEPTED)
@@ -44,11 +49,5 @@ export class RouteController {
             map: routeRetrieveDtoInstance.map,
             description: routeRetrieveDtoInstance.description,
         };
-    }
-
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    create(@Body() routeDate: RouteCreateDto): Promise<RouteCreateDto> {
-        return this.routeSerevice.create(routeDate);
     }
 }

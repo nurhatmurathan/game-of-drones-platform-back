@@ -10,9 +10,7 @@ import {
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 import { LigaService } from "./liga.service";
-import { LigaCreateDto } from "./dto/liga.create.dto";
-import { LigaListeDto } from "./dto/liga.list.dto";
-import { LigaRetrieveDto } from "./dto/liga.retrieve.dto";
+import { LigaCoverDto, LigaRetrieveDto } from "./dto/index";
 import { UtilService } from "../../utils/util.service";
 
 @ApiTags("Liga")
@@ -25,7 +23,7 @@ export class LigaController {
 
     @Get()
     @HttpCode(HttpStatus.ACCEPTED)
-    findAll(): Promise<LigaListeDto[]> {
+    findAll(): Promise<LigaCoverDto[]> {
         return this.ligaService.findAll();
     }
 

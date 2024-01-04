@@ -1,4 +1,4 @@
-import { AuthGuard, IsAdminGuard } from "./../../auth/guards/index";
+import { AuthGuard, IsAdminGuard } from "./../../auth/guards";
 import {
     Body,
     Controller,
@@ -13,9 +13,7 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { LigaAdminService } from "./liga.admin.service";
-import { LigaListeDto } from "./dto/liga.list.dto";
-import { LigaRetrieveAdminDto } from "./dto/liga.retrieve.admin.dto";
-import { LigaCreateDto } from "./dto/liga.create.dto";
+import { LigaCoverDto, LigaRetrieveAdminDto, LigaCreateDto } from "./dto";
 
 @ApiTags("Admin Liga")
 @Controller("admin-liga")
@@ -26,7 +24,7 @@ export class LigaAdminController {
 
     @Get()
     @HttpCode(HttpStatus.ACCEPTED)
-    findAll(): Promise<LigaListeDto[]> {
+    findAll(): Promise<LigaCoverDto[]> {
         return this.ligaAdminService.findAll();
     }
 

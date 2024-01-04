@@ -3,20 +3,17 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { Liga } from "./liga.entity";
-import { LigaCreateDto } from "./dto/liga.create.dto";
-import { LigaListeDto } from "./dto/liga.list.dto";
-import { LigaRetrieveDto } from "./dto/liga.retrieve.dto";
+import { LigaCoverDto, LigaRetrieveDto } from "./dto/index";
 import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 
 @Injectable()
 export class LigaService {
     constructor(
         @InjectRepository(Liga)
-        private readonly ligaRepository: Repository<Liga>,
-        private readonly multilingualTextService: MultilingualtextService
+        private readonly ligaRepository: Repository<Liga>
     ) {}
 
-    async findAll(): Promise<LigaListeDto[]> {
+    async findAll(): Promise<LigaCoverDto[]> {
         return await this.ligaRepository.find();
     }
 

@@ -12,10 +12,10 @@ export class UserAdminService {
     ) {}
 
     async findAllUsers(): Promise<UserCoverDto[]> {
-        const users = await this.userRepository.find({
+        const userInstances = await this.userRepository.find({
             where: { isAdmin: false },
         });
-        return users.map((user) => ({
+        return userInstances.map((user) => ({
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
