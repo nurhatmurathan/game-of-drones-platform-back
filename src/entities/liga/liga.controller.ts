@@ -1,15 +1,11 @@
 import {
     Req,
-    Body,
     Controller,
     Get,
     Param,
     ParseIntPipe,
-    Post,
     HttpCode,
     HttpStatus,
-    BadRequestException,
-    NotFoundException,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
@@ -25,7 +21,7 @@ export class LigaController {
     constructor(
         private readonly ligaService: LigaService,
         private readonly utilService: UtilService
-    ) { }
+    ) {}
 
     @Get()
     @HttpCode(HttpStatus.ACCEPTED)
@@ -50,12 +46,5 @@ export class LigaController {
             name: ligaRetrieveDtoInstance.name,
             description: ligaRetrieveDtoInstance.description,
         };
-    }
-
-    @Post()
-    @ApiBearerAuth()
-    @HttpCode(HttpStatus.CREATED)
-    create(@Body() ligaCreateDto: LigaCreateDto): Promise<LigaCreateDto> {
-        return this.ligaService.create(ligaCreateDto);
     }
 }

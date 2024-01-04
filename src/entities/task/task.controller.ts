@@ -17,7 +17,7 @@ import { UtilService } from "../../utils/util.service";
 import { TaskCreateDto } from "./dto/task.create.dto";
 import { TaskListDto } from "./dto/task.list.dto";
 import { TaskRetrieveDto } from "./dto/task.retrieve.dto";
-import { AuthGuard } from "../../auth/auth.guard";
+import { AuthGuard } from "../../auth/guards/auth.guard";
 
 @ApiTags("Task")
 @Controller("task")

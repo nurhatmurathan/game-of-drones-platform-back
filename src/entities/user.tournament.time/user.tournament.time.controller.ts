@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserTournamentTimeService } from "./user.tournament.time.service";
-import { AuthGuard } from "src/auth/auth.guard";
+import { AuthGuard } from "src/auth/guards/auth.guard";
 import { UserTournamnetTimeCreateDto } from "./dto/user.tournament.time.create.dto";
 import { request } from "http";
 
@@ -20,7 +20,7 @@ import { request } from "http";
 export class UserTournamentTimeController {
     constructor(
         private readonly usertournamenttimeService: UserTournamentTimeService
-    ) { }
+    ) {}
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard)

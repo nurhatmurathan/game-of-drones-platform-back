@@ -16,15 +16,13 @@ import { TournamentService } from "./tournament.service";
 import { TournamentListDto } from "./dto/tournament.list.dto";
 import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
 import { TournamentCreateDto } from "./dto/tournament.create.dto";
-import { AuthGuard } from "../../auth/auth.guard";
+import { AuthGuard } from "../../auth/guards/auth.guard";
 import { Tournament } from "./tournament.entity";
 
 @ApiTags("Tournament")
 @Controller("tournament")
 export class TournamentController {
-    constructor(
-        private readonly tournamentService: TournamentService,
-    ) { }
+    constructor(private readonly tournamentService: TournamentService) {}
 
     @Get()
     @ApiBearerAuth()
@@ -32,9 +30,8 @@ export class TournamentController {
     @HttpCode(HttpStatus.ACCEPTED)
     async findAll(@Req() request): Promise<TournamentListDto[]> {
         console.log("Step in Controller");
-        const tournamentListDto = this.tournamentService.findLigaTournaments(
-            request
-        );
+        const tournamentListDto =
+            this.tournamentService.findLigaTournaments(request);
         return tournamentListDto;
     }
 
@@ -53,13 +50,11 @@ export class TournamentController {
         return tournamentRetrieveDto;
     }
 
-
     @Post()
     @HttpCode(HttpStatus.CREATED)
     create(@Body() tournamentData: TournamentCreateDto): Promise<Tournament> {
-        return this.tournamentService.create(tournamentData)
+        return this.tournamentService.create(tournamentData);
     }
-
 
     // @Get("liga/:id")
     // @ApiBearerAuth()

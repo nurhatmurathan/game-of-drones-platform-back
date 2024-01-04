@@ -21,7 +21,7 @@ export class AuthService {
         ) {
             throw new UnauthorizedException();
         }
-        const payload = { sub: user.id, email: user.email };
+        const payload = { sub: user.id, isAdmin: user.isAdmin };
         return {
             access: await this.jwtService.signAsync(payload),
             refresh: await this.jwtService.signAsync(payload, {
@@ -48,7 +48,6 @@ export class AuthService {
 
     async register(userData: AuthRegisterDto) {
         const userInstanse = await this.userService.create(userData);
-        console.log(userInstanse);
         return this.signIn(userData);
     }
 }

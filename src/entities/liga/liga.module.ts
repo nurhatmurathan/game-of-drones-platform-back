@@ -6,6 +6,8 @@ import { LigaController } from "./liga.controller";
 import { LigaService } from "./liga.service";
 import { MultilingualtextModule } from "../../entities/multilingualtext/multilingualtext.module";
 import { UtilModule } from "../../utils/util.module";
+import { LigaAdminController } from "./liga.admin.controller";
+import { LigaAdminService } from "./liga.admin.service";
 
 @Module({
     imports: [
@@ -13,8 +15,8 @@ import { UtilModule } from "../../utils/util.module";
         MultilingualtextModule,
         UtilModule,
     ],
-    controllers: [LigaController],
-    providers: [LigaService],
+    controllers: [LigaController, LigaAdminController],
+    providers: [LigaService, LigaAdminService],
     exports: [LigaService],
 })
 export class LigaModule {}

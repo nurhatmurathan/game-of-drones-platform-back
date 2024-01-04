@@ -12,17 +12,16 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { TournamentTimeService } from "./tournament.time.service";
-import { AuthGuard } from "src/auth/auth.guard";
+import { AuthGuard } from "src/auth/guards/auth.guard";
 import { TournamentTime } from "./tournament.time.entity";
-import { TournamnetTimeCreateDto } from './dto/tournament.time.create.dto';
+import { TournamnetTimeCreateDto } from "./dto/tournament.time.create.dto";
 
-@ApiTags('Tournament Time')
+@ApiTags("Tournament Time")
 @Controller("tournament-time")
 export class TournamentTimeController {
     constructor(
         private readonly tournamentTimeService: TournamentTimeService
-    ) { }
-
+    ) {}
 
     // @Post("/:id/reserve")
     // @ApiBearerAuth()
@@ -32,7 +31,6 @@ export class TournamentTimeController {
     //     const userId = request.user.sub;
     //     return this.tournamentTimeService.reservePlaceForTournaments(id, userId);
     // }
-
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
