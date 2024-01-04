@@ -26,7 +26,9 @@ export class Tournament {
     @Column({ name: "price", type: "bigint" })
     price: number;
 
-    @ManyToOne(() => Liga, (liga) => liga.tournaments)
+    @ManyToOne(() => Liga, (liga) => liga.tournaments, {
+        onDelete: 'SET NULL',
+    })
     liga: Liga;
 
     @ManyToOne(() => Route, (route) => route.tournaments)

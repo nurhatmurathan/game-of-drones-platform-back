@@ -18,7 +18,10 @@ export class Liga {
     @Column({ name: "name", type: "varchar", length: 50 })
     name: string;
 
-    @OneToOne(() => MultilingualText)
+    @OneToOne(() => MultilingualText, (multilingualText) => multilingualText.liga, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
     @JoinColumn()
     description: MultilingualText;
 
@@ -28,6 +31,9 @@ export class Liga {
     })
     users: User[];
 
-    @OneToMany(() => Tournament, (tournament) => tournament.liga)
+    @OneToMany(() => Tournament, (tournament) => tournament.liga, {
+        cascade: true,
+        nullable: true,
+    })
     tournaments: Tournament[];
 }
