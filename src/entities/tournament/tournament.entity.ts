@@ -23,7 +23,7 @@ export class Tournament {
     @Column({ name: "start_date", type: "bigint" })
     startDate: number;
 
-    @Column({ name: "price", type: "bigint" })
+    @Column({ name: "price", type: "double precision" })
     price: number;
 
     @ManyToOne(() => Liga, (liga) => liga.tournaments, {

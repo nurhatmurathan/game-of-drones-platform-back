@@ -1,4 +1,4 @@
-import { Injectable, Req } from "@nestjs/common";
+import { BadRequestException, Injectable, Req } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, MoreThanOrEqual } from "typeorm";
 
@@ -35,6 +35,10 @@ export class TournamentService {
         );
         const language = this.utilService.getLanguageFromHeaders(request);
 
+        if (!userInstance.liga) {
+            throw new BadRequestException("Please choose your 'Liga'!");
+        }
+
         console.log("User liga: " + userInstance.liga.id);
         console.log("Language: " + language);
 
@@ -66,7 +70,7 @@ export class TournamentService {
 
         const tournament = await this.tournamentRepository.findOne({
             relations: ["liga", "route", "description"],
-            where: { id: id, liga: { id: userInstance.liga.id } },
+            where: { id: id, liga: { id: userInstance.liga?.id } },
         });
 
         return this.mapTournamentToRetrieveDto(tournament, language);

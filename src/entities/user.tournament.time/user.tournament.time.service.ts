@@ -181,6 +181,8 @@ export class UserTournamentTimeService {
             { id: trainingId } as Training,
         ];
 
+        console.log(instance);
+
         this.userTournamentTimeRepository.save(instance);
     }
 
