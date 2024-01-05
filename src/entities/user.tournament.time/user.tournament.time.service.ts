@@ -1,3 +1,4 @@
+import { Training } from "./../training/training.entity";
 import { UserFutureTournamnetTimeDto } from "./dto/user.tournament.time.future.dto";
 import {
     BadRequestException,
@@ -163,8 +164,44 @@ export class UserTournamentTimeService {
         };
     }
 
-    getInstance(id: number): Promise<UserTournamentTime> {
-        return this.userTournamentTimeRepository.findOne({ where: { id: id } });
+    async addTraining(
+        userId: number,
+        tournamentTimeId: number,
+        trainingId: number
+    ) {
+        const instance: UserTournamentTime =
+            await this.getInstanceByUserIdtournamentTimeId(
+                userId,
+                tournamentTimeId,
+                ["trainings"]
+            );
+
+        instance.trainings = [
+            ...instance.trainings,
+            { id: trainingId } as Training,
+        ];
+
+        this.userTournamentTimeRepository.save(instance);
+    }
+
+    async getInstance(id: number): Promise<UserTournamentTime> {
+        return await this.userTournamentTimeRepository.findOne({
+            where: { id: id },
+        });
+    }
+
+    async getInstanceByUserIdtournamentTimeId(
+        userId: number,
+        tournamentTimeId: number,
+        relations?: string[]
+    ): Promise<UserTournamentTime> {
+        return await this.userTournamentTimeRepository.findOne({
+            where: {
+                user: { id: userId },
+                tournamentTime: { id: tournamentTimeId },
+            },
+            relations: relations,
+        });
     }
 
     async getListOfTournamentsIdsOfGivenUser(

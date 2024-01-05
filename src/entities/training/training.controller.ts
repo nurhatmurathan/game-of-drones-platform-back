@@ -20,7 +20,6 @@ import {
 import { TrainingService } from "./training.service";
 import { TrainingCreateDto } from "./dto/training.create.dto";
 import { Training } from "./training.entity";
-import { TrainingsTournamentTimeDto } from "./dto/training.turnamenttime.dto";
 
 @ApiTags("Training")
 @Controller("Training")

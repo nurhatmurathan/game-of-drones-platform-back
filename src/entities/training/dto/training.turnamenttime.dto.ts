@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class TrainingsTournamentTimeDto {
+export class TrainingIdDto {
     @ApiProperty()
-    readonly tournamentTimeId: number;
+    readonly trainingId: number;
 }

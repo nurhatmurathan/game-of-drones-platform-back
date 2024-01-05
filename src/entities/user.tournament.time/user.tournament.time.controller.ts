@@ -5,6 +5,8 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Param,
+    ParseIntPipe,
     Post,
     Request,
     UseGuards,
@@ -14,16 +16,17 @@ import { UserTournamentTimeService } from "./user.tournament.time.service";
 import { AuthGuard } from "src/auth/guards/auth.guard";
 import { UserTournamnetTimeCreateDto } from "./dto/user.tournament.time.create.dto";
 import { request } from "http";
+import { TrainingIdDto } from "../training/dto/training.turnamenttime.dto";
 
 @ApiTags("UserTournamentTime")
 @Controller("UserTournamentTime")
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 export class UserTournamentTimeController {
     constructor(
         private readonly usertournamenttimeService: UserTournamentTimeService
-    ) { }
+    ) {}
 
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard)
     @Post()
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() body: UserTournamnetTimeCreateDto, @Request() req) {
@@ -33,14 +36,12 @@ export class UserTournamentTimeController {
         );
     }
 
-    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         description: "Response",
         type: UserFutureTournamnetTimeDto,
         isArray: true,
     })
-    @UseGuards(AuthGuard)
     @Get("tournaments/future")
     @HttpCode(HttpStatus.ACCEPTED)
     async userFutureTournamneTimes(@Request() request) {
@@ -49,13 +50,25 @@ export class UserTournamentTimeController {
         );
     }
 
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard)
     @Get("tournaments/pasted")
     @HttpCode(HttpStatus.ACCEPTED)
     async userPastedTournamneTimes(@Request() request) {
         return await this.usertournamenttimeService.userPastedTournamentTimes(
             request
+        );
+    }
+
+    @Post("/:tournamentTimeId/add-training")
+    @HttpCode(HttpStatus.CREATED)
+    async addTraining(
+        @Param("tournamentTimeId", ParseIntPipe) tournamentTimeId: number,
+        @Body() trainindData: TrainingIdDto,
+        @Request() request
+    ) {
+        this.usertournamenttimeService.addTraining(
+            request.user.sub,
+            tournamentTimeId,
+            trainindData.trainingId
         );
     }
 }
