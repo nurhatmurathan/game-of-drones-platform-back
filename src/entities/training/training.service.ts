@@ -20,7 +20,6 @@ export class TrainingService {
     async availableTrainings(tournamentTimeId: number): Promise<Training[]> {
         const tournamentTimeInstance =
             await this.tournamentTimeService.findOne(tournamentTimeId);
-
         return await this.trainingRepository.find({
             where: { startTime: LessThan(tournamentTimeInstance.startTime) },
             order: { startTime: "ASC" },

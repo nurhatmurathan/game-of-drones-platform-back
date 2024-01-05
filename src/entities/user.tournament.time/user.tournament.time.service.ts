@@ -24,7 +24,7 @@ export class UserTournamentTimeService {
         private readonly userTournamentTimeRepository: Repository<UserTournamentTime>,
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly utilService: UtilService
-    ) { }
+    ) {}
 
     async create(
         userId: number,
@@ -34,8 +34,11 @@ export class UserTournamentTimeService {
         tournamentTimeId: number;
         reservedPlaces: number;
     }> {
-
-        const reserved = await this.tournamentTimeService.reservePlaceInTheTournament(tournamentTimeId, userId);
+        const reserved =
+            await this.tournamentTimeService.reservePlaceInTheTournament(
+                tournamentTimeId,
+                userId
+            );
 
         try {
             await this.userTournamentTimeRepository.manager.transaction(
@@ -65,25 +68,29 @@ export class UserTournamentTimeService {
     async userFutureTournamentTimes(
         @Req() request
     ): Promise<UserFutureTournamnetTimeDto[]> {
-        const language = this.utilService.getLanguageFromHeaders(request)
+        const language = this.utilService.getLanguageFromHeaders(request);
 
         return await Promise.all(
             (await this.userTournamentTimes(request.user.sub, false)).map(
                 async (userTournamentTime) =>
-                    this.mapUserFutureTournamentTime(userTournamentTime, language)
+                    this.mapUserFutureTournamentTime(
+                        userTournamentTime,
+                        language
+                    )
             )
         );
     }
 
-    async userPastedTournamentTimes(
-        @Req() request
-    ) {
-        const language = this.utilService.getLanguageFromHeaders(request)
+    async userPastedTournamentTimes(@Req() request) {
+        const language = this.utilService.getLanguageFromHeaders(request);
 
         return await Promise.all(
             (await this.userTournamentTimes(request.user.sub, true)).map(
                 async (userTournamentTime) =>
-                    this.mapUserPastedTournamentTime(userTournamentTime, language)
+                    this.mapUserPastedTournamentTime(
+                        userTournamentTime,
+                        language
+                    )
             )
         );
     }
@@ -92,7 +99,7 @@ export class UserTournamentTimeService {
         userId: number,
         pasted: boolean
     ): Promise<UserTournamentTime[]> {
-        const currentDate = new Date();
+        const currentDate: number = Date.now();
 
         return await this.userTournamentTimeRepository.find({
             where: {
@@ -103,10 +110,13 @@ export class UserTournamentTimeService {
                         : MoreThan(currentDate),
                 },
             },
-            relations: ["tournamentTime", "tournamentTime.tournament"],
+            relations: [
+                "tournamentTime",
+                "tournamentTime.tournament",
+                "tournamentTime.tournament.description",
+            ],
         });
     }
-
 
     private mapUserFutureTournamentTime(
         userTournamentTime: UserTournamentTime,
@@ -120,7 +130,9 @@ export class UserTournamentTimeService {
                 tournament: {
                     id: userTournamentTime.tournamentTime.tournament.id,
                     name: userTournamentTime.tournamentTime.tournament.name,
-                    description: userTournamentTime.tournamentTime.tournament.description[language],
+                    description:
+                        userTournamentTime.tournamentTime.tournament
+                            .description[language],
                     startDate:
                         userTournamentTime.tournamentTime.tournament.startDate,
                 },
@@ -141,7 +153,9 @@ export class UserTournamentTimeService {
                 tournament: {
                     id: userTournamentTime.tournamentTime.tournament.id,
                     name: userTournamentTime.tournamentTime.tournament.name,
-                    description: userTournamentTime.tournamentTime.tournament.description[language],
+                    description:
+                        userTournamentTime.tournamentTime.tournament
+                            .description[language],
                     startDate:
                         userTournamentTime.tournamentTime.tournament.startDate,
                 },

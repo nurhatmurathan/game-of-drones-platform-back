@@ -5,7 +5,7 @@ export class TournamentTimeListDto {
     id: number;
 
     @ApiProperty()
-    startTime: Date;
+    startTime: number;
 
     @ApiProperty()
     places: number;

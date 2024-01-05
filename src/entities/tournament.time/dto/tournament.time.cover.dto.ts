@@ -6,7 +6,7 @@ export class TournamnetTimeCoverDto {
     id: number;
 
     @ApiProperty()
-    startTime: Date;
+    startTime: number;
 
     @ApiProperty()
     tournament: TournamnetCoverDto;

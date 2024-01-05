@@ -4,8 +4,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class TrainingCreateDto {
     @ApiProperty()
-    @IsDate()
-    readonly startTime: Date;
+    readonly startTime: number;
 
     @ApiProperty()
     @IsInt()

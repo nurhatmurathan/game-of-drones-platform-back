@@ -13,8 +13,8 @@ export class Training {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ name: "start_time", type: "time", nullable: true })
-    startTime: Date;
+    @Column({ name: "start_time", type: "bigint" })
+    startTime: number;
 
     @Column({ name: "places", type: "integer" })
     places: number;

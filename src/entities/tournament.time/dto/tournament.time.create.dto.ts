@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class TournamnetTimeCreateDto {
     @ApiProperty()
-    startTime: Date;
+    startTime: number;
 
     @ApiProperty()
     places: number;

@@ -27,7 +27,7 @@ export class Tournament {
     price: number;
 
     @ManyToOne(() => Liga, (liga) => liga.tournaments, {
-        onDelete: 'SET NULL',
+        onDelete: "SET NULL",
     })
     liga: Liga;
 

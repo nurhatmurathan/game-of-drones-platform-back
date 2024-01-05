@@ -5,6 +5,8 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Param,
+    ParseIntPipe,
     Post,
     UseGuards,
 } from "@nestjs/common";
@@ -31,16 +33,14 @@ export class TrainingController {
         return await this.trainingService.create(trainingData);
     }
 
-    @Get("tournamnetTime")
+    @Get("trainings/:tournamentTimeId")
     @ApiBearerAuth()
     @ApiResponse({ isArray: true })
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.ACCEPTED)
     async availableTrainings(
-        @Body() body: TrainingsTournamentTimeDto
+        @Param("tournamentTimeId", ParseIntPipe) tournamentTimeId: number
     ): Promise<Training[]> {
-        return await this.trainingService.availableTrainings(
-            body.tournamentTimeId
-        );
+        return await this.trainingService.availableTrainings(tournamentTimeId);
     }
 }

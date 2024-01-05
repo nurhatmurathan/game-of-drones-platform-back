@@ -21,22 +21,5 @@ import { TournamnetTimeCreateDto } from "./dto/tournament.time.create.dto";
 export class TournamentTimeController {
     constructor(
         private readonly tournamentTimeService: TournamentTimeService
-    ) { }
-
-    // @Post("/:id/reserve")
-    // @ApiBearerAuth()
-    // @UseGuards(AuthGuard)
-    // @HttpCode(HttpStatus.ACCEPTED)
-    // async reservePlaceForTournaments(@Param('id', ParseIntPipe) id: number, @Req() request): Promise<TournamentTime | null> {
-    //     const userId = request.user.sub;
-    //     return this.tournamentTimeService.reservePlaceForTournaments(id, userId);
-    // }
-
-    // @Post()
-    // @HttpCode(HttpStatus.CREATED)
-    // async create(
-    //     @Body() tournamentTimeData: TournamnetTimeCreateDto
-    // ): Promise<TournamentTime> {
-    //     return await this.tournamentTimeService.create(tournamentTimeData);
-    // }
+    ) {}
 }
