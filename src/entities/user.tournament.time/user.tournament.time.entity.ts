@@ -7,8 +7,11 @@ import {
     PrimaryGeneratedColumn,
     ManyToOne,
     OneToMany,
+    ManyToMany,
     Unique,
+    JoinTable,
 } from "typeorm";
+import { Training } from "../training/training.entity";
 
 @Entity("user_tournamenttime")
 @Unique(["user", "tournamentTime"])
@@ -30,4 +33,8 @@ export class UserTournamentTime {
 
     @OneToMany(() => Action, (action) => action.userTournamentTime)
     actions: Action[];
+
+    @ManyToMany(() => Training)
+    @JoinTable()
+    trainings: Training[];
 }

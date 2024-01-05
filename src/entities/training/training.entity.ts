@@ -1,5 +1,4 @@
 import { Route } from "../../entities/route/route.entity";
-import { UserTrainingTime } from "../../entities/user.training.time/user.training.time.entity";
 import {
     Entity,
     Column,
@@ -24,10 +23,4 @@ export class Training {
 
     @ManyToOne(() => Route, (route) => route.trainings)
     route: Route;
-
-    @OneToMany(
-        () => UserTrainingTime,
-        (userTrainingTime) => userTrainingTime.training
-    )
-    userTrainingTimes: UserTrainingTime[];
 }

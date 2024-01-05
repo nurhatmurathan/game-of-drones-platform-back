@@ -1,6 +1,5 @@
 import { Liga } from "../../entities/liga/liga.entity";
 import { UserTournamentTime } from "../../entities/user.tournament.time/user.tournament.time.entity";
-import { UserTrainingTime } from "../../entities/user.training.time/user.training.time.entity";
 import { BillingAccount } from "../billing.account/billing.account.entity";
 import {
     Entity,
@@ -51,7 +50,7 @@ export class User {
     billingAccount: BillingAccount;
 
     @ManyToOne(() => Liga, (liga) => liga.users, {
-        onDelete: 'SET NULL'
+        onDelete: "SET NULL",
     })
     liga: Liga;
 
@@ -60,10 +59,4 @@ export class User {
         (userTournamentTime) => userTournamentTime.user
     )
     userTournamentTimes: UserTournamentTime[];
-
-    @OneToMany(
-        () => UserTrainingTime,
-        (userTrainingTime) => userTrainingTime.user
-    )
-    userTrainingTimes: UserTrainingTime[];
 }

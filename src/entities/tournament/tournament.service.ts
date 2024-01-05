@@ -5,7 +5,7 @@ import { Repository, MoreThanOrEqual } from "typeorm";
 import { Tournament } from "./tournament.entity";
 import { TournamentListDto } from "./dto/tournament.list.dto";
 import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
-import { TournamentCreateDto } from './dto/tournament.create.dto';
+import { TournamentCreateDto } from "./dto/tournament.create.dto";
 import { LigaService } from "../liga/liga.service";
 import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
@@ -24,12 +24,9 @@ export class TournamentService {
         private readonly ligaService: LigaService,
         private readonly utilService: UtilService,
         private readonly userService: UserService
-    ) { }
+    ) {}
 
-    async findLigaTournaments(
-        @Req() request
-    ): Promise<TournamentListDto[]> {
-
+    async findLigaTournaments(@Req() request): Promise<TournamentListDto[]> {
         console.log("Step in Service");
         console.log("User: " + request.user.sub);
 
@@ -61,10 +58,7 @@ export class TournamentService {
         return tournamentListDtos;
     }
 
-    async findOne(
-        id: number,
-        @Req() request
-    ): Promise<TournamentRetrieveDto> {
+    async findOne(id: number, @Req() request): Promise<TournamentRetrieveDto> {
         const userInstance = await this.userService.findOneById(
             request.user.sub
         );
@@ -81,7 +75,13 @@ export class TournamentService {
     async create(
         createTournamentDto: TournamentCreateDto
     ): Promise<Tournament> {
-        const { ligaId, routeId, description, coverDescription, ...tournament } = createTournamentDto;
+        const {
+            ligaId,
+            routeId,
+            description,
+            coverDescription,
+            ...tournament
+        } = createTournamentDto;
 
         const ligaInstance = await this.ligaService.getInstance(ligaId);
         const routeInstance = await this.routeService.getInstance(routeId);
@@ -105,7 +105,6 @@ export class TournamentService {
         tournament: Tournament,
         language: string
     ): Promise<TournamentListDto> {
-
         console.log("Step in DTO function 1");
         const tournamentDto = new TournamentListDto();
         console.log("Step in DTO function 1 sub 2");
@@ -113,7 +112,7 @@ export class TournamentService {
         console.log("Step in DTO function 1 sub 3");
         tournamentDto.name = tournament.name;
         console.log("Step in DTO function 1 sub 4");
-        tournamentDto.description = tournament.coverDescription[language]
+        tournamentDto.description = tournament.coverDescription[language];
         console.log("Step in DTO function 1 sub 5");
         tournamentDto.startDate = tournament.startDate;
         console.log("Step in DTO function 1 sub 5");
@@ -138,7 +137,7 @@ export class TournamentService {
         const tournamentDto = new TournamentRetrieveDto();
         tournamentDto.id = tournament.id;
         tournamentDto.name = tournament.name;
-        tournamentDto.description = tournament.description[language]
+        tournamentDto.description = tournament.description[language];
         tournamentDto.startDate = tournament.startDate;
         tournamentDto.price = tournament.price;
 
