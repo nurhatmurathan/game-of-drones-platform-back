@@ -65,7 +65,7 @@ export class UserTournamentTimeController {
         @Body() trainindData: TrainingIdDto,
         @Request() request
     ) {
-        this.usertournamenttimeService.addTraining(
+        return this.usertournamenttimeService.addTraining(
             request.user.sub,
             tournamentTimeId,
             trainindData.trainingId

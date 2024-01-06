@@ -10,6 +10,7 @@ import {
     OneToOne,
     JoinColumn,
 } from "typeorm";
+import { UserToken } from "../user.token/user.token.entity";
 
 @Entity("users")
 export class User {
@@ -59,4 +60,7 @@ export class User {
         (userTournamentTime) => userTournamentTime.user
     )
     userTournamentTimes: UserTournamentTime[];
+
+    @OneToMany(() => UserToken, (userToken) => userToken.user)
+    userTokens: UserToken[];
 }

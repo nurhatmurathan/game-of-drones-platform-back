@@ -34,7 +34,7 @@ export class UserTournamentTime {
     @OneToMany(() => Action, (action) => action.userTournamentTime)
     actions: Action[];
 
-    @ManyToMany(() => Training)
+    @ManyToMany(() => Training, (training) => training.userTournamentTimes)
     @JoinTable()
     trainings: Training[];
 }

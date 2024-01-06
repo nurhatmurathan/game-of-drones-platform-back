@@ -25,4 +25,12 @@ export class TrainingService {
             order: { startTime: "ASC" },
         });
     }
+
+    async userTrainings(userId: number) {
+        return await this.trainingRepository.find({
+            where: {
+                userTournamentTimes: { user: { id: userId } },
+            },
+        });
+    }
 }
