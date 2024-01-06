@@ -10,12 +10,9 @@ import {
 } from "@nestjs/common";
 import { UserTournamentTime } from "./user.tournament.time.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { LessThan, MoreThan, Repository } from "typeorm";
-import { User } from "../user/user.entity";
+import { FindOptionsRelations, LessThan, MoreThan, Repository } from "typeorm";
 
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
-import { TournamentTime } from "../tournament.time/tournament.time.entity";
-import { UtilModule } from "src/utils/util.module";
 import { UtilService } from "src/utils/util.service";
 
 @Injectable()
@@ -173,7 +170,9 @@ export class UserTournamentTimeService {
             await this.getInstanceByUserIdtournamentTimeId(
                 userId,
                 tournamentTimeId,
-                ["trainings"]
+                {
+                    trainings: true,
+                }
             );
 
         instance.trainings = [
@@ -184,6 +183,8 @@ export class UserTournamentTimeService {
         console.log(instance);
 
         this.userTournamentTimeRepository.save(instance);
+
+        return { message: "Training is added" };
     }
 
     async getInstance(id: number): Promise<UserTournamentTime> {
@@ -195,15 +196,24 @@ export class UserTournamentTimeService {
     async getInstanceByUserIdtournamentTimeId(
         userId: number,
         tournamentTimeId: number,
-        relations?: string[]
+        relations?: FindOptionsRelations<UserTournamentTime>
     ): Promise<UserTournamentTime> {
-        return await this.userTournamentTimeRepository.findOne({
-            where: {
-                user: { id: userId },
-                tournamentTime: { id: tournamentTimeId },
-            },
-            relations: relations,
-        });
+        const instance: UserTournamentTime =
+            await this.userTournamentTimeRepository.findOne({
+                where: {
+                    user: { id: userId },
+                    tournamentTime: { id: tournamentTimeId },
+                },
+
+                relations: relations,
+            });
+
+        if (!instance)
+            throw new NotFoundException(
+                "This User does not added this TournamentTime!"
+            );
+
+        return instance;
     }
 
     async getListOfTournamentsIdsOfGivenUser(

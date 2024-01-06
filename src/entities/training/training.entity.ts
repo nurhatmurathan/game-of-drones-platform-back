@@ -5,7 +5,9 @@ import {
     PrimaryGeneratedColumn,
     ManyToOne,
     OneToMany,
+    ManyToMany,
 } from "typeorm";
+import { UserTournamentTime } from "../user.tournament.time/user.tournament.time.entity";
 
 @Entity("training")
 export class Training {
@@ -23,4 +25,10 @@ export class Training {
 
     @ManyToOne(() => Route, (route) => route.trainings)
     route: Route;
+
+    @ManyToMany(
+        () => UserTournamentTime,
+        (userTournamentTime) => userTournamentTime.trainings
+    )
+    userTournamentTimes: UserTournamentTime[];
 }
