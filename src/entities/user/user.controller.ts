@@ -1,4 +1,4 @@
-import { AuthGuard } from "../../auth/guards/auth.guard";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import {
     Body,
     Controller,
@@ -16,18 +16,17 @@ import { UserProfileEditDto } from "./dto/user.profileedit.dto";
 
 @ApiTags("User")
 @Controller("users")
+@UseGuards(CustomAuthGuard)
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @ApiBearerAuth()
-    @UseGuards(AuthGuard)
     @Get("profile/cover")
     async getProfile(@Request() req) {
         return await this.userService.profileCover(req.user);
     }
 
     @ApiBearerAuth()
-    @UseGuards(AuthGuard)
     @Post("profile/edit")
     async egitProfile(@Request() req, @Body() userData: UserProfileEditDto) {
         return await this.userService.profileEdit({

@@ -1,4 +1,4 @@
-import { AuthGuard, IsAdminGuard } from "./../../auth/guards";
+import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
 import {
     Body,
     Controller,
@@ -19,7 +19,7 @@ import { RouteListDto, RouteCreateDto, RouteRetrieveAdminDto, RouteUpdateDto } f
 @ApiTags("Admin Route")
 @Controller("admin-route")
 @ApiBearerAuth()
-@UseGuards(AuthGuard, IsAdminGuard)
+@UseGuards(CustomAuthGuard, IsAdminGuard)
 export class RouteAdminController {
     constructor(private readonly routeAdminSerevice: RouteAdminService) { }
 

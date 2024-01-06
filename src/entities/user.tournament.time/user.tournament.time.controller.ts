@@ -13,7 +13,7 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserTournamentTimeService } from "./user.tournament.time.service";
-import { AuthGuard } from "src/auth/guards/auth.guard";
+import { CustomAuthGuard } from "src/auth/guards/auth.guard";
 import { UserTournamnetTimeCreateDto } from "./dto/user.tournament.time.create.dto";
 import { request } from "http";
 import { TrainingIdDto } from "../training/dto/training.turnamenttime.dto";
@@ -21,11 +21,11 @@ import { TrainingIdDto } from "../training/dto/training.turnamenttime.dto";
 @ApiTags("UserTournamentTime")
 @Controller("UserTournamentTime")
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
+@UseGuards(CustomAuthGuard)
 export class UserTournamentTimeController {
     constructor(
         private readonly usertournamenttimeService: UserTournamentTimeService
-    ) {}
+    ) { }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)

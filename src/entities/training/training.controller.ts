@@ -1,4 +1,4 @@
-import { AuthGuard } from "../../auth/guards/auth.guard";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import {
     Body,
     Controller,
@@ -24,7 +24,7 @@ import { Training } from "./training.entity";
 @ApiTags("Training")
 @Controller("Training")
 export class TrainingController {
-    constructor(private readonly trainingService: TrainingService) {}
+    constructor(private readonly trainingService: TrainingService) { }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
@@ -35,7 +35,7 @@ export class TrainingController {
     @Get("trainings/:tournamentTimeId")
     @ApiBearerAuth()
     @ApiResponse({ isArray: true })
-    @UseGuards(AuthGuard)
+    @UseGuards(CustomAuthGuard)
     @HttpCode(HttpStatus.ACCEPTED)
     async availableTrainings(
         @Param("tournamentTimeId", ParseIntPipe) tournamentTimeId: number

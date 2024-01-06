@@ -9,7 +9,7 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AuthGuard } from "./guards/auth.guard";
+import { CustomAuthGuard } from "./guards/auth.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UserLoginDto } from "./dto/auth.login.dto";
 import { UserRefreshDto } from "./dto/auth.refresh.dto";
@@ -19,7 +19,7 @@ import { AuthRegisterDto } from "./dto/auth.register.dto";
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) { }
 
     @HttpCode(HttpStatus.OK)
     @Post("login")
@@ -40,7 +40,7 @@ export class AuthController {
     }
 
     @ApiBearerAuth()
-    @UseGuards(AuthGuard)
+    @UseGuards(CustomAuthGuard)
     @Get("profile")
     getProfile(@Request() req) {
         return req.user;

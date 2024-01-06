@@ -1,4 +1,4 @@
-import { AuthGuard, IsAdminGuard } from "./../../auth/guards";
+import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
 import {
     Body,
     Controller,
@@ -22,7 +22,7 @@ import { LigaUpdateDto } from "./dto/liga.update.admin.dto";
 @ApiTags("Admin Liga")
 @Controller("admin-liga")
 @ApiBearerAuth()
-@UseGuards(AuthGuard, IsAdminGuard)
+@UseGuards(CustomAuthGuard, IsAdminGuard)
 export class LigaAdminController {
     constructor(private readonly ligaAdminService: LigaAdminService) { }
 

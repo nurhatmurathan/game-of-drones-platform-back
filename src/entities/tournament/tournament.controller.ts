@@ -16,17 +16,17 @@ import { TournamentService } from "./tournament.service";
 import { TournamentListDto } from "./dto/tournament.list.dto";
 import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
 import { TournamentCreateDto } from "./dto/tournament.create.dto";
-import { AuthGuard } from "../../auth/guards/auth.guard";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import { Tournament } from "./tournament.entity";
 
 @ApiTags("Tournament")
 @Controller("tournament")
 export class TournamentController {
-    constructor(private readonly tournamentService: TournamentService) {}
+    constructor(private readonly tournamentService: TournamentService) { }
 
     @Get()
     @ApiBearerAuth()
-    @UseGuards(AuthGuard)
+    @UseGuards(CustomAuthGuard)
     @HttpCode(HttpStatus.ACCEPTED)
     async findAll(@Req() request): Promise<TournamentListDto[]> {
         console.log("Step in Controller");
@@ -37,7 +37,7 @@ export class TournamentController {
 
     @Get("/:id")
     @ApiBearerAuth()
-    @UseGuards(AuthGuard)
+    @UseGuards(CustomAuthGuard)
     @HttpCode(HttpStatus.ACCEPTED)
     async findOne(
         @Param("id", ParseIntPipe) id: number,

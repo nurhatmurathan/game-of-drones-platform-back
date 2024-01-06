@@ -17,7 +17,7 @@ import { UtilService } from "../../utils/util.service";
 import { TaskCreateDto } from "./dto/task.create.dto";
 import { TaskListDto } from "./dto/task.list.dto";
 import { TaskRetrieveDto } from "./dto/task.retrieve.dto";
-import { AuthGuard } from "../../auth/guards/auth.guard";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 
 @ApiTags("Task")
 @Controller("task")
@@ -25,7 +25,7 @@ export class TaskController {
     constructor(
         private readonly taskService: TaskService,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
     @Get()
     @ApiBearerAuth()
@@ -39,7 +39,7 @@ export class TaskController {
 
     @Get("/:id")
     @ApiBearerAuth()
-    @UseGuards(AuthGuard)
+    @UseGuards(CustomAuthGuard)
     @HttpCode(HttpStatus.ACCEPTED)
     async findOne(
         @Param("id", ParseIntPipe) id: number,
