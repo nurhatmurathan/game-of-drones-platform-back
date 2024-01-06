@@ -13,14 +13,17 @@ export class UserService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly billingAccountServise: BillingAccountService
-    ) {}
+    ) { }
 
     async create(userData: UserCreateDto, isAdmin?: boolean) {
+        console.log("I'm here in User create function");
+
         const { password, ...res } = userData;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = userData.password ? await bcrypt.hash(userData.password, 10) : null;
         const billingAccountInstance =
             await this.billingAccountServise.create();
 
+        console.log(`Password: ${hashedPassword}`);
         const newUser = this.userRepository.create({
             ...res,
             password: hashedPassword,
@@ -28,6 +31,8 @@ export class UserService {
             isAdmin: isAdmin,
         });
 
+
+        console.log(`New User: ${newUser}`);
         return await this.userRepository.save(newUser);
     }
 

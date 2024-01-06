@@ -10,7 +10,7 @@ export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService
-    ) {}
+    ) { }
 
     async signIn(userData: UserLoginDto) {
         const user = await this.userService.findOneByEmail(userData.email);
@@ -22,6 +22,16 @@ export class AuthService {
             throw new UnauthorizedException();
         }
         const payload = { sub: user.id, isAdmin: user.isAdmin };
+        return {
+            access: await this.jwtService.signAsync(payload),
+            refresh: await this.jwtService.signAsync(payload, {
+                expiresIn: "24h",
+            }),
+        };
+    }
+
+    async loginOAuthUser(userPayload: any) {
+        const payload = { sub: userPayload.sub, isAdmin: userPayload.isAdmin };
         return {
             access: await this.jwtService.signAsync(payload),
             refresh: await this.jwtService.signAsync(payload, {

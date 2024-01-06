@@ -15,6 +15,7 @@ import { UserLoginDto } from "./dto/auth.login.dto";
 import { UserRefreshDto } from "./dto/auth.refresh.dto";
 import { UserVerifyDto } from "./dto/auth.verify.dto";
 import { AuthRegisterDto } from "./dto/auth.register.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -50,5 +51,16 @@ export class AuthController {
     register(@Body() userData: AuthRegisterDto) {
         console.log(userData);
         return this.authService.register(userData);
+    }
+
+    @Get('google')
+    @UseGuards(AuthGuard('google'))
+    googleAuth(@Request() req) {
+    }
+
+    @Get('google/callback')
+    @UseGuards(AuthGuard('google'))
+    googleAuthRedirect(@Request() req) {
+        return req.user.tokens;
     }
 }
