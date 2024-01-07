@@ -13,13 +13,15 @@ export class UserService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly billingAccountServise: BillingAccountService
-    ) { }
+    ) {}
 
     async create(userData: UserCreateDto, isAdmin?: boolean) {
         console.log("I'm here in User create function");
 
         const { password, ...res } = userData;
-        const hashedPassword = userData.password ? await bcrypt.hash(userData.password, 10) : null;
+        const hashedPassword = userData.password
+            ? await bcrypt.hash(userData.password, 10)
+            : null;
         const billingAccountInstance =
             await this.billingAccountServise.create();
 
@@ -31,16 +33,12 @@ export class UserService {
             isAdmin: isAdmin,
         });
 
-
         console.log(`New User: ${newUser}`);
         return await this.userRepository.save(newUser);
     }
 
     async findOneByEmail(email: string): Promise<User | undefined> {
         return await this.userRepository.findOne({ where: { email } });
-    }
-    async findOneByIIN(iin: string): Promise<User | undefined> {
-        return await this.userRepository.findOne({ where: { iin } });
     }
 
     findOneById(id: number): Promise<User | undefined> {
@@ -68,7 +66,7 @@ export class UserService {
         return await this.userRepository.save(userData);
     }
 
-    save(userInstance: User): void {
-        this.userRepository.save(userInstance);
+    async save(userInstance: User) {
+        await this.userRepository.save(userInstance);
     }
 }

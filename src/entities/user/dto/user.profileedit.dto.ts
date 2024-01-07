@@ -13,11 +13,6 @@ export class UserProfileEditDto {
     @IsString()
     firstName: string;
 
-    @ApiProperty({ required: false })
-    @IsOptional()
-    @IsString()
-    middleName: string;
-
     @ApiProperty({ type: Number })
     @IsInt()
     liga: Liga;

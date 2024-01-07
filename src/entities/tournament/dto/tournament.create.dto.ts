@@ -13,7 +13,7 @@ export class TournamentCreateDto {
     @ApiProperty()
     coverDescription: MultilingualtextDto;
 
-    @ApiProperty()
+    @ApiProperty({ example: Date.now() })
     @IsNumber()
     startDate: number;
 

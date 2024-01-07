@@ -5,7 +5,7 @@ export class TournamnetTimeCoverDto {
     @ApiProperty()
     id: number;
 
-    @ApiProperty()
+    @ApiProperty({ example: Date.now() })
     startTime: number;
 
     @ApiProperty()

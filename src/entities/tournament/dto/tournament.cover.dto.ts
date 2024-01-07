@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNumber, IsString } from "class-validator";
 
-
 export class TournamnetCoverDto {
     @ApiProperty()
     @IsInt()
@@ -13,10 +12,9 @@ export class TournamnetCoverDto {
 
     @ApiProperty()
     @IsString()
-    description: string
+    description: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: Date.now() })
     @IsNumber()
     startDate: number;
-
 }
