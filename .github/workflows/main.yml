@@ -20,6 +20,13 @@ jobs:
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
             - name: Build and Push Docker Image
+              env:
+                  CLOUD_DATABASE_HOST: ${{ secrets.CLOUD_DATABASE_HOST }}
+                  CLOUD_DATABASE_USER: ${{ secrets.g-of-d }}
+                  CLOUD_DATABASE_PASS: ${{ secrets.Sdu2023 }}
+                  CLOUD_DATABASE_NAME: ${{ secrets.g-of-d }}
+                  JWT_SECRET: ${{ secrets.dron }}
+                  
               uses: docker/build-push-action@v2
               with:
                   context: .

@@ -1,4 +1,3 @@
-import { IsIINAlreadyExist } from "./../../common/validations/is-iin-exist.constraint";
 import { IsEmailAlreadyExist } from "./../../common/validations/is-email-exist.constraint";
 import { ApiProperty } from "@nestjs/swagger";
 import {
@@ -11,22 +10,13 @@ import {
     Validate,
     min,
 } from "class-validator";
-import { Liga } from "src/entities/liga/liga.entity";
-import { isInt8Array } from "util/types";
 
 export class AuthRegisterDto {
-    @ApiProperty()
-    @IsEmail()
-    @Validate(IsEmailAlreadyExist)
-    email: string;
+    @ApiProperty({ example: "1ec61dddb22a33314a50b883a6a53981a6ef9f6a" })
+    @IsString()
+    token: string;
 
-    @ApiProperty()
-    @IsNumberString()
-    @Length(12, 12, { message: "iin must be exactly 12 characters" })
-    @Validate(IsIINAlreadyExist)
-    iin: string;
-
-    @ApiProperty()
+    @ApiProperty({ example: "12345678" })
     @IsString()
     @MinLength(8)
     password: string;

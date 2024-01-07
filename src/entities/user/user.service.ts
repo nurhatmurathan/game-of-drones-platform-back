@@ -1,11 +1,10 @@
-import { BillingAccount } from "./../billing.account/billing.account.entity";
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { User } from "./user.entity";
 import * as bcrypt from "bcrypt";
-import { UserCreateDto } from "./dto/user.create.dto";
+import { Repository } from "typeorm";
 import { BillingAccountService } from "../billing.account/billing.account.service";
+import { UserCreateDto } from "./dto/user.create.dto";
+import { User } from "./user.entity";
 
 @Injectable()
 export class UserService {
@@ -16,10 +15,12 @@ export class UserService {
     ) { }
 
     async create(userData: UserCreateDto, isAdmin?: boolean) {
-        console.log("I'm here in User create function");
+        console.log("I'm here in User service - create function ");
 
         const { password, ...res } = userData;
-        const hashedPassword = userData.password ? await bcrypt.hash(userData.password, 10) : null;
+        const hashedPassword = userData.password
+            ? await bcrypt.hash(userData.password, 10)
+            : null;
         const billingAccountInstance =
             await this.billingAccountServise.create();
 
@@ -31,16 +32,13 @@ export class UserService {
             isAdmin: isAdmin,
         });
 
-
         console.log(`New User: ${newUser}`);
         return await this.userRepository.save(newUser);
     }
 
     async findOneByEmail(email: string): Promise<User | undefined> {
+        console.log("I'm here in User Service - findOneByEmail function");
         return await this.userRepository.findOne({ where: { email } });
-    }
-    async findOneByIIN(iin: string): Promise<User | undefined> {
-        return await this.userRepository.findOne({ where: { iin } });
     }
 
     findOneById(id: number): Promise<User | undefined> {
@@ -68,7 +66,7 @@ export class UserService {
         return await this.userRepository.save(userData);
     }
 
-    save(userInstance: User): void {
-        this.userRepository.save(userInstance);
+    async save(userInstance: User) {
+        await this.userRepository.save(userInstance);
     }
 }

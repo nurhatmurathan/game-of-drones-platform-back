@@ -3,7 +3,7 @@ import { Route } from "./../../route/route.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class TrainingCreateDto {
-    @ApiProperty()
+    @ApiProperty({ example: Date.now() })
     readonly startTime: number;
 
     @ApiProperty()

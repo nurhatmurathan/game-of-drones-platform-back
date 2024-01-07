@@ -8,9 +8,5 @@ export class UserCoverDto {
     @ApiProperty()
     lastName: string;
     @ApiProperty()
-    middleName: string;
-    @ApiProperty()
-    iin: string;
-    @ApiProperty()
     email: string;
 }

@@ -19,8 +19,6 @@ export class UserAdminService {
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
-            middleName: user.middleName,
-            iin: user.iin,
             email: user.email,
         }));
     }
@@ -33,8 +31,6 @@ export class UserAdminService {
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
-            middleName: user.middleName,
-            iin: user.iin,
             email: user.email,
         }));
     }

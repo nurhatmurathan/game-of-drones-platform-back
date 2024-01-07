@@ -10,7 +10,6 @@ import {
     OneToOne,
     JoinColumn,
 } from "typeorm";
-import { UserToken } from "../user.token/user.token.entity";
 
 @Entity("users")
 export class User {
@@ -23,22 +22,11 @@ export class User {
     @Column({ name: "last_name", type: "varchar", length: 50, nullable: true })
     lastName: string;
 
-    @Column({
-        name: "middle_name",
-        type: "varchar",
-        length: 50,
-        nullable: true,
-    })
-    middleName: string;
-
     @Column({ name: "email", type: "varchar", length: 100, unique: true })
     email: string;
 
     @Column({ name: "password", type: "varchar" })
     password: string;
-
-    @Column({ name: "iin", type: "varchar", length: 12, unique: true })
-    iin: string;
 
     @Column({ name: "avatar", type: "varchar", nullable: true })
     avatar: string;
@@ -60,7 +48,4 @@ export class User {
         (userTournamentTime) => userTournamentTime.user
     )
     userTournamentTimes: UserTournamentTime[];
-
-    @OneToMany(() => UserToken, (userToken) => userToken.user)
-    userTokens: UserToken[];
 }

@@ -16,11 +16,14 @@ import { TaskModule } from "./entities/task/task.module";
 import { ActionModule } from "./entities/action/action.module";
 import { UserTournamentTimeModule } from "./entities/user.tournament.time/user.tournament.time.module";
 import { TrainingModule } from "./entities/training/training.module";
+import { MailModule } from "./mail/mail.module";
+import { TokenModule } from "./entities/token/token.module";
 
 @Module({
     imports: [
         DatabaseModule,
         ConfigModule,
+        TokenModule,
         ValidatorModule,
         UserModule,
         LigaModule,
@@ -34,6 +37,7 @@ import { TrainingModule } from "./entities/training/training.module";
         TaskModule,
         ActionModule,
         TrainingModule,
+        MailModule,
     ],
     controllers: [AuthController],
     providers: [AuthService],

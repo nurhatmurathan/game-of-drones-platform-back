@@ -2,7 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { RouteRetrieveDto } from "../../route/dto/route.retrieve.dto";
 import { IsDate, IsInt, IsNumber, IsString } from "class-validator";
 
-
 export class TournamentListDto {
     @ApiProperty()
     @IsInt()
@@ -14,9 +13,9 @@ export class TournamentListDto {
 
     @ApiProperty()
     @IsString()
-    description: string
+    description: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: Date.now() })
     @IsNumber()
     startDate: number;
 

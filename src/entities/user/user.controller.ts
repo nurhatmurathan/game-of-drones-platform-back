@@ -11,14 +11,13 @@ import {
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserCreateDto } from "./dto/user.create.dto";
 import { UserProfileEditDto } from "./dto/user.profileedit.dto";
 
 @ApiTags("User")
 @Controller("users")
 @UseGuards(CustomAuthGuard)
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {}
 
     @ApiBearerAuth()
     @Get("profile/cover")
