@@ -1,10 +1,11 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+
 import * as bcrypt from "bcrypt";
-import { UserCreateDto } from "src/entities/user/dto/user.create.dto";
-import { UserProfileEditDto } from "src/entities/user/dto/user.profileedit.dto";
-import { User } from "src/entities/user/user.entity";
+
 import { TokenService } from "../entities/token/token.service";
+import { UserCreateDto, UserProfileEditDto } from "../entities/user/dto";
+import { User } from "../entities/user/user.entity";
 import { UserService } from "../entities/user/user.service";
 import { MailService } from "../mail/mail.service";
 

@@ -1,9 +1,8 @@
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { Token } from "./token.entity";
-import { Repository } from "typeorm";
-import { User } from "../user/user.entity";
 import { randomBytes } from "crypto";
+import { Repository } from "typeorm";
+import { Token } from "./token.entity";
 
 @Injectable()
 export class TokenService {
@@ -13,6 +12,8 @@ export class TokenService {
     ) {}
 
     async createSixNumberedCode(email: string): Promise<string> {
+        this.clearRegisterTokens(email);
+
         const code: string = Math.floor(Math.random() * 1000000)
             .toString()
             .padStart(6, "0"); // 0 to 999999
@@ -54,5 +55,13 @@ export class TokenService {
             .from(Token)
             .where({ email })
             .execute();
+    }
+
+    async findOneByCode(code: string): Promise<Token | undefined> {
+        return await this.tokenRepository.findOne({ where: { code } });
+    }
+
+    async findOneByToken(token: string): Promise<Token | undefined> {
+        return await this.tokenRepository.findOne({ where: { token } });
     }
 }

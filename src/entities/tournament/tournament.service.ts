@@ -1,17 +1,19 @@
 import { BadRequestException, Injectable, Req } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThanOrEqual } from "typeorm";
+import { MoreThanOrEqual, Repository } from "typeorm";
 
-import { Tournament } from "./tournament.entity";
-import { TournamentListDto } from "./dto/tournament.list.dto";
-import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
-import { TournamentCreateDto } from "./dto/tournament.create.dto";
+import { UtilService } from "../../utils/util.service";
 import { LigaService } from "../liga/liga.service";
+import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
-import { UtilService } from "../../utils/util.service";
 import { UserService } from "../user/user.service";
-import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
+import {
+    TournamentCreateDto,
+    TournamentListDto,
+    TournamentRetrieveDto
+} from "./dto";
+import { Tournament } from "./tournament.entity";
 
 @Injectable()
 export class TournamentService {
@@ -24,7 +26,7 @@ export class TournamentService {
         private readonly ligaService: LigaService,
         private readonly utilService: UtilService,
         private readonly userService: UserService
-    ) {}
+    ) { }
 
     async findLigaTournaments(@Req() request): Promise<TournamentListDto[]> {
         console.log("Step in Service");

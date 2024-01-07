@@ -1,9 +1,8 @@
-import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { MultilingualtextDto } from "./dto/multilingualtext.dto";
-import { MultilingualtextUpdateDto } from "./dto/multilingualtext.update.dto";
+import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
+import { MultilingualtextDto, MultilingualtextUpdateDto } from "./dto";
 
 @Injectable()
 export class MultilingualtextService {

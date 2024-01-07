@@ -1,25 +1,20 @@
 import {
-    Req,
     Body,
     Controller,
-    Get,
-    Param,
-    ParseIntPipe,
-    Post,
     HttpCode,
     HttpStatus,
-    UseGuards,
+    Post
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-import { ActionCreateDto } from "./dto/action.create.dto";
-import { ActionService } from "./action.service";
 import { Action } from "./action.entity";
+import { ActionService } from "./action.service";
+import { ActionCreateDto } from "./dto";
 
 @ApiTags("Action")
 @Controller("action")
 export class ActionController {
-    constructor(private readonly actionService: ActionService) {}
+    constructor(private readonly actionService: ActionService) { }
 
     @Post()
     @ApiBearerAuth()

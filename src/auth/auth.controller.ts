@@ -17,12 +17,9 @@ import {
     AuthRegisterDto,
     UserLoginDto,
     UserRefreshDto,
-    UserVerifyDto
+    UserVerifyDto,
 } from "./dto";
-import {
-    CustomAuthGuard
-} from "./guards";
-
+import { CustomAuthGuard } from "./guards";
 
 @ApiTags("auth")
 @Controller("auth")

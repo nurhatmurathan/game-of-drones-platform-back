@@ -1,9 +1,9 @@
-import { IsAdminGuard } from "./../../auth/guards/admin.guard";
-import { CustomAuthGuard } from "../../auth/guards/auth.guard";
-import { Body, Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import { IsAdminGuard } from "./../../auth/guards";
+import { UserCoverDto } from "./dto";
 import { UserAdminService } from "./user.admin.service";
-import { UserCoverDto } from "./dto/user.cover.dto";
 
 @ApiTags("Admin User")
 @Controller("admin-users")

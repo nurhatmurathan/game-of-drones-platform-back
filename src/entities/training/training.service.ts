@@ -1,9 +1,9 @@
-import { InjectRepository } from "@nestjs/typeorm";
-import { Training } from "./training.entity";
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, Repository } from "typeorm";
-import { TrainingCreateDto } from "./dto/training.create.dto";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
+import { TrainingCreateDto } from "./dto";
+import { Training } from "./training.entity";
 
 @Injectable()
 export class TrainingService {
@@ -11,7 +11,7 @@ export class TrainingService {
         @InjectRepository(Training)
         private readonly trainingRepository: Repository<Training>,
         private readonly tournamentTimeService: TournamentTimeService
-    ) {}
+    ) { }
 
     async create(trainingData: TrainingCreateDto): Promise<Training> {
         return await this.trainingRepository.save(trainingData);

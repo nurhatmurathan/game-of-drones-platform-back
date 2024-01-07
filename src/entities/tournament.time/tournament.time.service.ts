@@ -6,12 +6,11 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { TournamentTime } from "./tournament.time.entity";
-import { TournamentTimeListDto } from "./dto/tournament.time.list.dto";
-import { UserService } from "../user/user.service";
-import { TournamnetTimeCreateDto } from "./dto/tournament.time.create.dto";
-import { User } from "../user/user.entity";
 import { Tournament } from "../tournament/tournament.entity";
+import { User } from "../user/user.entity";
+import { UserService } from "../user/user.service";
+import { TournamentTimeListDto } from "./dto";
+import { TournamentTime } from "./tournament.time.entity";
 
 @Injectable()
 export class TournamentTimeService {
@@ -19,7 +18,7 @@ export class TournamentTimeService {
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
         private readonly userService: UserService
-    ) {}
+    ) { }
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });

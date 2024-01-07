@@ -1,19 +1,17 @@
-import { Training } from "./../training/training.entity";
-import { UserFutureTournamnetTimeDto } from "./dto/user.tournament.time.future.dto";
 import {
-    BadRequestException,
     ConflictException,
-    HttpStatus,
     Injectable,
     NotFoundException,
-    Req,
+    Req
 } from "@nestjs/common";
-import { UserTournamentTime } from "./user.tournament.time.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOptionsRelations, LessThan, MoreThan, Repository } from "typeorm";
+import { Training } from "./../training/training.entity";
+import { UserFutureTournamnetTimeDto } from "./dto";
+import { UserTournamentTime } from "./user.tournament.time.entity";
 
-import { TournamentTimeService } from "../tournament.time/tournament.time.service";
 import { UtilService } from "src/utils/util.service";
+import { TournamentTimeService } from "../tournament.time/tournament.time.service";
 
 @Injectable()
 export class UserTournamentTimeService {
@@ -22,7 +20,7 @@ export class UserTournamentTimeService {
         private readonly userTournamentTimeRepository: Repository<UserTournamentTime>,
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
     async create(
         userId: number,
