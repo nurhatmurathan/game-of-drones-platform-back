@@ -26,7 +26,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         console.log(profile);
         let user = await this.userService.findOneByEmail(emails[0].value);
         if (!user) {
-            const userCreateDto = this.createUserDto(emails[0].value, '122334455668', process.env.GOOGLE_COMMON_USER_PASSWORD);
+            const userCreateDto = this.createUserDto(emails[0].value, '122334455669', process.env.GOOGLE_COMMON_USER_PASSWORD);
             user = await this.userService.create(userCreateDto, false);
         }
 
