@@ -1,11 +1,14 @@
+import { TokenModule } from "./../../entities/token/token.module";
 import { UserModule } from "./../../entities/user/user.module";
 import { Module } from "@nestjs/common";
 import { IsEmailAlreadyExist } from "./is-email-exist.constraint";
+import { IsValidCode } from "./is-valid-code.constraint";
+import { IsValidToken } from "./is-valid-token.constraint";
 
 @Module({
-    imports: [UserModule],
+    imports: [UserModule, TokenModule],
     controllers: [],
-    providers: [IsEmailAlreadyExist],
+    providers: [IsEmailAlreadyExist, IsValidCode, IsValidToken],
     exports: [],
 })
 export class ValidatorModule {}

@@ -55,4 +55,12 @@ export class TokenService {
             .where({ email })
             .execute();
     }
+
+    async findOneByCode(code: string): Promise<Token | undefined> {
+        return await this.tokenRepository.findOne({ where: { code } });
+    }
+
+    async findOneByToken(token: string): Promise<Token | undefined> {
+        return await this.tokenRepository.findOne({ where: { token } });
+    }
 }
