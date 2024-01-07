@@ -1,8 +1,8 @@
 {
   "name": "game-of-d",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Game Of Drones - platform backend server",
+  "author": "Nurkhat Muratkan, Dias Gaziz",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

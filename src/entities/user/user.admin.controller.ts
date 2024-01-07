@@ -1,16 +1,16 @@
-import { IsAdminGuard } from "./../../auth/guards/admin.guard";
-import { CustomAuthGuard } from "../../auth/guards/auth.guard";
-import { Body, Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserAdminService } from "./user.admin.service";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import { IsAdminGuard } from "./../../auth/guards";
 import { UserCoverDto } from "./dto/user.cover.dto";
+import { UserAdminService } from "./user.admin.service";
 
 @ApiTags("Admin User")
 @Controller("admin-users")
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard, IsAdminGuard)
 export class UserAdminController {
-    constructor(private readonly userAdminService: UserAdminService) { }
+    constructor(private readonly userAdminService: UserAdminService) {}
 
     @Get("users")
     async findAllUser(): Promise<UserCoverDto[]> {
