@@ -1,11 +1,8 @@
-import { IsEmail } from "class-validator";
-import { TokenService } from "../entities/token/token.service";
-import { UserService } from "../entities/user/user.service";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { UserLoginDto } from "./dto/auth.login.dto";
-import { AuthRegisterDto } from "./dto/auth.register.dto";
+import { TokenService } from "../entities/token/token.service";
+import { UserService } from "../entities/user/user.service";
 import { MailService } from "../mail/mail.service";
 
 @Injectable()

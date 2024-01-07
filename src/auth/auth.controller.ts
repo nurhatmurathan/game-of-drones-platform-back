@@ -8,16 +8,18 @@ import {
     Request,
     UseGuards,
 } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { CustomAuthGuard } from "./guards/auth.guard";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserLoginDto } from "./dto/auth.login.dto";
-import { UserRefreshDto } from "./dto/auth.refresh.dto";
-import { UserVerifyDto } from "./dto/auth.verify.dto";
-import { AuthRegisterDto } from "./dto/auth.register.dto";
 import { AuthGuard } from "@nestjs/passport";
-import { AuthEmailVerifyDto } from "./dto/auth.email.verify.dto";
-import { AuthCodeVerifyDto } from "./dto/auth.code.verify";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { AuthService } from "./auth.service";
+import {
+    AuthCodeVerifyDto,
+    AuthEmailVerifyDto,
+    AuthRegisterDto,
+    UserLoginDto,
+    UserRefreshDto,
+    UserVerifyDto,
+} from "./dto";
+import { CustomAuthGuard } from "./guards";
 
 @ApiTags("auth")
 @Controller("auth")
