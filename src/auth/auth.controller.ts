@@ -8,6 +8,7 @@ import {
     Request,
     UseGuards,
 } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import {
@@ -19,8 +20,7 @@ import {
     UserVerifyDto
 } from "./dto";
 import {
-    CustomAuthGuard,
-    GoogleAuthGuard
+    CustomAuthGuard
 } from "./guards";
 
 
@@ -72,15 +72,28 @@ export class AuthController {
     }
 
     @Get("google")
-    @UseGuards(GoogleAuthGuard)
+    @UseGuards(AuthGuard('google'))
     googleAuth(@Request() req) {
-        console.log("I'm here in googleAuth funtion");
+        console.log("I'm here in - googleAuth funtion");
     }
 
     @Get("google/callback")
-    @UseGuards(GoogleAuthGuard)
+    @UseGuards(AuthGuard('google'))
     googleAuthRedirect(@Request() req) {
         console.log("I'm in - googleAuthRedirect funtion");
+        return req.user.tokens;
+    }
+
+    @Get('facebook')
+    @UseGuards(AuthGuard('facebook'))
+    async facebookLogin(): Promise<any> {
+        console.log("I'm here in - facebookLogin funtion");
+    }
+
+    @Get('facebook/callback')
+    @UseGuards(AuthGuard('facebook'))
+    facebookAuthRedirect(@Request() req): any {
+        console.log("I'm here in - facebookAuthRedirect");
         return req.user.tokens;
     }
 }
