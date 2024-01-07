@@ -37,3 +37,12 @@ jobs:
                   file: Dockerfile
                   push: true
                   tags: ${{ secrets.DOCKER_USERNAME }}/g-of-d:latest
+                  build-args: |
+                    CLOUD_DATABASE_HOST=${{ secrets.CLOUD_DATABASE_HOST }}
+                    CLOUD_DATABASE_USER=${{ secrets.CLOUD_DATABASE_USER }}
+                    CLOUD_DATABASE_PASS=${{ secrets.CLOUD_DATABASE_PASS }}
+                    CLOUD_DATABASE_NAME=${{ secrets.CLOUD_DATABASE_NAME }}
+                    JWT_SECRET=${{ secrets.JWT_SECRET }}
+                    GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+                    GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+                    GOOGLE_COMMON_USER_PASSWORD=${{ secrets.GOOGLE_COMMON_USER_PASSWORD }}
