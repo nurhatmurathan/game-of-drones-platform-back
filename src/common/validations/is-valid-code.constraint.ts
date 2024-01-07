@@ -1,10 +1,10 @@
-import { TokenService } from "../../entities/token/token.service";
+import { Injectable } from "@nestjs/common";
 import {
+    ValidationArguments,
     ValidatorConstraint,
     ValidatorConstraintInterface,
-    ValidationArguments,
 } from "class-validator";
-import { Injectable } from "@nestjs/common";
+import { TokenService } from "../../entities/token/token.service";
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -22,6 +22,6 @@ export class IsValidCode implements ValidatorConstraintInterface {
     }
 
     defaultMessage(validationArguments?: ValidationArguments): string {
-        return "Code is Invalid or Expired!";
+        return "Code is not Active or Expired!";
     }
 }
