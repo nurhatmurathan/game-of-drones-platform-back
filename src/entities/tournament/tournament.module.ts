@@ -1,15 +1,17 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { Tournament } from "./tournament.entity";
-import { LigaModule } from "../liga/liga.module";
-import { RouteModule } from "../route/route.module";
-import { TournamentController } from "./tournament.controller";
-import { TournamentService } from "./tournament.service";
 import { UtilModule } from "../../utils/util.module";
-import { UserModule } from "../user/user.module";
-import { TournamentTimeModule } from "../tournament.time/tournament.time.module";
+import { LigaModule } from "../liga/liga.module";
 import { MultilingualtextModule } from "../multilingualtext/multilingualtext.module";
+import { RouteModule } from "../route/route.module";
+import { TournamentTimeModule } from "../tournament.time/tournament.time.module";
+import { UserModule } from "../user/user.module";
+import { TournamentAdminController } from "./tournament.admin.controller";
+import { TournamentAdminService } from "./tournament.admin.service";
+import { TournamentController } from "./tournament.controller";
+import { Tournament } from "./tournament.entity";
+import { TournamentService } from "./tournament.service";
 
 @Module({
     imports: [
@@ -21,7 +23,7 @@ import { MultilingualtextModule } from "../multilingualtext/multilingualtext.mod
         TournamentTimeModule,
         MultilingualtextModule
     ],
-    controllers: [TournamentController],
-    providers: [TournamentService],
+    controllers: [TournamentController, TournamentAdminController],
+    providers: [TournamentService, TournamentAdminService],
 })
 export class TournamentModule { }

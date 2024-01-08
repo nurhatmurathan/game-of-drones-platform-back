@@ -1,24 +1,20 @@
 import {
-    Body,
     Controller,
     Get,
     HttpCode,
     HttpStatus,
     Param,
     ParseIntPipe,
-    Post,
     Req,
-    UseGuards,
+    UseGuards
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import {
-    TournamentCreateDto,
     TournamentListDto,
     TournamentRetrieveDto
 } from "./dto";
-import { Tournament } from "./tournament.entity";
 import { TournamentService } from "./tournament.service";
 
 @ApiTags("Tournament")
@@ -33,7 +29,7 @@ export class TournamentController {
     async findAll(@Req() request): Promise<TournamentListDto[]> {
         console.log("Step in Controller");
         const tournamentListDto =
-            this.tournamentService.findLigaTournaments(request);
+            this.tournamentService.findAll(request);
         return tournamentListDto;
     }
 
@@ -50,12 +46,6 @@ export class TournamentController {
             request
         );
         return tournamentRetrieveDto;
-    }
-
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    create(@Body() tournamentData: TournamentCreateDto): Promise<Tournament> {
-        return this.tournamentService.create(tournamentData);
     }
 
     // @Get("liga/:id")

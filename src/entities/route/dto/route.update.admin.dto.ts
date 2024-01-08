@@ -1,14 +1,20 @@
-import { IsInt, IsString, IsUrl, ValidateNested } from "class-validator";
-import { MultilingualtextUpdateDto } from "src/entities/multilingualtext/dto/multilingualtext.update.dto";
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
+import { IsInt, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
+import { MultilingualtextUpdateDto } from "src/entities/multilingualtext/dto/multilingualtext.update.dto";
 
-export class RouteUpdateDto {
+export class RouteAdminUpdateDto {
+    @IsOptional()
+    @IsInt()
+    id: number;
+
     @ApiProperty()
     @IsString()
     name: string;
 
     @ApiProperty()
     @ValidateNested()
+    @Type(() => MultilingualtextUpdateDto)
     description: MultilingualtextUpdateDto;
 
     @ApiProperty()

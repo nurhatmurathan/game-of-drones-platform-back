@@ -1,15 +1,13 @@
-import { Liga } from "../../entities/liga/liga.entity";
-import { UserTournamentTime } from "../../entities/user.tournament.time/user.tournament.time.entity";
-import { BillingAccount } from "../billing.account/billing.account.entity";
 import {
-    Entity,
     Column,
-    PrimaryGeneratedColumn,
-    ManyToOne,
+    Entity,
+    JoinColumn,
     OneToMany,
     OneToOne,
-    JoinColumn,
+    PrimaryGeneratedColumn
 } from "typeorm";
+import { UserTournamentTime } from "../../entities/user.tournament.time/user.tournament.time.entity";
+import { BillingAccount } from "../billing.account/billing.account.entity";
 
 @Entity("users")
 export class User {
@@ -38,10 +36,10 @@ export class User {
     @JoinColumn()
     billingAccount: BillingAccount;
 
-    @ManyToOne(() => Liga, (liga) => liga.users, {
-        onDelete: "SET NULL",
-    })
-    liga: Liga;
+    // @ManyToOne(() => Liga, (liga) => liga.users, {
+    //     onDelete: "SET NULL",
+    // })
+    // liga: Liga;
 
     @OneToMany(
         () => UserTournamentTime,

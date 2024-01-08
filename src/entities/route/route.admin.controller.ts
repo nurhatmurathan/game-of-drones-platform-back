@@ -1,4 +1,3 @@
-import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
 import {
     Body,
     Controller,
@@ -13,8 +12,9 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
+import { RouteAdminCreateDto, RouteAdminRetrieveDto, RouteAdminUpdateDto, RouteListDto } from "./dto";
 import { RouteAdminService } from "./route.admin.service";
-import { RouteListDto, RouteCreateDto, RouteRetrieveAdminDto, RouteUpdateDto } from "./dto";
 
 @ApiTags("Admin Route")
 @Controller("admin-route")
@@ -33,13 +33,13 @@ export class RouteAdminController {
     @HttpCode(HttpStatus.ACCEPTED)
     async findOne(
         @Param("id", ParseIntPipe) id: number
-    ): Promise<RouteRetrieveAdminDto> {
+    ): Promise<RouteAdminRetrieveDto> {
         return await this.routeAdminSerevice.findOne(id);
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() routeDate: RouteCreateDto): Promise<RouteCreateDto> {
+    create(@Body() routeDate: RouteAdminCreateDto): Promise<RouteAdminCreateDto> {
         return this.routeAdminSerevice.create(routeDate);
     }
 
@@ -47,8 +47,8 @@ export class RouteAdminController {
     @HttpCode(HttpStatus.ACCEPTED)
     async update(
         @Param("id", ParseIntPipe) id: number,
-        @Body() routeUpdateDto: RouteUpdateDto
-    ): Promise<RouteRetrieveAdminDto> {
+        @Body() routeUpdateDto: RouteAdminUpdateDto
+    ): Promise<RouteAdminRetrieveDto> {
         return this.routeAdminSerevice.update(id, routeUpdateDto);
     }
 

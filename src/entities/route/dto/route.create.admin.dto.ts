@@ -1,14 +1,16 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import { IsInt, IsString, IsUrl, ValidateNested } from "class-validator";
 import { MultilingualtextDto } from "../../multilingualtext/dto/multilingualtext.dto";
-import { ApiProperty } from "@nestjs/swagger";
 
-export class RouteCreateDto {
+export class RouteAdminCreateDto {
     @ApiProperty()
     @IsString()
     name: string;
 
     @ApiProperty()
     @ValidateNested()
+    @Type(() => MultilingualtextDto)
     description: MultilingualtextDto;
 
     @ApiProperty()

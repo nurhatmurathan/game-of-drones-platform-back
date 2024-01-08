@@ -1,16 +1,15 @@
-import { Liga } from "../../entities/liga/liga.entity";
-import { Route } from "../../entities/route/route.entity";
-import { TournamentTime } from "../../entities/tournament.time/tournament.time.entity";
-import { MultilingualText } from "../multilingualtext/multilingualtext.entity";
 import {
-    Entity,
     Column,
-    PrimaryGeneratedColumn,
+    Entity,
+    JoinColumn,
     ManyToOne,
     OneToMany,
     OneToOne,
-    JoinColumn,
+    PrimaryGeneratedColumn,
 } from "typeorm";
+import { Route } from "../../entities/route/route.entity";
+import { TournamentTime } from "../../entities/tournament.time/tournament.time.entity";
+import { MultilingualText } from "../multilingualtext/multilingualtext.entity";
 
 @Entity("tournament")
 export class Tournament {
@@ -26,10 +25,10 @@ export class Tournament {
     @Column({ name: "price", type: "double precision" })
     price: number;
 
-    @ManyToOne(() => Liga, (liga) => liga.tournaments, {
-        onDelete: "SET NULL",
-    })
-    liga: Liga;
+    // @ManyToOne(() => Liga, (liga) => liga.tournaments, {
+    //     onDelete: "SET NULL",
+    // })
+    // liga: Liga;
 
     @ManyToOne(() => Route, (route) => route.tournaments)
     route: Route;

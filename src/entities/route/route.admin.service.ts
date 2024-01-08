@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Route } from "./route.entity";
 import { Repository } from "typeorm";
-import {
-    RouteRetrieveAdminDto,
-    RouteListDto,
-    RouteCreateDto,
-    RouteUpdateDto,
-} from "./dto/index";
 import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
-import e from "express";
+import {
+    RouteAdminCreateDto,
+    RouteAdminRetrieveDto,
+    RouteAdminUpdateDto,
+    RouteListDto,
+} from "./dto/index";
+import { Route } from "./route.entity";
 
 @Injectable()
 export class RouteAdminService {
@@ -28,14 +27,18 @@ export class RouteAdminService {
         }));
     }
 
-    async findOne(id: number): Promise<RouteRetrieveAdminDto> {
+    async findOne(id: number): Promise<RouteAdminRetrieveDto> {
         return await this.routeRepository.findOne({
             where: { id },
             relations: ["description"],
         });
     }
 
-    async create(routeData: RouteCreateDto): Promise<RouteCreateDto> {
+    async findOneInstance(id: number): Promise<Route> {
+        return await this.routeRepository.findOne({ where: { id } });
+    }
+
+    async create(routeData: RouteAdminCreateDto): Promise<RouteAdminCreateDto> {
         const { description, ...routeInformation } = routeData;
 
         const multilingualTextInstance =
@@ -49,7 +52,7 @@ export class RouteAdminService {
         return this.routeRepository.save(newRouteInstance);
     }
 
-    async update(id: number, routeDtoData: RouteUpdateDto): Promise<RouteRetrieveAdminDto> {
+    async update(id: number, routeDtoData: RouteAdminUpdateDto): Promise<RouteAdminRetrieveDto> {
         const { description, ...route } = routeDtoData;
         const routeInstance = await this.routeRepository.findOne({ where: { id } });
 
@@ -61,7 +64,7 @@ export class RouteAdminService {
         return this.mapEntityToDto(updatedRoute);
     }
 
-    private mapEntityToDto(entity: Route): RouteRetrieveAdminDto {
+    private mapEntityToDto(entity: Route): RouteAdminRetrieveDto {
         return {
             id: entity.id,
             name: entity.name,

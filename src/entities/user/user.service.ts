@@ -44,21 +44,19 @@ export class UserService {
     findOneById(id: number): Promise<User | undefined> {
         return this.userRepository.findOne({
             where: { id },
-            relations: ["liga", "billingAccount"],
+            relations: ["billingAccount"],
         });
     }
 
     async profileCover(tokenPayload: any) {
         const user = await this.userRepository.findOne({
             where: { id: tokenPayload.sub },
-            relations: ["liga"],
         });
 
         return {
             firstName: user.firstName,
             lastName: user.lastName,
             avatar: user.avatar || null,
-            liga: user.liga,
         };
     }
 

@@ -1,14 +1,11 @@
-import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
-import { Tournament } from "../../entities/tournament/tournament.entity";
-import { User } from "../../entities/user/user.entity";
 import {
-    Entity,
     Column,
-    PrimaryGeneratedColumn,
-    OneToMany,
-    OneToOne,
+    Entity,
     JoinColumn,
+    OneToOne,
+    PrimaryGeneratedColumn
 } from "typeorm";
+import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
 
 @Entity("liga")
 export class Liga {
@@ -22,15 +19,15 @@ export class Liga {
     @JoinColumn()
     description: MultilingualText;
 
-    @OneToMany(() => User, (user) => user.liga, {
-        cascade: true,
-        nullable: true
-    })
-    users: User[];
+    // @OneToMany(() => User, (user) => user.liga, {
+    //     cascade: true,
+    //     nullable: true
+    // })
+    // users: User[];
 
-    @OneToMany(() => Tournament, (tournament) => tournament.liga, {
-        cascade: true,
-        nullable: true,
-    })
-    tournaments: Tournament[];
+    // @OneToMany(() => Tournament, (tournament) => tournament.liga, {
+    //     cascade: true,
+    //     nullable: true,
+    // })
+    // tournaments: Tournament[];
 }

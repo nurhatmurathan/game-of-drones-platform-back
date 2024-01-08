@@ -1,15 +1,13 @@
-import { BadRequestException, Injectable, Req } from "@nestjs/common";
+import { Injectable, Req } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { MoreThanOrEqual, Repository } from "typeorm";
 
 import { UtilService } from "../../utils/util.service";
 import { LigaService } from "../liga/liga.service";
-import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
 import { UserService } from "../user/user.service";
 import {
-    TournamentCreateDto,
     TournamentListDto,
     TournamentRetrieveDto
 } from "./dto";
@@ -21,33 +19,21 @@ export class TournamentService {
         @InjectRepository(Tournament)
         private readonly tournamentRepository: Repository<Tournament>,
         private readonly tournamentTimeService: TournamentTimeService,
-        private readonly multilingualTextService: MultilingualtextService,
         private readonly routeService: RouteService,
         private readonly ligaService: LigaService,
         private readonly utilService: UtilService,
         private readonly userService: UserService
     ) { }
 
-    async findLigaTournaments(@Req() request): Promise<TournamentListDto[]> {
+    async findAll(@Req() request): Promise<TournamentListDto[]> {
         console.log("Step in Service");
-        console.log("User: " + request.user.sub);
 
-        const userInstance = await this.userService.findOneById(
-            request.user.sub
-        );
         const language = this.utilService.getLanguageFromHeaders(request);
-
-        if (!userInstance.liga) {
-            throw new BadRequestException("Please choose your 'Liga'!");
-        }
-
-        console.log("User liga: " + userInstance.liga.id);
         console.log("Language: " + language);
 
         const tournaments = await this.tournamentRepository.find({
-            relations: ["liga", "route", "coverDescription"],
+            relations: ["route", "coverDescription"],
             where: {
-                liga: { id: userInstance.liga.id },
                 startDate: MoreThanOrEqual(Date.now()),
             },
         });
@@ -65,46 +51,14 @@ export class TournamentService {
     }
 
     async findOne(id: number, @Req() request): Promise<TournamentRetrieveDto> {
-        const userInstance = await this.userService.findOneById(
-            request.user.sub
-        );
         const language = this.utilService.getLanguageFromHeaders(request);
 
         const tournament = await this.tournamentRepository.findOne({
             relations: ["liga", "route", "description"],
-            where: { id: id, liga: { id: userInstance.liga?.id } },
+            where: { id },
         });
 
         return this.mapTournamentToRetrieveDto(tournament, language);
-    }
-
-    async create(
-        createTournamentDto: TournamentCreateDto
-    ): Promise<Tournament> {
-        const {
-            ligaId,
-            routeId,
-            description,
-            coverDescription,
-            ...tournament
-        } = createTournamentDto;
-
-        const ligaInstance = await this.ligaService.getInstance(ligaId);
-        const routeInstance = await this.routeService.getInstance(routeId);
-        const multilingualTextDescriptionInstance =
-            await this.multilingualTextService.create(description);
-        const multilingualTextCoverDescriptionInstance =
-            await this.multilingualTextService.create(coverDescription);
-
-        const newTournaments = await this.tournamentRepository.create({
-            ...tournament,
-            description: multilingualTextDescriptionInstance,
-            coverDescription: multilingualTextCoverDescriptionInstance,
-            liga: ligaInstance,
-            route: routeInstance,
-        });
-
-        return this.tournamentRepository.save(newTournaments);
     }
 
     private async mapTournamentToListDto(
@@ -147,11 +101,11 @@ export class TournamentService {
         tournamentDto.startDate = tournament.startDate;
         tournamentDto.price = tournament.price;
 
-        if (tournament.liga)
-            tournamentDto.liga = await this.ligaService.findOne(
-                tournament.liga.id,
-                language
-            );
+        // if (tournament.liga)
+        //     tournamentDto.liga = await this.ligaService.findOne(
+        //         tournament.liga.id,
+        //         language
+        //     );
 
         if (tournament.route)
             tournamentDto.route = await this.routeService.findOne(

@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { Route } from "./route.entity";
 import { RouteListDto, RouteRetrieveDto } from "./dto/index";
+import { Route } from "./route.entity";
 
 @Injectable()
 export class RouteService {
@@ -36,9 +36,5 @@ export class RouteService {
             map: routeInstance.map,
             description: routeDesctiption,
         };
-    }
-
-    getInstance(id: number): Promise<Route> {
-        return this.routeRepository.findOne({ where: { id: id } });
     }
 }
