@@ -14,6 +14,6 @@ export class Token {
     @Column({ name: "token", type: "varchar", unique: true, default: null })
     token: string;
 
-    @Column({ name: "expiration_date", type: "timestamptz" })
+    @Column({ name: "expiration_date", type: "timestamp" })
     expirationDate: Date;
 }
