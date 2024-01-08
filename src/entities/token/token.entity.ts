@@ -1,6 +1,4 @@
-import { IsEmail } from "class-validator";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../user/user.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("token")
 export class Token {
@@ -16,6 +14,6 @@ export class Token {
     @Column({ name: "token", type: "varchar", unique: true, default: null })
     token: string;
 
-    @Column({ name: "expiration_date", type: "timestamp" })
+    @Column({ name: "expiration_date", type: "timestamptz" })
     expirationDate: Date;
 }
