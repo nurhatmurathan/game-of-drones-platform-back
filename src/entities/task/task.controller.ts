@@ -1,23 +1,25 @@
 import {
-    Req,
     Body,
     Controller,
     Get,
+    HttpCode,
+    HttpStatus,
     Param,
     ParseIntPipe,
     Post,
-    HttpCode,
-    HttpStatus,
+    Req,
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-import { TaskService } from "./task.service";
-import { UtilService } from "../../utils/util.service";
-import { TaskCreateDto } from "./dto/task.create.dto";
-import { TaskListDto } from "./dto/task.list.dto";
-import { TaskRetrieveDto } from "./dto/task.retrieve.dto";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import { UtilService } from "../../utils/util.service";
+import {
+    TaskCreateDto,
+    TaskListDto,
+    TaskRetrieveDto
+} from "./dto";
+import { TaskService } from "./task.service";
 
 @ApiTags("Task")
 @Controller("task")

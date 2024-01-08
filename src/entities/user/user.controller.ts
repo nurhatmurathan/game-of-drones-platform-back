@@ -1,23 +1,21 @@
-import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import {
     Body,
     Controller,
     Get,
     Post,
-    Req,
     Request,
-    Res,
-    UseGuards,
+    UseGuards
 } from "@nestjs/common";
-import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserProfileEditDto } from "./dto/user.profileedit.dto";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import { UserProfileEditDto } from "./dto";
+import { UserService } from "./user.service";
 
 @ApiTags("User")
 @Controller("users")
 @UseGuards(CustomAuthGuard)
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @ApiBearerAuth()
     @Get("profile/cover")

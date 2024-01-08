@@ -1,4 +1,3 @@
-import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import {
     Body,
     Controller,
@@ -12,14 +11,13 @@ import {
 } from "@nestjs/common";
 import {
     ApiBearerAuth,
-    ApiBody,
-    ApiProperty,
     ApiResponse,
-    ApiTags,
+    ApiTags
 } from "@nestjs/swagger";
-import { TrainingService } from "./training.service";
-import { TrainingCreateDto } from "./dto/training.create.dto";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import { TrainingCreateDto } from "./dto";
 import { Training } from "./training.entity";
+import { TrainingService } from "./training.service";
 
 @ApiTags("Training")
 @Controller("Training")

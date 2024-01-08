@@ -1,15 +1,15 @@
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { UserCoverDto } from "./dto";
 import { User } from "./user.entity";
-import { UserCoverDto } from "./dto/user.cover.dto";
 
 @Injectable()
 export class UserAdminService {
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>
-    ) {}
+    ) { }
 
     async findAllUsers(): Promise<UserCoverDto[]> {
         const userInstances = await this.userRepository.find({

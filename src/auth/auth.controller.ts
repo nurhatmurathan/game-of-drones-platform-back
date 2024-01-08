@@ -24,7 +24,7 @@ import { CustomAuthGuard } from "./guards";
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) { }
 
     @HttpCode(HttpStatus.ACCEPTED)
     @Post("verify/email")
@@ -69,12 +69,28 @@ export class AuthController {
     }
 
     @Get("google")
-    @UseGuards(AuthGuard("google"))
-    googleAuth(@Request() req) {}
+    @UseGuards(AuthGuard('google'))
+    googleAuth(@Request() req) {
+        console.log("I'm here in - googleAuth funtion");
+    }
 
     @Get("google/callback")
-    @UseGuards(AuthGuard("google"))
+    @UseGuards(AuthGuard('google'))
     googleAuthRedirect(@Request() req) {
+        console.log("I'm in - googleAuthRedirect funtion");
+        return req.user.tokens;
+    }
+
+    @Get('facebook')
+    @UseGuards(AuthGuard('facebook'))
+    async facebookLogin(): Promise<any> {
+        console.log("I'm here in - facebookLogin funtion");
+    }
+
+    @Get('facebook/callback')
+    @UseGuards(AuthGuard('facebook'))
+    facebookAuthRedirect(@Request() req): any {
+        console.log("I'm here in - facebookAuthRedirect");
         return req.user.tokens;
     }
 }

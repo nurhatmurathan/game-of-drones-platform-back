@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import { IsAdminGuard } from "./../../auth/guards";
-import { UserCoverDto } from "./dto/user.cover.dto";
+import { UserCoverDto } from "./dto";
 import { UserAdminService } from "./user.admin.service";
 
 @ApiTags("Admin User")
@@ -10,7 +10,7 @@ import { UserAdminService } from "./user.admin.service";
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard, IsAdminGuard)
 export class UserAdminController {
-    constructor(private readonly userAdminService: UserAdminService) {}
+    constructor(private readonly userAdminService: UserAdminService) { }
 
     @Get("users")
     async findAllUser(): Promise<UserCoverDto[]> {

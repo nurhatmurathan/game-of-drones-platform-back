@@ -1,11 +1,10 @@
-import { BillingAccount } from "./../billing.account/billing.account.entity";
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { User } from "./user.entity";
 import * as bcrypt from "bcrypt";
-import { UserCreateDto } from "./dto/user.create.dto";
+import { Repository } from "typeorm";
 import { BillingAccountService } from "../billing.account/billing.account.service";
+import { UserCreateDto } from "./dto";
+import { User } from "./user.entity";
 
 @Injectable()
 export class UserService {
@@ -13,10 +12,10 @@ export class UserService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly billingAccountServise: BillingAccountService
-    ) {}
+    ) { }
 
     async create(userData: UserCreateDto, isAdmin?: boolean) {
-        console.log("I'm here in User create function");
+        console.log("I'm here in User service - create function ");
 
         const { password, ...res } = userData;
         const hashedPassword = userData.password
@@ -38,6 +37,7 @@ export class UserService {
     }
 
     async findOneByEmail(email: string): Promise<User | undefined> {
+        console.log("I'm here in User Service - findOneByEmail function");
         return await this.userRepository.findOne({ where: { email } });
     }
 

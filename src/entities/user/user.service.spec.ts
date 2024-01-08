@@ -67,19 +67,6 @@ describe("UserService", () => {
         });
     });
 
-    describe("findOneByIIN", () => {
-        it("should return a user if a user with the IIN exists", async () => {
-            const user = { id: 1, iin: "123456789123" };
-            repository.findOne.mockResolvedValue(user);
-
-            const result = await service.findOneByIIN("123456789123");
-            expect(result).toEqual(user);
-            expect(repository.findOne).toHaveBeenCalledWith({
-                where: { iin: "123456789123" },
-            });
-        });
-    });
-
     describe("profileEdit", () => {
         it("should update user data", async () => {
             const user = { id: 1, email: "test@example.com" };

@@ -1,14 +1,16 @@
-import { Injectable, Inject, forwardRef } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { Task } from "./task.entity";
-import { TaskCreateDto } from "./dto/task.create.dto";
-import { TaskListDto } from "./dto/task.list.dto";
-import { TaskRetrieveDto } from "./dto/task.retrieve.dto";
-import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { ActionService } from "../action/action.service";
+import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
+import {
+    TaskCreateDto,
+    TaskListDto,
+    TaskRetrieveDto
+} from "./dto";
+import { Task } from "./task.entity";
 
 @Injectable()
 export class TaskService {
@@ -19,7 +21,7 @@ export class TaskService {
         private readonly actionService: ActionService,
         private readonly multilingualTextService: MultilingualtextService,
         private readonly userTournamentTimeService: UserTournamentTimeService
-    ) {}
+    ) { }
 
     async findAll(language: string): Promise<TaskListDto[]> {
         const taskList = await this.taskReposotory.find({
@@ -34,10 +36,10 @@ export class TaskService {
                 id: task.id,
                 name: task.name,
                 // description: description,
-                taskDescription: taskDescription 
+                taskDescription: taskDescription
             }
         });
-        
+
         return taskListDto;
     }
 
@@ -57,8 +59,8 @@ export class TaskService {
             );
 
         let doneCount = 0;
-        if (taskInstance.inOneGame) 
-            doneCount = await this.actionService.maxActionCountInOneTournament(taskInstance.id, listOfTournamentsIdsOfGivenUser); 
+        if (taskInstance.inOneGame)
+            doneCount = await this.actionService.maxActionCountInOneTournament(taskInstance.id, listOfTournamentsIdsOfGivenUser);
         else
             doneCount = await this.actionService.countActionsInAllTournaments(
                 taskInstance.id,
@@ -89,7 +91,7 @@ export class TaskService {
         const newTask = this.taskReposotory.create({
             ...task,
             description: multilingualTextDescription,
-            taskDescription: multilingualTexTaskDescription    
+            taskDescription: multilingualTexTaskDescription
 
         });
 

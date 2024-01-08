@@ -1,7 +1,11 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+
 import * as bcrypt from "bcrypt";
+
 import { TokenService } from "../entities/token/token.service";
+import { UserCreateDto, UserProfileEditDto } from "../entities/user/dto";
+import { User } from "../entities/user/user.entity";
 import { UserService } from "../entities/user/user.service";
 import { MailService } from "../mail/mail.service";
 
@@ -12,7 +16,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly mailService: MailService,
         private readonly tokenService: TokenService
-    ) {}
+    ) { }
 
     async signIn(email: string, password: string) {
         const user = await this.userService.findOneByEmail(email);
@@ -21,15 +25,6 @@ export class AuthService {
             throw new UnauthorizedException();
         }
         const payload = { sub: user.id, isAdmin: user.isAdmin };
-        return {
-            access: await this.jwtService.signAsync(payload),
-            refresh: await this.jwtService.signAsync(payload, {
-                expiresIn: "24h",
-            }),
-        };
-    }
-
-    async loginOAuthUser(payload: any) {
         return {
             access: await this.jwtService.signAsync(payload),
             refresh: await this.jwtService.signAsync(payload, {
@@ -78,4 +73,68 @@ export class AuthService {
 
         return { token };
     }
+
+    async loginOAuthUser(payload: any) {
+        console.log("In AuthService - loginOAuthUser function");
+        return {
+            access: await this.jwtService.signAsync(payload),
+            refresh: await this.jwtService.signAsync(payload, {
+                expiresIn: "24h",
+            }),
+        };
+    }
+
+    async validateUser(profile: any): Promise<User> {
+        console.log("In AuthService - validateUser function");
+
+        const { name, emails, photos } = profile;
+        const email = emails[0].value;
+
+        let user = await this.userService.findOneByEmail(email);
+        if (user)
+            return user;
+
+        const userDto = this.createUserDto(
+            email,
+            process.env.GOOGLE_COMMON_USER_PASSWORD
+        );
+        const profileDto = this.createUserProfileDto(
+            name.givenName,
+            name.familyName,
+            photos[0].value
+        );
+
+        user = await this.userService.create(userDto);
+        await this.userService.profileEdit({
+            id: user.id,
+            email: user.email,
+            ...profileDto
+        });
+
+        return user;
+    }
+
+    private createUserDto(
+        email: string,
+        password: string
+    ): UserCreateDto {
+        const userDto = new UserCreateDto();
+        userDto.email = email;
+        userDto.password = password;
+        return userDto;
+    }
+
+    private createUserProfileDto(
+        firstName: string,
+        lastName: string,
+        avatar: string
+    ): UserProfileEditDto {
+        const userProfileDto = new UserProfileEditDto();
+        userProfileDto.firstName = firstName,
+            userProfileDto.lastName = lastName,
+            userProfileDto.avatar = avatar
+        return userProfileDto;
+    }
+
+
 }

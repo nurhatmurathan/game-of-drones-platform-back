@@ -1,4 +1,3 @@
-import { UserFutureTournamnetTimeDto } from "./dto/user.tournament.time.future.dto";
 import {
     Body,
     Controller,
@@ -12,11 +11,13 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { UserTournamentTimeService } from "./user.tournament.time.service";
 import { CustomAuthGuard } from "src/auth/guards/auth.guard";
-import { UserTournamnetTimeCreateDto } from "./dto/user.tournament.time.create.dto";
-import { request } from "http";
 import { TrainingIdDto } from "../training/dto/training.turnamenttime.dto";
+import {
+    UserFutureTournamnetTimeDto,
+    UserTournamnetTimeCreateDto
+} from "./dto";
+import { UserTournamentTimeService } from "./user.tournament.time.service";
 
 @ApiTags("UserTournamentTime")
 @Controller("UserTournamentTime")

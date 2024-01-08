@@ -1,23 +1,25 @@
 import {
-    Req,
     Body,
     Controller,
     Get,
+    HttpCode,
+    HttpStatus,
     Param,
     ParseIntPipe,
     Post,
-    HttpCode,
-    HttpStatus,
+    Req,
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-import { TournamentService } from "./tournament.service";
-import { TournamentListDto } from "./dto/tournament.list.dto";
-import { TournamentRetrieveDto } from "./dto/tournament.retrieve.dto";
-import { TournamentCreateDto } from "./dto/tournament.create.dto";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import {
+    TournamentCreateDto,
+    TournamentListDto,
+    TournamentRetrieveDto
+} from "./dto";
 import { Tournament } from "./tournament.entity";
+import { TournamentService } from "./tournament.service";
 
 @ApiTags("Tournament")
 @Controller("tournament")
