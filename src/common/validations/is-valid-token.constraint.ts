@@ -1,10 +1,10 @@
-import { TokenService } from "../../entities/token/token.service";
+import { Injectable } from "@nestjs/common";
 import {
+    ValidationArguments,
     ValidatorConstraint,
     ValidatorConstraintInterface,
-    ValidationArguments,
 } from "class-validator";
-import { Injectable } from "@nestjs/common";
+import { TokenService } from "../../entities/token/token.service";
 
 @ValidatorConstraint({ async: true })
 @Injectable()
@@ -15,7 +15,7 @@ export class IsValidToken implements ValidatorConstraintInterface {
         return await this.tokenService
             .findOneByToken(token)
             .then((tokenInstance) => {
-                if (!tokenInstance || tokenInstance.expirationDate > new Date())
+                if (!tokenInstance || tokenInstance.expirationDate < new Date())
                     return false;
                 return true;
             });
