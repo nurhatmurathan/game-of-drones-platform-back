@@ -28,8 +28,10 @@ jobs:
                   JWT_SECRET: ${{ secrets.JWT_SECRET }}
                   GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
                   GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+                  GOOGLE_CALLBACK_URL: ${{ secrets.GOGOOGLE_CALLBACK_URL }}
                   FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
                   FACEBOOK_APP_SECRET: ${{ secrets.FACEBOOK_APP_SECRET }}
+                  FACEBOOK_CALLBACK_URL: ${{ secrets.FACEBOOK_CALLBACK_URL }}                  
                   GOOGLE_COMMON_USER_PASSWORD: ${{ secrets.GOOGLE_COMMON_USER_PASSWORD }}
               uses: docker/build-push-action@v2
               with:
@@ -45,6 +47,8 @@ jobs:
                     JWT_SECRET=${{ secrets.JWT_SECRET }}
                     GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
                     GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+                    GOOGLE_CALLBACK_URL=${{ secrets.GOGOOGLE_CALLBACK_URL }}
                     FACEBOOK_APP_ID=${{ secrets.FACEBOOK_APP_ID }}
                     FACEBOOK_APP_SECRET=${{ secrets.FACEBOOK_APP_SECRET }}
+                    FACEBOOK_CALLBACK_URL=${{ secrets.FACEBOOK_CALLBACK_URL }}
                     GOOGLE_COMMON_USER_PASSWORD=${{ secrets.GOOGLE_COMMON_USER_PASSWORD }}
