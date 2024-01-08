@@ -21,7 +21,8 @@ export class TokenService {
         const timezone = "Asia/Almaty";
         const expirationDate: Date = moment
             .tz(timezone)
-            .add(1, "hours") // expires in 1 hour
+            .utc()
+            .add(7, "hours") // expires in 1 hour
             .toDate();
 
         const instance: Token = this.tokenRepository.create({
