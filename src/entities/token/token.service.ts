@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomBytes } from "crypto";
+import * as moment from "moment-timezone";
 import { Repository } from "typeorm";
 import { Token } from "./token.entity";
-
 @Injectable()
 export class TokenService {
     constructor(
@@ -12,14 +12,17 @@ export class TokenService {
     ) {}
 
     async createSixNumberedCode(email: string): Promise<string> {
-        this.clearRegisterTokens(email);
+        await this.clearRegisterTokens(email);
 
         const code: string = Math.floor(Math.random() * 1000000)
             .toString()
             .padStart(6, "0"); // 0 to 999999
 
-        const expirationDate: Date = new Date();
-        expirationDate.setHours(expirationDate.getHours() + 1); // expiret in 1 hour
+        const timezone = "Asia/Almaty";
+        const expirationDate: Date = moment
+            .tz(timezone)
+            .add(1, "hours") // expires in 1 hour
+            .toDate();
 
         const instance: Token = this.tokenRepository.create({
             email,
