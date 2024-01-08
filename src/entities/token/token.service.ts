@@ -22,7 +22,7 @@ export class TokenService {
         const expirationDate: Date = moment
             .tz(timezone)
             .utc()
-            .add(7, "hours") // expires in 1 hour
+            .add(24, "hours") // expires in 1 hour
             .toDate();
 
         const instance: Token = this.tokenRepository.create({
