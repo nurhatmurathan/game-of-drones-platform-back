@@ -15,7 +15,7 @@ export class IsValidCode implements ValidatorConstraintInterface {
         return await this.tokenService
             .findOneByCode(code)
             .then((tokenInstance) => {
-                if (!tokenInstance || tokenInstance.expirationDate > new Date())
+                if (!tokenInstance || tokenInstance.expirationDate < new Date())
                     return false;
                 return true;
             });
