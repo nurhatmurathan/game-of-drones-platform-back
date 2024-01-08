@@ -23,12 +23,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
         done: VerifyCallback
     ): Promise<any> {
         console.log("I'm here in Google Strategy");
-
         const user = await this.authService.validateUser(profile);
-        const payload = { sub: user.id, isAdmin: user.isAdmin };
-        const tokens = await this.authService.loginOAuthUser(payload);
-
-        console.log({ user: payload, tokens });
-        return { user: payload, tokens };
+        return user;
     }
 }

@@ -78,7 +78,8 @@ export class AuthController {
     @UseGuards(AuthGuard('google'))
     googleAuthRedirect(@Request() req) {
         console.log("I'm in - googleAuthRedirect funtion");
-        return req.user.tokens;
+        console.log(req.user);
+        return this.authService.loginOAuthUser(req.user);
     }
 
     @Get('facebook')
@@ -91,6 +92,7 @@ export class AuthController {
     @UseGuards(AuthGuard('facebook'))
     facebookAuthRedirect(@Request() req): any {
         console.log("I'm here in - facebookAuthRedirect");
-        return req.user.tokens;
+        console.log(req.user);
+        return this.authService.loginOAuthUser(req.user);
     }
 }

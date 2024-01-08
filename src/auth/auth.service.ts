@@ -74,8 +74,9 @@ export class AuthService {
         return { token };
     }
 
-    async loginOAuthUser(payload: any) {
+    async loginOAuthUser(user: User) {
         console.log("In AuthService - loginOAuthUser function");
+        const payload = { sub: user.id, isAdmin: user.isAdmin };
         return {
             access: await this.jwtService.signAsync(payload),
             refresh: await this.jwtService.signAsync(payload, {
