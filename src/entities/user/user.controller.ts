@@ -15,13 +15,13 @@ import { UserService } from "./user.service";
 
 @ApiTags("User")
 @Controller("users")
-@UseGuards(CustomAuthGuard)
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @ApiBearerAuth()
     @Get("profile/cover")
     @HttpCode(HttpStatus.OK)
+    @UseGuards(CustomAuthGuard)
     async getProfile(@Request() req) {
         return await this.userService.profileCover(req.user);
     }
@@ -29,6 +29,7 @@ export class UserController {
     @ApiBearerAuth()
     @Post("profile/edit")
     @HttpCode(HttpStatus.OK)
+    @UseGuards(CustomAuthGuard)
     async egitProfile(@Request() req, @Body() userData: UserProfileEditDto) {
         return await this.userService.profileEdit({
             id: req.user.sub,
