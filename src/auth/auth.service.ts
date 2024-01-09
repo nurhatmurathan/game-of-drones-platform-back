@@ -16,14 +16,18 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly mailService: MailService,
         private readonly tokenService: TokenService
-    ) {}
+    ) { }
 
     async signIn(email: string, password: string) {
+        console.log("Im in - signIn function");
         const user = await this.userService.findOneByEmail(email);
 
+        console.log("Step 1 in signIn function");
         if (!user || !(await bcrypt.compare(password, user.password))) {
             throw new UnauthorizedException();
         }
+
+        console.log("Step 2 in signIn function");
         return this.getAccessRefreshToken(user);
     }
 
@@ -120,7 +124,13 @@ export class AuthService {
     }
 
     private async getAccessRefreshToken(user: User) {
+        console.log("Im in - getAccessRefreshToken function");
         const payload = { sub: user.id, isAdmin: user.isAdmin };
+        console.log("Step 1 in getAccessRefreshToken function");
+
+
+        console.log(process.env.JWT_SECRET);
+
         return {
             access: await this.jwtService.signAsync(payload),
             refresh: await this.jwtService.signAsync(payload, {

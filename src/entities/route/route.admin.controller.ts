@@ -39,22 +39,22 @@ export class RouteAdminController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() routeDate: RouteAdminCreateDto): Promise<RouteAdminCreateDto> {
-        return this.routeAdminSerevice.create(routeDate);
+    create(@Body() createDate: RouteAdminCreateDto): Promise<RouteAdminCreateDto> {
+        return this.routeAdminSerevice.create(createDate);
     }
 
     @Put("/:id")
     @HttpCode(HttpStatus.ACCEPTED)
     async update(
         @Param("id", ParseIntPipe) id: number,
-        @Body() routeUpdateDto: RouteAdminUpdateDto
+        @Body() updateData: RouteAdminUpdateDto
     ): Promise<RouteAdminRetrieveDto> {
-        return this.routeAdminSerevice.update(id, routeUpdateDto);
+        return this.routeAdminSerevice.update(id, updateData);
     }
 
     @Delete('/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    remove(@Param('id', ParseIntPipe) id: number) {
+    delete(@Param('id', ParseIntPipe) id: number) {
         return this.routeAdminSerevice.delete(id);
     }
 }

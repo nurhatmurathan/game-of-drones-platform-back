@@ -21,8 +21,8 @@ import { UtilModule } from "./utils/util.module";
 
 @Module({
     imports: [
-        DatabaseModule,
         ConfigModule,
+        DatabaseModule,
         TokenModule,
         ValidatorModule,
         UserModule,
@@ -42,4 +42,4 @@ import { UtilModule } from "./utils/util.module";
     controllers: [AuthController],
     providers: [AuthService],
 })
-export class AppModule {}
+export class AppModule { }

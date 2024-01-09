@@ -7,6 +7,8 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { FacebookStrategy, GoogleStrategy } from "./strategies";
 
+require("dotenv").config();
+
 @Module({
     imports: [
         UserModule,
@@ -22,6 +24,4 @@ import { FacebookStrategy, GoogleStrategy } from "./strategies";
     providers: [AuthService, GoogleStrategy, FacebookStrategy],
     exports: [AuthService],
 })
-export class AuthModule {}
-
-console.log(process.env.JWT_SECRET);
+export class AuthModule { }

@@ -1,19 +1,20 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
     Param,
     ParseIntPipe,
     Post,
+    Put,
     UseGuards
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
-import { TournamentAdminCreateDto, TournamentAdminListDto, TournamentAdminRetrieveDto } from "./dto";
+import { TournamentAdminCreateDto, TournamentAdminListDto, TournamentAdminRetrieveDto, TournamentAdminUpdateDto } from "./dto";
 import { TournamentAdminService } from "./tournament.admin.service";
-import { Tournament } from "./tournament.entity";
 
 
 @ApiTags("Admin Tournament")
@@ -41,7 +42,23 @@ export class TournamentAdminController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() tournamentDate: TournamentAdminCreateDto): Promise<Tournament> {
-        return this.tournamentAdminService.create(tournamentDate);
+    create(@Body() createData: TournamentAdminCreateDto): Promise<TournamentAdminRetrieveDto> {
+        return this.tournamentAdminService.create(createData);
+    }
+
+
+    @Put("/:id")
+    @HttpCode(HttpStatus.ACCEPTED)
+    update(
+        @Param("id", ParseIntPipe) id: number,
+        @Body() updateData: TournamentAdminUpdateDto
+    ): Promise<TournamentAdminRetrieveDto> {
+        return this.tournamentAdminService.update(id, updateData);
+    }
+
+    @Delete("/:id")
+    @HttpCode(HttpStatus.NO_CONTENT)
+    delete(@Param("id", ParseIntPipe) id: number) {
+        return this.tournamentAdminService.delete(id);
     }
 }
