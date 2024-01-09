@@ -9,7 +9,6 @@ export class UtilService {
         if (!languageHeader) {
             return "ru";
         }
-
         const language = languageHeader.toString();
         return language;
     }
