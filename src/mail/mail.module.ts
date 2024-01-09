@@ -11,8 +11,8 @@ import { MailService } from "./mail.service";
                 host: "smtp.gmail.com",
                 secure: false,
                 auth: {
-                    user: "jasawweb@gmail.com",
-                    pass: "vzkykkpltrudpomx",
+                    user: process.env.GOOGLE_MAIL_SENDER,
+                    pass: process.env.GOOGLE_MAIL_SENDER_PASS,
                 },
             },
             defaults: {
