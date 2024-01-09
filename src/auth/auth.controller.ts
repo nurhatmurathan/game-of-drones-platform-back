@@ -82,8 +82,8 @@ export class AuthController {
         console.log(req.user);
 
         const jwt = this.authService.loginOAuthUser(req.user);
-        res.cookie('jwt', jwt);
-        return res.redirect(process.env.REDIRECT_URL);
+        
+        return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
     }
 
 
