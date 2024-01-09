@@ -1,4 +1,5 @@
 export * from "./tournament.admin.retrieve.dto";
+export * from "./tournament.admin.update.dto";
 export * from "./tournament.cover.dto";
 export * from "./tournament.create.admin.dto";
 export * from "./tournament.list.admin";
