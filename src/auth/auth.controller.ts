@@ -86,7 +86,6 @@ export class AuthController {
         return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
     }
 
-
     @Get('facebook')
     @UseGuards(AuthGuard('facebook'))
     async facebookLogin(): Promise<any> {
