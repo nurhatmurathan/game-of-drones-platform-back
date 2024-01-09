@@ -23,7 +23,7 @@ export class MailService {
             to: user.email,
             from: process.env.GOOGLE_MAIL_SENDER,
             subject: `Reset Your Password for ${user.firstName} ${user.lastName}`,
-            template: "password.reset",
+            template: "passwordreset",
             context: { link: `some link + ${token}` },
         });
     }
