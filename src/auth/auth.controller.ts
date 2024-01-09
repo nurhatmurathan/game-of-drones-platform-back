@@ -77,12 +77,11 @@ export class AuthController {
 
     @Get("google/callback")
     @UseGuards(AuthGuard('google'))
-    googleAuthRedirect(@Request() req, @Res() res) {
+    async googleAuthRedirect(@Request() req, @Res() res) {
         console.log("I'm in - googleAuthRedirect funtion");
         console.log(req.user);
 
-        const jwt = this.authService.loginOAuthUser(req.user);
-        
+        const jwt = await this.authService.loginOAuthUser(req.user);
         return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
     }
 
@@ -95,12 +94,11 @@ export class AuthController {
 
     @Get('facebook/callback')
     @UseGuards(AuthGuard('facebook'))
-    facebookAuthRedirect(@Request() req, @Res() res): any {
+    async facebookAuthRedirect(@Request() req, @Res() res) {
         console.log("I'm here in - facebookAuthRedirect");
         console.log(req.user);
 
-        const jwt = this.authService.loginOAuthUser(req.user);
-        res.cookie('jwt', jwt, { httpOnly: true, secure: true });
-        return res.redirect(process.env.REDIRECT_URL);
+        const jwt = await this.authService.loginOAuthUser(req.user);
+        return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
     }
 }
