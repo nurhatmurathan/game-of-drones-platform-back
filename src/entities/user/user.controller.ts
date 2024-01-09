@@ -41,6 +41,6 @@ export class UserController {
     @Post("password/reset")
     @HttpCode(HttpStatus.ACCEPTED)
     async resetPassword(@Body() userData: UserEmailDto) {
-        this.userService.passwordReset(userData.email);
+        return await this.userService.passwordReset(userData.email);
     }
 }

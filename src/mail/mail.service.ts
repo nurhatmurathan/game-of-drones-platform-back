@@ -26,5 +26,7 @@ export class MailService {
             template: "passwordreset",
             context: { link: `some link + ${token}` },
         });
+
+        return { message: "Link to reset password is sended to your email" };
     }
 }

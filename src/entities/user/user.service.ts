@@ -80,12 +80,10 @@ export class UserService {
         const passResetInstance: UserPasswordresetToken =
             await this.userPasswordresetTokenService.create(instance);
 
-        this.mailService.sendUserPasswordResetLink(
+        return await this.mailService.sendUserPasswordResetLink(
             instance,
             passResetInstance.token
         );
-
-        return { message: "Link to reset password is sended to your email" };
     }
 
     private validate(instance: User): void {

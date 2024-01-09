@@ -24,13 +24,7 @@ export class AuthService {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             throw new UnauthorizedException();
         }
-        const payload = { sub: user.id, isAdmin: user.isAdmin };
-        return {
-            access: await this.jwtService.signAsync(payload),
-            refresh: await this.jwtService.signAsync(payload, {
-                expiresIn: "24h",
-            }),
-        };
+        return this.getAccessRefreshToken(user);
     }
 
     async refreshJWTToken(refreshToken: string) {
@@ -56,14 +50,14 @@ export class AuthService {
 
         this.tokenService.clearRegisterTokens(email);
 
-        return this.signIn(email, password);
+        return await this.signIn(email, password);
     }
 
     async verifyMail(email: string) {
         const code: string =
             await this.tokenService.createSixNumberedCode(email);
 
-        return this.mailService.sendUserConfirmation(email, code);
+        return await this.mailService.sendUserConfirmation(email, code);
     }
 
     async verifyCode(code: string) {
@@ -74,13 +68,7 @@ export class AuthService {
 
     async loginOAuthUser(user: User) {
         console.log("In AuthService - loginOAuthUser function");
-        const payload = { sub: user.id, isAdmin: user.isAdmin };
-        return {
-            access: await this.jwtService.signAsync(payload),
-            refresh: await this.jwtService.signAsync(payload, {
-                expiresIn: "24h",
-            }),
-        };
+        return this.getAccessRefreshToken(user);
     }
 
     async validateUser(profile: any): Promise<User> {
@@ -129,5 +117,15 @@ export class AuthService {
             (userProfileDto.lastName = lastName),
             (userProfileDto.avatar = avatar);
         return userProfileDto;
+    }
+
+    private async getAccessRefreshToken(user: User) {
+        const payload = { sub: user.id, isAdmin: user.isAdmin };
+        return {
+            access: await this.jwtService.signAsync(payload),
+            refresh: await this.jwtService.signAsync(payload, {
+                expiresIn: "24h",
+            }),
+        };
     }
 }
