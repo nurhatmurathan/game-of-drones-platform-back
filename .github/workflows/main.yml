@@ -33,6 +33,9 @@ jobs:
                   FACEBOOK_APP_SECRET: ${{ secrets.FACEBOOK_APP_SECRET }}
                   FACEBOOK_CALLBACK_URL: ${{ secrets.FACEBOOK_CALLBACK_URL }}                  
                   GOOGLE_COMMON_USER_PASSWORD: ${{ secrets.GOOGLE_COMMON_USER_PASSWORD }}
+                  REDIRECT_URL: ${{ secrets.REDIRECT_URL }}
+                  GOOGLE_MAIL_SENDER: ${{ secrets.GOOGLE_MAIL_SENDER }}
+                  GOOGLE_MAIL_SENDER_PASS: ${{ secrets.GOOGLE_MAIL_SENDER_PASS }}
               uses: docker/build-push-action@v2
               with:
                   context: .
@@ -52,3 +55,6 @@ jobs:
                     FACEBOOK_APP_SECRET=${{ secrets.FACEBOOK_APP_SECRET }}
                     FACEBOOK_CALLBACK_URL=${{ secrets.FACEBOOK_CALLBACK_URL }}
                     GOOGLE_COMMON_USER_PASSWORD=${{ secrets.GOOGLE_COMMON_USER_PASSWORD }}
+                    REDIRECT_URL=${{ secrets.REDIRECT_URL }}
+                    GOOGLE_MAIL_SENDER=${{ secrets.GOOGLE_MAIL_SENDER }}
+                    GOOGLE_MAIL_SENDER_PASS=${{ secrets.GOOGLE_MAIL_SENDER_PASS }}
