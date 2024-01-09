@@ -31,3 +31,5 @@ import { MailService } from "./mail.service";
     exports: [MailService],
 })
 export class MailModule {}
+
+console.log(process.env.GOOGLE_MAIL_SENDER);

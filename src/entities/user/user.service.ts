@@ -94,9 +94,12 @@ export class UserService {
     }
 
     private async setPassword(instance: User, password: string) {
-        const hashedPass: string = bcrypt.hash(password, 10);
-        instance.password = hashedPass;
+        console.log(instance);
+        console.log(password);
 
+        const hashedPass: string = await bcrypt.hash(password, 10);
+        instance.password = hashedPass;
+        console.log(hashedPass);
         await this.userRepository.save(instance);
 
         return { message: "Password is updated" };

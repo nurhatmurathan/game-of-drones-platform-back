@@ -23,3 +23,5 @@ import { FacebookStrategy, GoogleStrategy } from "./strategies";
     exports: [AuthService],
 })
 export class AuthModule {}
+
+console.log(process.env.JWT_SECRET);
