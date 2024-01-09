@@ -48,12 +48,7 @@ export class TokenService {
     }
 
     async clearRegisterTokens(email: string) {
-        await this.tokenRepository
-            .createQueryBuilder()
-            .delete()
-            .from(Token)
-            .where({ email })
-            .execute();
+        await this.tokenRepository.delete({ email });
     }
 
     async findOneByCode(code: string): Promise<Token | undefined> {

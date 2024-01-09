@@ -73,7 +73,7 @@ export class UserService {
         await this.userRepository.save(userInstance);
     }
 
-    async passwordReset(email: string) {
+    async getPasswordResetLink(email: string) {
         const instance: User = await this.findOneByEmail(email);
         this.validate(instance);
 
@@ -84,6 +84,22 @@ export class UserService {
             instance,
             passResetInstance.token
         );
+    }
+
+    async passwordResetWithToken(token: string, password: string) {
+        const instance: User =
+            await this.userPasswordresetTokenService.getTokenUser(token);
+
+        return this.setPassword(instance, password);
+    }
+
+    private async setPassword(instance: User, password: string) {
+        const hashedPass: string = bcrypt.hash(password, 10);
+        instance.password = hashedPass;
+
+        await this.userRepository.save(instance);
+
+        return { message: "Password is updated" };
     }
 
     private validate(instance: User): void {

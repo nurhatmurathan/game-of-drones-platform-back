@@ -13,6 +13,8 @@ export class UserPasswordresetTokenService {
     ) {}
 
     async create(user: User): Promise<UserPasswordresetToken> {
+        this.userPasswordresetTokenRepository.delete({ user });
+
         const token: string = randomBytes(30).toString("hex");
         const expirationDate = new Date();
         expirationDate.setHours(expirationDate.getHours() + 1);
@@ -40,6 +42,8 @@ export class UserPasswordresetTokenService {
     }
 
     private validate(token: UserPasswordresetToken): void {
+        console.log(token);
+        console.log(new Date());
         if (!token) throw new BadRequestException("Invalid Token!");
         if (token.expirationDate < new Date())
             throw new BadRequestException("Token is expired!");
