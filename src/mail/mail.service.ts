@@ -1,5 +1,6 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
+import { User } from "./../entities/user/user.entity";
 
 @Injectable()
 export class MailService {
@@ -12,6 +13,18 @@ export class MailService {
             subject: "Welcome to Game Of Drones! Confirm your Email",
             template: "confirmation",
             context: { code },
+        });
+
+        return { message: "Code is sended to your email" };
+    }
+
+    async sendUserPasswordResetLink(user: User, token: string) {
+        await this.mailerService.sendMail({
+            to: user.email,
+            from: process.env.GOOGLE_MAIL_SENDER,
+            subject: `Reset Your Password for ${user.firstName} ${user.lastName}`,
+            template: "password.reset",
+            context: { link: `some link + ${token}` },
         });
     }
 }

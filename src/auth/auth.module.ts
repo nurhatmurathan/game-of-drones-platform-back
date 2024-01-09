@@ -22,4 +22,4 @@ import { FacebookStrategy, GoogleStrategy } from "./strategies";
     providers: [AuthService, GoogleStrategy, FacebookStrategy],
     exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

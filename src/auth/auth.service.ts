@@ -16,7 +16,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly mailService: MailService,
         private readonly tokenService: TokenService
-    ) { }
+    ) {}
 
     async signIn(email: string, password: string) {
         const user = await this.userService.findOneByEmail(email);
@@ -63,9 +63,7 @@ export class AuthService {
         const code: string =
             await this.tokenService.createSixNumberedCode(email);
 
-        this.mailService.sendUserConfirmation(email, code);
-
-        return { message: "Code is sended to you email" };
+        return this.mailService.sendUserConfirmation(email, code);
     }
 
     async verifyCode(code: string) {
@@ -92,8 +90,7 @@ export class AuthService {
         const email = emails[0].value;
 
         let user = await this.userService.findOneByEmail(email);
-        if (user)
-            return user;
+        if (user) return user;
 
         const userDto = this.createUserDto(
             email,
@@ -109,16 +106,13 @@ export class AuthService {
         await this.userService.profileEdit({
             id: user.id,
             email: user.email,
-            ...profileDto
+            ...profileDto,
         });
 
         return user;
     }
 
-    private createUserDto(
-        email: string,
-        password: string
-    ): UserCreateDto {
+    private createUserDto(email: string, password: string): UserCreateDto {
         const userDto = new UserCreateDto();
         userDto.email = email;
         userDto.password = password;
@@ -131,11 +125,9 @@ export class AuthService {
         avatar: string
     ): UserProfileEditDto {
         const userProfileDto = new UserProfileEditDto();
-        userProfileDto.firstName = firstName,
-            userProfileDto.lastName = lastName,
-            userProfileDto.avatar = avatar
+        (userProfileDto.firstName = firstName),
+            (userProfileDto.lastName = lastName),
+            (userProfileDto.avatar = avatar);
         return userProfileDto;
     }
-
-
 }

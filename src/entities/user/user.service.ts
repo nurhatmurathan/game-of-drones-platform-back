@@ -1,8 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { Repository } from "typeorm";
 import { BillingAccountService } from "../billing.account/billing.account.service";
+import { UserPasswordresetToken } from "../user.passwordreset.token/user.passwordreset.token.entity";
+import { UserPasswordresetTokenService } from "../user.passwordreset.token/user.passwordreset.token.service";
+import { MailService } from "./../../mail/mail.service";
 import { UserCreateDto } from "./dto";
 import { User } from "./user.entity";
 
@@ -11,8 +14,10 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-        private readonly billingAccountServise: BillingAccountService
-    ) { }
+        private readonly billingAccountServise: BillingAccountService,
+        private readonly userPasswordresetTokenService: UserPasswordresetTokenService,
+        private readonly mailService: MailService
+    ) {}
 
     async create(userData: UserCreateDto, isAdmin?: boolean) {
         console.log("I'm here in User service - create function ");
@@ -66,5 +71,24 @@ export class UserService {
 
     async save(userInstance: User) {
         await this.userRepository.save(userInstance);
+    }
+
+    async passwordReset(email: string) {
+        const instance: User = await this.findOneByEmail(email);
+        this.validate(instance);
+
+        const passResetInstance: UserPasswordresetToken =
+            await this.userPasswordresetTokenService.create(instance);
+
+        this.mailService.sendUserPasswordResetLink(
+            instance,
+            passResetInstance.token
+        );
+
+        return { message: "Link to reset password is sended to your email" };
+    }
+
+    private validate(instance: User): void {
+        if (!instance) throw new BadRequestException("User does not exist!");
     }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomBytes } from "crypto";
-import * as moment from "moment-timezone";
 import { Repository } from "typeorm";
 import { Token } from "./token.entity";
 @Injectable()
@@ -16,14 +15,10 @@ export class TokenService {
 
         const code: string = Math.floor(Math.random() * 1000000)
             .toString()
-            .padStart(6, "0"); // 0 to 999999
+            .padStart(6, "0");
 
-        const timezone = "Asia/Almaty";
-        const expirationDate: Date = moment
-            .tz(timezone)
-            .utc()
-            .add(24, "hours") // expires in 1 hour
-            .toDate();
+        const expirationDate = new Date();
+        expirationDate.setHours(expirationDate.getHours() + 1);
 
         const instance: Token = this.tokenRepository.create({
             email,
