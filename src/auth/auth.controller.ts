@@ -82,7 +82,7 @@ export class AuthController {
         console.log(req.user);
 
         const jwt = this.authService.loginOAuthUser(req.user);
-        res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+        res.cookie('jwt', jwt);
         return res.redirect(process.env.REDIRECT_URL);
     }
 
