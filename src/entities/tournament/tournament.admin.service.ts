@@ -60,6 +60,4 @@ export class TournamentAdminService {
         savedTournament.tournamentTimes = tournamentTimeInstances;
         return this.tournamentRepository.save(savedTournament);
     }
-
-
 }

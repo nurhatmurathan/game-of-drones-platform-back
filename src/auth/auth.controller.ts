@@ -6,6 +6,7 @@ import {
     HttpStatus,
     Post,
     Request,
+    Res,
     UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
@@ -76,11 +77,15 @@ export class AuthController {
 
     @Get("google/callback")
     @UseGuards(AuthGuard('google'))
-    googleAuthRedirect(@Request() req) {
+    googleAuthRedirect(@Request() req, @Res() res) {
         console.log("I'm in - googleAuthRedirect funtion");
         console.log(req.user);
-        return this.authService.loginOAuthUser(req.user);
+
+        const jwt = this.authService.loginOAuthUser(req.user);
+        res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+        return res.redirect(process.env.REDIRECT_URL);
     }
+
 
     @Get('facebook')
     @UseGuards(AuthGuard('facebook'))
@@ -90,9 +95,12 @@ export class AuthController {
 
     @Get('facebook/callback')
     @UseGuards(AuthGuard('facebook'))
-    facebookAuthRedirect(@Request() req): any {
+    facebookAuthRedirect(@Request() req, @Res() res): any {
         console.log("I'm here in - facebookAuthRedirect");
         console.log(req.user);
-        return this.authService.loginOAuthUser(req.user);
+
+        const jwt = this.authService.loginOAuthUser(req.user);
+        res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+        return res.redirect(process.env.REDIRECT_URL);
     }
 }
