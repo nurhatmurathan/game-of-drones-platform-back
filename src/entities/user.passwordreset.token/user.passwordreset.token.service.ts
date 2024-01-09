@@ -17,7 +17,7 @@ export class UserPasswordresetTokenService {
 
         const token: string = randomBytes(30).toString("hex");
         const expirationDate = new Date();
-        expirationDate.setHours(expirationDate.getHours() + 1);
+        expirationDate.setHours(expirationDate.getHours() + 24);
 
         const instance: UserPasswordresetToken =
             this.userPasswordresetTokenRepository.create({
