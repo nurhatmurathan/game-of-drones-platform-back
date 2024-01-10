@@ -2,6 +2,9 @@ import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
+
+import { UtilService } from "src/utils/util.service";
+import { LanguagesEnum } from "../../common/enums";
 import { ActionService } from "../action/action.service";
 import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
@@ -17,25 +20,25 @@ export class TaskService {
     constructor(
         @InjectRepository(Task)
         private readonly taskReposotory: Repository<Task>,
+        private readonly utilSevice: UtilService,
         @Inject(forwardRef(() => ActionService))
         private readonly actionService: ActionService,
         private readonly multilingualTextService: MultilingualtextService,
         private readonly userTournamentTimeService: UserTournamentTimeService
     ) { }
 
-    async findAll(language: string): Promise<TaskListDto[]> {
+    async findAll(language: LanguagesEnum): Promise<TaskListDto[]> {
+        const languageType = this.utilSevice.getLanguage(language);
+
         const taskList = await this.taskReposotory.find({
             relations: ['taskDescription']
         });
 
         const taskListDto = taskList.map((task) => {
-            // const description = task.description[language];
-            const taskDescription = task.taskDescription[language];
-
+            const taskDescription = task.taskDescription[languageType];
             return {
                 id: task.id,
                 name: task.name,
-                // description: description,
                 taskDescription: taskDescription
             }
         });
@@ -46,8 +49,10 @@ export class TaskService {
     async findOne(
         id: number,
         userId: number,
-        language: string
+        language: LanguagesEnum
     ): Promise<TaskRetrieveDto> {
+        const languageType = this.utilSevice.getLanguage(language);
+
         const taskInstance = await this.taskReposotory.findOne({
             where: { id: id },
             relations: ["description", "taskDescription"],
@@ -67,14 +72,11 @@ export class TaskService {
                 listOfTournamentsIdsOfGivenUser
             );
 
-        const description = taskInstance.description[language];
-        const taskDescription = taskInstance.taskDescription[language];
-
         return {
             id: taskInstance.id,
             name: taskInstance.name,
-            description: description,
-            taskDescription: taskDescription,
+            description: taskInstance.description[languageType],
+            taskDescription: taskInstance.taskDescription[languageType],
             maxCount: taskInstance.maxCount,
             doneCount: doneCount,
             reward: taskInstance.reward,

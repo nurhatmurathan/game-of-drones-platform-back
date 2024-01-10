@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
+import { LanguagesEnum } from "../../common/enums";
+import { UtilService } from "../../utils/util.service";
 import { RouteListDto, RouteRetrieveDto } from "./dto/index";
 import { Route } from "./route.entity";
 
@@ -9,7 +11,8 @@ import { Route } from "./route.entity";
 export class RouteService {
     constructor(
         @InjectRepository(Route)
-        private readonly routeRepository: Repository<Route>
+        private readonly routeRepository: Repository<Route>,
+        private readonly utilService: UtilService
     ) { }
 
     async findAll(): Promise<RouteListDto[]> {
@@ -21,20 +24,20 @@ export class RouteService {
         }));
     }
 
-    async findOne(id: number, language: string): Promise<RouteRetrieveDto> {
+    async findOne(id: number, language: LanguagesEnum): Promise<RouteRetrieveDto> {
+        const languageType = this.utilService.getLanguage(language);
         const routeInstance = await this.routeRepository.findOne({
             where: { id },
             relations: ["description"],
         });
 
-        var routeDesctiption = routeInstance.description[language];
         return {
             id: routeInstance.id,
             name: routeInstance.name,
             length: routeInstance.length,
             bestTime: routeInstance.bestTime,
             map: routeInstance.map,
-            description: routeDesctiption,
+            description: routeInstance.description[languageType]
         };
     }
 }

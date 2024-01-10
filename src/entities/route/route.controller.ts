@@ -1,26 +1,23 @@
 import {
     Controller,
     Get,
-    Post,
-    Param,
-    ParseIntPipe,
+    Headers,
     HttpCode,
     HttpStatus,
-    Req,
-    Body,
+    Param,
+    ParseIntPipe
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
-import { RouteService } from "./route.service";
-import { UtilService } from "../../utils/util.service";
+import { LanguagesEnum } from "../../common/enums";
 import { RouteListDto, RouteRetrieveDto } from "./dto";
+import { RouteService } from "./route.service";
 
 @ApiTags("Route")
 @Controller("route")
 export class RouteController {
     constructor(
         private readonly routeSerevice: RouteService,
-        private readonly utilService: UtilService
     ) { }
 
     @Get()
@@ -33,9 +30,8 @@ export class RouteController {
     @HttpCode(HttpStatus.ACCEPTED)
     async findOne(
         @Param("id", ParseIntPipe) id: number,
-        @Req() request
+        @Headers("Accept-Language") language: LanguagesEnum
     ): Promise<RouteRetrieveDto> {
-        const language = this.utilService.getLanguageFromHeaders(request);
         const routeRetrieveDtoInstance = await this.routeSerevice.findOne(
             id,
             language

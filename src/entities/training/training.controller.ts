@@ -20,7 +20,7 @@ import { Training } from "./training.entity";
 import { TrainingService } from "./training.service";
 
 @ApiTags("Training")
-@Controller("Training")
+@Controller("training")
 export class TrainingController {
     constructor(private readonly trainingService: TrainingService) { }
 

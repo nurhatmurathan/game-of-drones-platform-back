@@ -1,8 +1,7 @@
 import {
     ConflictException,
     Injectable,
-    NotFoundException,
-    Req
+    NotFoundException
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOptionsRelations, LessThan, MoreThan, Repository } from "typeorm";
@@ -11,6 +10,7 @@ import { UserFutureTournamnetTimeDto } from "./dto";
 import { UserTournamentTime } from "./user.tournament.time.entity";
 
 import { UtilService } from "src/utils/util.service";
+import { LanguagesEnum } from "../../common/enums";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
 
 @Injectable()
@@ -62,30 +62,34 @@ export class UserTournamentTimeService {
     }
 
     async userFutureTournamentTimes(
-        @Req() request
+        language: LanguagesEnum,
+        userId: number
     ): Promise<UserFutureTournamnetTimeDto[]> {
-        const language = this.utilService.getLanguageFromHeaders(request);
+        const languageType = this.utilService.getLanguage(language);
 
         return await Promise.all(
-            (await this.userTournamentTimes(request.user.sub, false)).map(
+            (await this.userTournamentTimes(userId, false)).map(
                 async (userTournamentTime) =>
                     this.mapUserFutureTournamentTime(
                         userTournamentTime,
-                        language
+                        languageType
                     )
             )
         );
     }
 
-    async userPastedTournamentTimes(@Req() request) {
-        const language = this.utilService.getLanguageFromHeaders(request);
+    async userPastedTournamentTimes(
+        language: LanguagesEnum,
+        userId: number
+    ) {
+        const languageType = this.utilService.getLanguage(language);
 
         return await Promise.all(
-            (await this.userTournamentTimes(request.user.sub, true)).map(
+            (await this.userTournamentTimes(userId, true)).map(
                 async (userTournamentTime) =>
                     this.mapUserPastedTournamentTime(
                         userTournamentTime,
-                        language
+                        languageType
                     )
             )
         );
@@ -116,7 +120,7 @@ export class UserTournamentTimeService {
 
     private mapUserFutureTournamentTime(
         userTournamentTime: UserTournamentTime,
-        language: string
+        languageType: string
     ): UserFutureTournamnetTimeDto {
         return {
             id: userTournamentTime.id,
@@ -128,7 +132,7 @@ export class UserTournamentTimeService {
                     name: userTournamentTime.tournamentTime.tournament.name,
                     description:
                         userTournamentTime.tournamentTime.tournament
-                            .description[language],
+                            .description[languageType],
                     startDate:
                         userTournamentTime.tournamentTime.tournament.startDate,
                 },
@@ -138,7 +142,7 @@ export class UserTournamentTimeService {
 
     private mapUserPastedTournamentTime(
         userTournamentTime: UserTournamentTime,
-        language: string
+        languageType: string
     ) {
         return {
             id: userTournamentTime.id,
@@ -151,7 +155,7 @@ export class UserTournamentTimeService {
                     name: userTournamentTime.tournamentTime.tournament.name,
                     description:
                         userTournamentTime.tournamentTime.tournament
-                            .description[language],
+                            .description[languageType],
                     startDate:
                         userTournamentTime.tournamentTime.tournament.startDate,
                 },
