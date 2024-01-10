@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Request } from "express";
+import { LanguagesEnum } from "./../common/enums/languages";
 
 @Injectable()
 export class UtilService {
@@ -20,10 +21,10 @@ export class UtilService {
         return language;
     }
 
-    getLanguage(language: string) {
-        if (!language || !new Set(["en", "ru", "kz"]).has(language as string)) {
-            return "ru";
+    getLanguage(language: LanguagesEnum): LanguagesEnum {
+        if (!language || !LanguagesEnum[language]) {
+            return LanguagesEnum.ru;
         }
-        return language;
+        return LanguagesEnum[language];
     }
 }

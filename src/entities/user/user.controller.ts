@@ -12,6 +12,7 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import { LanguagesEnum } from "./../../common/enums/languages";
 import { UtilService } from "./../../utils/util.service";
 import { UserEmailDto, UserPasswordDto, UserProfileEditDto } from "./dto";
 import { UserService } from "./user.service";
@@ -48,7 +49,7 @@ export class UserController {
     @HttpCode(HttpStatus.ACCEPTED)
     async getPesetPasswordLink(
         @Body() userData: UserEmailDto,
-        @Headers("Accept-Language") language: string
+        @Headers("Accept-Language") language: LanguagesEnum
     ) {
         language = this.utilService.getLanguage(language);
         return await this.userService.getPasswordResetLink(
