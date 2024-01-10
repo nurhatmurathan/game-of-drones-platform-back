@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { FindOptionsRelations, Repository } from "typeorm";
@@ -50,6 +54,7 @@ export class UserService {
         id: number,
         relations?: FindOptionsRelations<User>
     ): Promise<User | undefined> {
+        if (!id) throw new NotFoundException("User with this id not found");
         return this.userRepository.findOne({
             where: { id },
             relations,
@@ -83,7 +88,6 @@ export class UserService {
 
     async editPassword(id: number, oldPassword: string, newPassword: string) {
         const instance: User = await this.findOneById(id);
-
         if (!(await bcrypt.compare(oldPassword, instance.password)))
             throw new BadRequestException("Old password is incorrect!");
 
@@ -120,7 +124,7 @@ export class UserService {
         instance.password = hashedPass;
 
         await this.userRepository.save(instance);
-
+        console.log(instance);
         return { message: "Password is updated" };
     }
 

@@ -63,7 +63,7 @@ export class UserController {
     @UseGuards(CustomAuthGuard)
     async editPassword(@Request() req, @Body() userData: UserPasswordEditDto) {
         return await this.userService.editPassword(
-            req.user.sud,
+            req.user.sub,
             userData.oldPassword,
             userData.newPassword
         );

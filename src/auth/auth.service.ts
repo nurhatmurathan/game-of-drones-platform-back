@@ -123,11 +123,9 @@ export class AuthService {
     }
 
     private async getAccessRefreshToken(user: User) {
-        console.log("Im in - getAccessRefreshToken function");
         const payload = { sub: user.id, isAdmin: user.isAdmin };
-        console.log("Step 1 in getAccessRefreshToken function");
 
-        console.log(process.env.JWT_SECRET);
+        console.log("get-tokens", user);
 
         return {
             access: await this.jwtService.signAsync(payload),
