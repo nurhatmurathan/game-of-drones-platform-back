@@ -10,7 +10,7 @@ export class UserPasswordresetTokenService {
     constructor(
         @InjectRepository(UserPasswordresetToken)
         private readonly userPasswordresetTokenRepository: Repository<UserPasswordresetToken>
-    ) {}
+    ) { }
 
     async create(user: User): Promise<UserPasswordresetToken> {
         this.userPasswordresetTokenRepository.delete({ user });
@@ -37,7 +37,6 @@ export class UserPasswordresetTokenService {
             });
 
         this.validate(instance);
-
         return instance.user;
     }
 

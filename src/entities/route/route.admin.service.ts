@@ -30,7 +30,7 @@ export class RouteAdminService {
     async findOne(id: number): Promise<RouteAdminRetrieveDto> {
         return await this.routeRepository.findOne({
             where: { id },
-            relations: ["description"],
+            relations: { description: true }
         });
     }
 
@@ -52,13 +52,13 @@ export class RouteAdminService {
         return this.routeRepository.save(newRouteInstance);
     }
 
-    async update(id: number, routeDtoData: RouteAdminUpdateDto): Promise<RouteAdminRetrieveDto> {
-        const { description, ...route } = routeDtoData;
+    async update(id: number, updateData: RouteAdminUpdateDto): Promise<RouteAdminRetrieveDto> {
+        const { description, ...route } = updateData;
         const routeInstance = await this.routeRepository.findOne({ where: { id } });
 
         this.isExists(routeInstance, id);
-        routeDtoData.description = await this.multilingualTextService.update(description);
-        Object.assign(routeInstance, routeDtoData)
+        updateData.description = await this.multilingualTextService.update(description);
+        Object.assign(routeInstance, updateData)
 
         const updatedRoute = await this.routeRepository.save(routeInstance);
         return this.mapEntityToDto(updatedRoute);
@@ -79,7 +79,7 @@ export class RouteAdminService {
     async delete(id: number): Promise<any> {
         const routeInstance = await this.routeRepository.findOne({
             where: { id },
-            relations: ["description"]
+            relations: { description: true }
         });
 
         const multilingualtextId = routeInstance.description.id;
@@ -87,6 +87,8 @@ export class RouteAdminService {
 
         await this.routeRepository.remove(routeInstance);
         await this.multilingualTextService.delete(multilingualtextId);
+
+        return { "message": "OK!" }
     }
 
     private isExists(instance: Route, id: number): void {
