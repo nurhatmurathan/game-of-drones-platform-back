@@ -90,7 +90,7 @@ export class UserService {
     async passwordResetWithToken(token: string, password: string) {
         const instance: User =
             await this.userPasswordresetTokenService.getTokenUser(token);
-
+        this.userPasswordresetTokenService.deleteUserToken(instance);
         return this.setPassword(instance, password);
     }
 
