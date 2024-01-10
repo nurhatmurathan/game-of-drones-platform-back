@@ -2,16 +2,15 @@ import {
     Body,
     Controller,
     Get,
+    Headers,
     HttpCode,
     HttpStatus,
     Param,
     Post,
-    Req,
     Request,
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Request as RequestExpress } from "express";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import { UtilService } from "./../../utils/util.service";
 import { UserEmailDto, UserPasswordDto, UserProfileEditDto } from "./dto";
@@ -49,10 +48,9 @@ export class UserController {
     @HttpCode(HttpStatus.ACCEPTED)
     async getPesetPasswordLink(
         @Body() userData: UserEmailDto,
-        @Req() request: RequestExpress
+        @Headers("Accept-Language") language: string
     ) {
-        const language: string =
-            this.utilService.getLanguageFromHeaders(request);
+        language = this.utilService.getLanguage(language);
         return await this.userService.getPasswordResetLink(
             userData.email,
             language

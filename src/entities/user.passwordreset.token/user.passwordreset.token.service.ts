@@ -10,10 +10,10 @@ export class UserPasswordresetTokenService {
     constructor(
         @InjectRepository(UserPasswordresetToken)
         private readonly userPasswordresetTokenRepository: Repository<UserPasswordresetToken>
-    ) { }
+    ) {}
 
     async create(user: User): Promise<UserPasswordresetToken> {
-        this.userPasswordresetTokenRepository.delete({ user });
+        this.deleteUserToken(user);
 
         const token: string = randomBytes(30).toString("hex");
         const expirationDate = new Date();
@@ -38,6 +38,10 @@ export class UserPasswordresetTokenService {
 
         this.validate(instance);
         return instance.user;
+    }
+
+    deleteUserToken(userInstanse: User): void {
+        this.userPasswordresetTokenRepository.delete({ user: userInstanse });
     }
 
     private validate(token: UserPasswordresetToken): void {
