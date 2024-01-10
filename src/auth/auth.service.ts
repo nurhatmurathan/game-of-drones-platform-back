@@ -16,7 +16,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly mailService: MailService,
         private readonly tokenService: TokenService
-    ) { }
+    ) {}
 
     async signIn(email: string, password: string) {
         console.log("Im in - signIn function");
@@ -95,9 +95,8 @@ export class AuthService {
         );
 
         user = await this.userService.create(userDto);
-        await this.userService.profileEdit({
+        await this.userService.editProfile({
             id: user.id,
-            email: user.email,
             ...profileDto,
         });
 
@@ -124,12 +123,9 @@ export class AuthService {
     }
 
     private async getAccessRefreshToken(user: User) {
-        console.log("Im in - getAccessRefreshToken function");
         const payload = { sub: user.id, isAdmin: user.isAdmin };
-        console.log("Step 1 in getAccessRefreshToken function");
 
-
-        console.log(process.env.JWT_SECRET);
+        console.log("get-tokens", user);
 
         return {
             access: await this.jwtService.signAsync(payload),
