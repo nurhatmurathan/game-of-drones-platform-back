@@ -6,18 +6,24 @@ import {
     HttpStatus,
     Param,
     Post,
+    Req,
     Request,
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Request as RequestExpress } from "express";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import { UtilService } from "./../../utils/util.service";
 import { UserEmailDto, UserPasswordDto, UserProfileEditDto } from "./dto";
 import { UserService } from "./user.service";
 
 @ApiTags("User")
 @Controller("users")
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly utilService: UtilService
+    ) {}
 
     @ApiBearerAuth()
     @Get("profile/cover")
@@ -41,8 +47,16 @@ export class UserController {
 
     @Post("password/reset")
     @HttpCode(HttpStatus.ACCEPTED)
-    async getPesetPasswordLink(@Body() userData: UserEmailDto) {
-        return await this.userService.getPasswordResetLink(userData.email);
+    async getPesetPasswordLink(
+        @Body() userData: UserEmailDto,
+        @Req() request: RequestExpress
+    ) {
+        const language: string =
+            this.utilService.getLanguageFromHeaders(request);
+        return await this.userService.getPasswordResetLink(
+            userData.email,
+            language
+        );
     }
 
     @Post("password/reset/:token")
