@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
-import { Repository } from "typeorm";
+import { FindOptionsRelations, Repository } from "typeorm";
 import { BillingAccountService } from "../billing.account/billing.account.service";
 import { UserPasswordresetToken } from "../user.passwordreset.token/user.passwordreset.token.entity";
 import { UserPasswordresetTokenService } from "../user.passwordreset.token/user.passwordreset.token.service";
@@ -46,27 +46,48 @@ export class UserService {
         return await this.userRepository.findOne({ where: { email } });
     }
 
-    findOneById(id: number): Promise<User | undefined> {
+    async findOneById(
+        id: number,
+        relations?: FindOptionsRelations<User>
+    ): Promise<User | undefined> {
         return this.userRepository.findOne({
             where: { id },
-            relations: ["billingAccount"],
+            relations,
         });
     }
 
-    async profileCover(tokenPayload: any) {
-        const user = await this.userRepository.findOne({
-            where: { id: tokenPayload.sub },
-        });
+    async getProfileCover(id: number) {
+        const instance = await this.findOneById(id);
 
         return {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            avatar: user.avatar || null,
+            firstName: instance.firstName,
+            lastName: instance.lastName,
+            avatar: instance.avatar,
         };
     }
 
-    async profileEdit(userData) {
+    async getProfile(id: number) {
+        const instance = await this.findOneById(id);
+
+        return {
+            firstName: instance.firstName,
+            lastName: instance.lastName,
+            avatar: instance.avatar,
+            email: instance.email,
+        };
+    }
+
+    async editProfile(userData): Promise<User> {
         return await this.userRepository.save(userData);
+    }
+
+    async editPassword(id: number, oldPassword: string, newPassword: string) {
+        const instance: User = await this.findOneById(id);
+
+        if (!(await bcrypt.compare(oldPassword, instance.password)))
+            throw new BadRequestException("Old password is incorrect!");
+
+        return await this.setPassword(instance, newPassword);
     }
 
     async save(userInstance: User) {

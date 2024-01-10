@@ -18,7 +18,7 @@ export class TournamentTimeService {
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
         private readonly userService: UserService
-    ) { }
+    ) {}
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
@@ -49,7 +49,9 @@ export class TournamentTimeService {
         id: number,
         userId: number
     ): Promise<number> {
-        const userInstance = await this.userService.findOneById(userId);
+        const userInstance = await this.userService.findOneById(userId, {
+            billingAccount: true,
+        });
         const tournamentTimeInstance =
             await this.tournamentTimeRepository.findOne({
                 where: { id: id },

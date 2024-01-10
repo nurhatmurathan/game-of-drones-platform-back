@@ -14,7 +14,12 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import { LanguagesEnum } from "./../../common/enums/languages";
 import { UtilService } from "./../../utils/util.service";
-import { UserEmailDto, UserPasswordDto, UserProfileEditDto } from "./dto";
+import {
+    UserEmailDto,
+    UserPasswordDto,
+    UserPasswordEditDto,
+    UserProfileEditDto,
+} from "./dto";
 import { UserService } from "./user.service";
 
 @ApiTags("User")
@@ -29,8 +34,16 @@ export class UserController {
     @Get("profile/cover")
     @HttpCode(HttpStatus.OK)
     @UseGuards(CustomAuthGuard)
+    async getProfileCover(@Request() req) {
+        return await this.userService.getProfileCover(req.user.sub);
+    }
+
+    @ApiBearerAuth()
+    @Get("profile")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(CustomAuthGuard)
     async getProfile(@Request() req) {
-        return await this.userService.profileCover(req.user);
+        return await this.userService.getProfile(req.user.sub);
     }
 
     @ApiBearerAuth()
@@ -38,11 +51,22 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(CustomAuthGuard)
     async egitProfile(@Request() req, @Body() userData: UserProfileEditDto) {
-        return await this.userService.profileEdit({
+        return await this.userService.editProfile({
             id: req.user.sub,
-            email: req.user.email,
             ...userData,
         });
+    }
+
+    @ApiBearerAuth()
+    @Post("password/edit")
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(CustomAuthGuard)
+    async editPassword(@Request() req, @Body() userData: UserPasswordEditDto) {
+        return await this.userService.editPassword(
+            req.user.sud,
+            userData.oldPassword,
+            userData.newPassword
+        );
     }
 
     @Post("password/reset")
