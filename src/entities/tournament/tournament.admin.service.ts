@@ -5,7 +5,12 @@ import { Repository } from "typeorm";
 import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { RouteAdminService } from "../route/route.admin.service";
 import { TournamentTimeAdminService } from "../tournament.time/tournament.time.admin.service";
-import { TournamentAdminCreateDto, TournamentAdminListDto, TournamentAdminRetrieveDto, TournamentAdminUpdateDto } from "./dto";
+import {
+    TournamentAdminCreateDto,
+    TournamentAdminListDto,
+    TournamentAdminRetrieveDto,
+    TournamentAdminUpdateDto
+} from "./dto";
 import { Tournament } from "./tournament.entity";
 
 
@@ -29,7 +34,7 @@ export class TournamentAdminService {
     }
 
     async findOne(id: number): Promise<TournamentAdminRetrieveDto> {
-        return await this.tournamentRepository.findOne({
+        const instance = await this.tournamentRepository.findOne({
             where: { id },
             relations: {
                 route: true,
@@ -38,6 +43,9 @@ export class TournamentAdminService {
                 tournamentTimes: true
             }
         });
+        this.isExists(instance, id);
+
+        return instance;
     }
 
     async create(createData: TournamentAdminCreateDto): Promise<TournamentAdminRetrieveDto> {
@@ -66,7 +74,7 @@ export class TournamentAdminService {
         createdInstance.tournamentTimes = tournamentTimeInstances;
         const savedInstance = await this.tournamentRepository.save(createdInstance);
 
-        return this.mapEntityToDto(savedInstance);
+        return this.mapEntityToRetrieveDto(savedInstance);
     }
 
     async update(id: number, updateData: TournamentAdminUpdateDto): Promise<TournamentAdminRetrieveDto> {
@@ -98,8 +106,8 @@ export class TournamentAdminService {
         updateData.tournamentTimes = tournamentTimeInstance;
         Object.assign(instance, updateData)
 
-        const updatedTournament = await this.tournamentRepository.save(instance);
-        return this.mapEntityToDto(updatedTournament);
+        const updatedInstance = await this.tournamentRepository.save(instance);
+        return this.mapEntityToRetrieveDto(updatedInstance);
     }
 
     async delete(id: number): Promise<any> {
@@ -129,7 +137,7 @@ export class TournamentAdminService {
         return { "message": "OK!" }
     }
 
-    private mapEntityToDto(entity: Tournament): TournamentAdminRetrieveDto {
+    private mapEntityToRetrieveDto(entity: Tournament): TournamentAdminRetrieveDto {
         return {
             id: entity.id,
             name: entity.name,

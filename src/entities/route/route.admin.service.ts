@@ -7,7 +7,7 @@ import {
     RouteAdminRetrieveDto,
     RouteAdminUpdateDto,
     RouteListDto,
-} from "./dto/index";
+} from "./dto";
 import { Route } from "./route.entity";
 
 @Injectable()
@@ -28,28 +28,31 @@ export class RouteAdminService {
     }
 
     async findOne(id: number): Promise<RouteAdminRetrieveDto> {
-        return await this.routeRepository.findOne({
+        const instance = await this.routeRepository.findOne({
             where: { id },
             relations: { description: true }
         });
+        this.isExists(instance, id);
+
+        return instance;
     }
 
     async findOneInstance(id: number): Promise<Route> {
         return await this.routeRepository.findOne({ where: { id } });
     }
 
-    async create(routeData: RouteAdminCreateDto): Promise<RouteAdminCreateDto> {
+    async create(routeData: RouteAdminCreateDto): Promise<RouteAdminRetrieveDto> {
         const { description, ...routeInformation } = routeData;
 
         const multilingualTextInstance =
             await this.multilingualTextService.create(description);
 
-        const newRouteInstance = this.routeRepository.create({
+        const newInstance = this.routeRepository.create({
             ...routeInformation,
             description: multilingualTextInstance,
         });
 
-        return this.routeRepository.save(newRouteInstance);
+        return this.routeRepository.save(newInstance);
     }
 
     async update(id: number, updateData: RouteAdminUpdateDto): Promise<RouteAdminRetrieveDto> {
@@ -60,11 +63,11 @@ export class RouteAdminService {
         updateData.description = await this.multilingualTextService.update(description);
         Object.assign(routeInstance, updateData)
 
-        const updatedRoute = await this.routeRepository.save(routeInstance);
-        return this.mapEntityToDto(updatedRoute);
+        const updatedInstance = await this.routeRepository.save(routeInstance);
+        return this.mapEntityToRetrieveDto(updatedInstance);
     }
 
-    private mapEntityToDto(entity: Route): RouteAdminRetrieveDto {
+    private mapEntityToRetrieveDto(entity: Route): RouteAdminRetrieveDto {
         return {
             id: entity.id,
             name: entity.name,

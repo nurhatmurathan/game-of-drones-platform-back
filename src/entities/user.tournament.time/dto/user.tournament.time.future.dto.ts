@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { TournamnetTimeCoverDto } from "../../../entities/tournament.time/dto/tournament.time.cover.dto";
+import { TournamnetTimeCoverDto } from "../../tournament.time/dto/user/tournament.time.cover.dto";
 
 export class UserFutureTournamnetTimeDto {
     @ApiProperty()

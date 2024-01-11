@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-validator";
-import { TournamentTimeAdminUpdateDto } from "src/entities/tournament.time/dto";
-import { MultilingualtextUpdateDto } from "../../multilingualtext/dto";
+import { MultilingualtextUpdateDto } from "../../../multilingualtext/dto";
+import { TournamentTimeAdminUpdateDto } from "../../../tournament.time/dto";
 
 
 export class TournamentAdminUpdateDto {

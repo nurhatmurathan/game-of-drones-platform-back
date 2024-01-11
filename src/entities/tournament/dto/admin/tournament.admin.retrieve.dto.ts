@@ -1,11 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-validator";
-import { TournamentTimeAdminCreateDto } from "src/entities/tournament.time/dto";
-import { MultilingualtextDto } from "../../multilingualtext/dto";
+import { MultilingualtextDto } from "../../../multilingualtext/dto";
+import { RouteAdminRetrieveDto } from "../../../route/dto";
+import { TournamentTimeListDto } from "../../../tournament.time/dto";
 
 
-export class TournamentAdminCreateDto {
+export class TournamentAdminRetrieveDto {
+    @ApiProperty()
+    @IsInt()
+    id: number;
+
     @ApiProperty()
     @IsString()
     name: string;
@@ -13,12 +18,12 @@ export class TournamentAdminCreateDto {
     @ApiProperty()
     @ValidateNested()
     @Type(() => MultilingualtextDto)
-    description: MultilingualtextDto;
+    description: MultilingualtextDto
 
     @ApiProperty()
     @ValidateNested()
     @Type(() => MultilingualtextDto)
-    coverDescription: MultilingualtextDto;
+    coverDescription: MultilingualtextDto
 
     @ApiProperty({ example: Date.now() })
     @IsNumber()
@@ -29,12 +34,13 @@ export class TournamentAdminCreateDto {
     price: number;
 
     @ApiProperty()
-    @IsInt()
-    routeId: number;
+    @ValidateNested()
+    @Type(() => RouteAdminRetrieveDto)
+    route: RouteAdminRetrieveDto;
 
-    @ApiProperty({ type: [TournamentTimeAdminCreateDto] })
+    @ApiProperty()
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => TournamentTimeAdminCreateDto)
-    tournamentTimes: TournamentTimeAdminCreateDto[];
+    @Type(() => TournamentTimeListDto)
+    tournamentTimes: TournamentTimeListDto[];
 }

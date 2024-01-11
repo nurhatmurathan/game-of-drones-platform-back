@@ -1,5 +1,4 @@
 import {
-    Body,
     Controller,
     Get,
     Headers,
@@ -7,16 +6,14 @@ import {
     HttpStatus,
     Param,
     ParseIntPipe,
-    Post,
     Req,
-    UseGuards,
+    UseGuards
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 import { LanguagesEnum } from "src/common/enums";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import {
-    TaskCreateDto,
     TaskListDto,
     TaskRetrieveDto
 } from "./dto";
@@ -50,12 +47,5 @@ export class TaskController {
         @Req() request
     ): Promise<TaskRetrieveDto> {
         return this.taskService.findOne(id, request.user.sub, language);
-    }
-
-    @Post()
-    @ApiBearerAuth()
-    @HttpCode(HttpStatus.CREATED)
-    create(@Body() taskCreateDto: TaskCreateDto): Promise<TaskCreateDto> {
-        return this.taskService.create(taskCreateDto);
     }
 }

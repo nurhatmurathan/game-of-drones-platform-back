@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { LigaRetrieveDto } from "../../liga/dto/liga.retrieve.dto";
-import { RouteRetrieveDto } from "../../route/dto/route.retrieve.dto";
-import { TournamentTimeListDto } from "../../tournament.time/dto/tournament.time.list.dto";
-import { IsDate, IsInt, IsNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-validator";
+import { LigaRetrieveDto } from "../../../liga/dto";
+import { RouteRetrieveDto } from "../../../route/dto";
+import { TournamentTimeListDto } from "../../../tournament.time/dto";
 
 
 export class TournamentRetrieveDto {
@@ -27,11 +28,18 @@ export class TournamentRetrieveDto {
     price: number;
 
     @ApiProperty()
+    @ValidateNested()
+    @Type(() => LigaRetrieveDto)
     liga: LigaRetrieveDto;
 
     @ApiProperty()
+    @ValidateNested()
+    @Type(() => RouteRetrieveDto)
     route: RouteRetrieveDto;
 
     @ApiProperty()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => TournamentTimeListDto)
     tournamentTimes: TournamentTimeListDto[];
 }

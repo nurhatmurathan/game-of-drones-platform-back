@@ -13,12 +13,18 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
-import { RouteAdminCreateDto, RouteAdminRetrieveDto, RouteAdminUpdateDto, RouteListDto } from "./dto";
+import {
+    RouteAdminCreateDto,
+    RouteAdminRetrieveDto,
+    RouteAdminUpdateDto,
+    RouteListDto
+} from "./dto";
 import { RouteAdminService } from "./route.admin.service";
 
+
+@ApiBearerAuth()
 @ApiTags("Admin Route")
 @Controller("admin-route")
-@ApiBearerAuth()
 @UseGuards(CustomAuthGuard, IsAdminGuard)
 export class RouteAdminController {
     constructor(private readonly routeAdminSerevice: RouteAdminService) { }

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNumber, IsString } from "class-validator";
-import { MultilingualtextDto } from "src/entities/multilingualtext/dto";
-import { RouteAdminRetrieveDto } from "src/entities/route/dto";
+import { MultilingualtextDto } from "../../../multilingualtext/dto";
+import { RouteAdminRetrieveDto } from "../../../route/dto";
 
 export class TournamentAdminListDto {
     @ApiProperty()

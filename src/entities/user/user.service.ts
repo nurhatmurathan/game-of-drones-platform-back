@@ -21,7 +21,7 @@ export class UserService {
         private readonly billingAccountServise: BillingAccountService,
         private readonly userPasswordresetTokenService: UserPasswordresetTokenService,
         private readonly mailService: MailService
-    ) {}
+    ) { }
 
     async create(userData: UserCreateDto, isAdmin?: boolean) {
         console.log("I'm here in User service - create function ");
@@ -115,6 +115,7 @@ export class UserService {
     async passwordResetWithToken(token: string, password: string) {
         const instance: User =
             await this.userPasswordresetTokenService.getTokenUser(token);
+
         this.userPasswordresetTokenService.deleteUserToken(instance);
         return this.setPassword(instance, password);
     }

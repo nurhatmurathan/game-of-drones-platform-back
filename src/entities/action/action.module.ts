@@ -1,12 +1,13 @@
 import { Module, forwardRef } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { ActionService } from "./action.service";
-import { ActionController } from "./action.controller";
-import { Action } from "./action.entity";
+import { MultilingualtextModule } from "../multilingualtext/multilingualtext.module";
 import { TaskModule } from "../task/task.module";
 import { UserTournamentTimeModule } from "../user.tournament.time/user.tournament.time.module";
-import { MultilingualtextModule } from "../multilingualtext/multilingualtext.module";
+import { ActionAdminService } from "./action.admin.service";
+import { ActionController } from "./action.controller";
+import { Action } from "./action.entity";
+import { ActionService } from "./action.service";
 
 @Module({
     imports: [
@@ -16,7 +17,7 @@ import { MultilingualtextModule } from "../multilingualtext/multilingualtext.mod
         MultilingualtextModule,
     ],
     controllers: [ActionController],
-    providers: [ActionService],
-    exports: [ActionService],
+    providers: [ActionService, ActionAdminService],
+    exports: [ActionService, ActionAdminService],
 })
-export class ActionModule {}
+export class ActionModule { }

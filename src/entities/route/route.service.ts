@@ -4,8 +4,12 @@ import { Repository } from "typeorm";
 
 import { LanguagesEnum } from "../../common/enums";
 import { UtilService } from "../../utils/util.service";
-import { RouteListDto, RouteRetrieveDto } from "./dto/index";
+import {
+    RouteListDto,
+    RouteRetrieveDto
+} from "./dto";
 import { Route } from "./route.entity";
+
 
 @Injectable()
 export class RouteService {
@@ -26,18 +30,24 @@ export class RouteService {
 
     async findOne(id: number, language: LanguagesEnum): Promise<RouteRetrieveDto> {
         const languageType = this.utilService.getLanguage(language);
-        const routeInstance = await this.routeRepository.findOne({
+        const instance = await this.routeRepository.findOne({
             where: { id },
-            relations: ["description"],
+            relations: {
+                description: true
+            },
         });
 
+        return this.mapEntityToRetrieveDto(instance, languageType);
+    }
+
+    private mapEntityToRetrieveDto(instance: Route, languageType: string): RouteRetrieveDto {
         return {
-            id: routeInstance.id,
-            name: routeInstance.name,
-            length: routeInstance.length,
-            bestTime: routeInstance.bestTime,
-            map: routeInstance.map,
-            description: routeInstance.description[languageType]
+            id: instance.id,
+            name: instance.name,
+            length: instance.length,
+            bestTime: instance.bestTime,
+            map: instance.map,
+            description: instance.description[languageType]
         };
     }
 }
