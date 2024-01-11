@@ -6,10 +6,8 @@ import { Repository } from "typeorm";
 import { UtilService } from "src/utils/util.service";
 import { LanguagesEnum } from "../../common/enums";
 import { ActionService } from "../action/action.service";
-import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
 import {
-    TaskCreateDto,
     TaskListDto,
     TaskRetrieveDto
 } from "./dto";
@@ -19,18 +17,17 @@ import { Task } from "./task.entity";
 export class TaskService {
     constructor(
         @InjectRepository(Task)
-        private readonly taskReposotory: Repository<Task>,
+        private readonly taskRepository: Repository<Task>,
         private readonly utilSevice: UtilService,
         @Inject(forwardRef(() => ActionService))
         private readonly actionService: ActionService,
-        private readonly multilingualTextService: MultilingualtextService,
         private readonly userTournamentTimeService: UserTournamentTimeService
     ) { }
 
     async findAll(language: LanguagesEnum): Promise<TaskListDto[]> {
         const languageType = this.utilSevice.getLanguage(language);
 
-        const taskList = await this.taskReposotory.find({
+        const taskList = await this.taskRepository.find({
             relations: ['taskDescription']
         });
 
@@ -53,7 +50,7 @@ export class TaskService {
     ): Promise<TaskRetrieveDto> {
         const languageType = this.utilSevice.getLanguage(language);
 
-        const taskInstance = await this.taskReposotory.findOne({
+        const taskInstance = await this.taskRepository.findOne({
             where: { id: id },
             relations: ["description", "taskDescription"],
         });
@@ -83,24 +80,7 @@ export class TaskService {
         };
     }
 
-    async create(taskData: TaskCreateDto): Promise<TaskCreateDto> {
-        const { description, taskDescription, ...task } = taskData;
-
-        const multilingualTextDescription =
-            await this.multilingualTextService.create(description);
-        const multilingualTexTaskDescription =
-            await this.multilingualTextService.create(taskDescription);
-        const newTask = this.taskReposotory.create({
-            ...task,
-            description: multilingualTextDescription,
-            taskDescription: multilingualTexTaskDescription
-
-        });
-
-        return await this.taskReposotory.save(newTask);
-    }
-
     getInstance(id: number): Promise<Task> {
-        return this.taskReposotory.findOne({ where: { id: id } });
+        return this.taskRepository.findOne({ where: { id: id } });
     }
 }

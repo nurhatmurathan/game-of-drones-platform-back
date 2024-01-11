@@ -17,9 +17,9 @@ import { TournamentAdminCreateDto, TournamentAdminListDto, TournamentAdminRetrie
 import { TournamentAdminService } from "./tournament.admin.service";
 
 
+@ApiBearerAuth()
 @ApiTags("Admin Tournament")
 @Controller("admin-tournament")
-@ApiBearerAuth()
 @UseGuards(CustomAuthGuard, IsAdminGuard)
 export class TournamentAdminController {
     constructor(

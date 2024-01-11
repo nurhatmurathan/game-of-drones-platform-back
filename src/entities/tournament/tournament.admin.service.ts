@@ -66,7 +66,7 @@ export class TournamentAdminService {
         createdInstance.tournamentTimes = tournamentTimeInstances;
         const savedInstance = await this.tournamentRepository.save(createdInstance);
 
-        return this.mapEntityToDto(savedInstance);
+        return this.mapEntityToRetrieveDto(savedInstance);
     }
 
     async update(id: number, updateData: TournamentAdminUpdateDto): Promise<TournamentAdminRetrieveDto> {
@@ -98,8 +98,8 @@ export class TournamentAdminService {
         updateData.tournamentTimes = tournamentTimeInstance;
         Object.assign(instance, updateData)
 
-        const updatedTournament = await this.tournamentRepository.save(instance);
-        return this.mapEntityToDto(updatedTournament);
+        const updatedInstance = await this.tournamentRepository.save(instance);
+        return this.mapEntityToRetrieveDto(updatedInstance);
     }
 
     async delete(id: number): Promise<any> {
@@ -129,7 +129,7 @@ export class TournamentAdminService {
         return { "message": "OK!" }
     }
 
-    private mapEntityToDto(entity: Tournament): TournamentAdminRetrieveDto {
+    private mapEntityToRetrieveDto(entity: Tournament): TournamentAdminRetrieveDto {
         return {
             id: entity.id,
             name: entity.name,
