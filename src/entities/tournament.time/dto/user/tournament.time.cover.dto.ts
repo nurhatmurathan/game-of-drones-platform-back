@@ -1,11 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { TournamnetCoverDto } from "../../../entities/tournament/dto/tournament.cover.dto";
+import { IsInt } from "class-validator";
+import { TournamnetCoverDto } from "../../../tournament/dto/user/tournament.cover.dto";
 
 export class TournamnetTimeCoverDto {
     @ApiProperty()
+    @IsInt()
     id: number;
 
     @ApiProperty({ example: Date.now() })
+    @IsInt()
     startTime: number;
 
     @ApiProperty()

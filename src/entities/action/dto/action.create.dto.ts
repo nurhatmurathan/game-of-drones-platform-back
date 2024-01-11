@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { MultilingualtextDto } from "../../multilingualtext/dto/multilingualtext.dto";
+import { MultilingualtextDto } from "../../multilingualtext/dto";
 
 export class ActionCreateDto {
     @ApiProperty()

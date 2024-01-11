@@ -25,14 +25,17 @@ export class TaskAdminService {
         return this.taskRepository.find();
     }
 
-    findOne(id: number): Promise<TaskAdminRetrieveDto> {
-        return this.taskRepository.findOne({
+    async findOne(id: number): Promise<TaskAdminRetrieveDto> {
+        const instance = await this.taskRepository.findOne({
             where: { id },
             relations: {
                 description: true,
                 taskDescription: true
             }
         });
+        this.isExists(instance, id);
+
+        return instance;
     }
 
     async create(createData: TaskAdminCreateDto): Promise<TaskAdminRetrieveDto> {
@@ -50,8 +53,7 @@ export class TaskAdminService {
 
         });
 
-        const savedInstance = await this.taskRepository.save(newInstance)
-        return this.mapEntityToRetrieveDto(savedInstance)
+        return this.taskRepository.save(newInstance);
     }
 
     async update(id: number, updateData: TaskAdminUpdateDto): Promise<TaskAdminRetrieveDto> {
@@ -65,8 +67,8 @@ export class TaskAdminService {
         updateData.taskDescription = await this.multilingualTextService.update(taskDescription);
 
         Object.assign(instance, updateData);
-        const updatedData = await this.taskRepository.save(instance);
-        return this.mapEntityToRetrieveDto(instance);
+        const updatedInstance = await this.taskRepository.save(instance);
+        return this.mapEntityToRetrieveDto(updatedInstance);
     }
 
     private mapEntityToRetrieveDto(instance: Task): TaskAdminRetrieveDto {
@@ -93,7 +95,7 @@ export class TaskAdminService {
         });
         this.isExists(instance, id);
 
-        instance.actions.forEach(async (action) => {
+        instance.actions.forEach((action) => {
             if (action.id)
                 this.actrionAdminService.delete(action.id);
         });
@@ -106,6 +108,7 @@ export class TaskAdminService {
         await this.multilingualTextService.delete(descriptionId);
         await this.multilingualTextService.delete(taskDescriptionId);
 
+        return { "message": "OK!" };
     }
 
     private isExists(instance: Task, id: number): void {

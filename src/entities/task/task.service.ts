@@ -13,6 +13,7 @@ import {
 } from "./dto";
 import { Task } from "./task.entity";
 
+
 @Injectable()
 export class TaskService {
     constructor(
@@ -28,7 +29,7 @@ export class TaskService {
         const languageType = this.utilSevice.getLanguage(language);
 
         const taskList = await this.taskRepository.find({
-            relations: ['taskDescription']
+            relations: { taskDescription: true }
         });
 
         const taskListDto = taskList.map((task) => {
@@ -52,7 +53,10 @@ export class TaskService {
 
         const taskInstance = await this.taskRepository.findOne({
             where: { id: id },
-            relations: ["description", "taskDescription"],
+            relations: {
+                description: true,
+                taskDescription: true
+            },
         });
 
         const listOfTournamentsIdsOfGivenUser =

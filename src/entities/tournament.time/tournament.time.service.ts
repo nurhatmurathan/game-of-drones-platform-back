@@ -9,7 +9,9 @@ import { Repository } from "typeorm";
 import { Tournament } from "../tournament/tournament.entity";
 import { User } from "../user/user.entity";
 import { UserService } from "../user/user.service";
-import { TournamentTimeListDto } from "./dto";
+import {
+    TournamentTimeListDto
+} from "./dto";
 import { TournamentTime } from "./tournament.time.entity";
 
 @Injectable()
@@ -18,7 +20,7 @@ export class TournamentTimeService {
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
         private readonly userService: UserService
-    ) {}
+    ) { }
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });

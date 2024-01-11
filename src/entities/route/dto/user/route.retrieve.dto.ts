@@ -1,22 +1,28 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MultilingualtextDto } from "../../multilingualtext/dto/multilingualtext.dto";
+import { IsInt, IsString, IsUrl } from "class-validator";
 
-export class RouteAdminRetrieveDto {
+export class RouteRetrieveDto {
     @ApiProperty()
+    @IsInt()
     id: number;
 
     @ApiProperty()
+    @IsString()
     name: string;
 
     @ApiProperty()
-    description: MultilingualtextDto;
+    @IsString()
+    description: string;
 
     @ApiProperty()
+    @IsString()
     length: string;
 
     @ApiProperty()
+    @IsInt()
     bestTime: number;
 
     @ApiProperty()
+    @IsUrl()
     map: string;
 }

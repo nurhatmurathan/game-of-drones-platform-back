@@ -1,6 +1,6 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsOptional } from "class-validator";
-import { Tournament } from "../../tournament/tournament.entity";
+import { Tournament } from "../../../tournament/tournament.entity";
 
 export class TournamentTimeAdminUpdateDto {
     @ApiProperty()

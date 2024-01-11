@@ -23,6 +23,6 @@ import { TaskService } from "./task.service";
     ],
     controllers: [TaskController, TaskAdminController],
     providers: [TaskService, TaskAdminService],
-    exports: [TaskService],
+    exports: [TaskService, TaskAdminService],
 })
 export class TaskModule { }

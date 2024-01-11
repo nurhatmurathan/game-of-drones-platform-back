@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-validator";
-import { MultilingualtextDto } from "src/entities/multilingualtext/dto";
-import { RouteAdminRetrieveDto } from "src/entities/route/dto";
-import { TournamentTimeListDto } from "../../tournament.time/dto/tournament.time.list.dto";
+import { LigaRetrieveDto } from "../../../liga/dto";
+import { RouteRetrieveDto } from "../../../route/dto";
+import { TournamentTimeListDto } from "../../../tournament.time/dto";
 
 
-export class TournamentAdminRetrieveDto {
+export class TournamentRetrieveDto {
     @ApiProperty()
     @IsInt()
     id: number;
@@ -16,16 +16,10 @@ export class TournamentAdminRetrieveDto {
     name: string;
 
     @ApiProperty()
-    @ValidateNested()
-    @Type(() => MultilingualtextDto)
-    description: MultilingualtextDto
+    @IsString()
+    description: string
 
     @ApiProperty()
-    @ValidateNested()
-    @Type(() => MultilingualtextDto)
-    coverDescription: MultilingualtextDto
-
-    @ApiProperty({ example: Date.now() })
     @IsNumber()
     startDate: number;
 
@@ -35,8 +29,13 @@ export class TournamentAdminRetrieveDto {
 
     @ApiProperty()
     @ValidateNested()
-    @Type(() => RouteAdminRetrieveDto)
-    route: RouteAdminRetrieveDto;
+    @Type(() => LigaRetrieveDto)
+    liga: LigaRetrieveDto;
+
+    @ApiProperty()
+    @ValidateNested()
+    @Type(() => RouteRetrieveDto)
+    route: RouteRetrieveDto;
 
     @ApiProperty()
     @IsArray()

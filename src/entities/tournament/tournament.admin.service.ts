@@ -5,7 +5,12 @@ import { Repository } from "typeorm";
 import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { RouteAdminService } from "../route/route.admin.service";
 import { TournamentTimeAdminService } from "../tournament.time/tournament.time.admin.service";
-import { TournamentAdminCreateDto, TournamentAdminListDto, TournamentAdminRetrieveDto, TournamentAdminUpdateDto } from "./dto";
+import {
+    TournamentAdminCreateDto,
+    TournamentAdminListDto,
+    TournamentAdminRetrieveDto,
+    TournamentAdminUpdateDto
+} from "./dto";
 import { Tournament } from "./tournament.entity";
 
 
@@ -29,7 +34,7 @@ export class TournamentAdminService {
     }
 
     async findOne(id: number): Promise<TournamentAdminRetrieveDto> {
-        return await this.tournamentRepository.findOne({
+        const instance = await this.tournamentRepository.findOne({
             where: { id },
             relations: {
                 route: true,
@@ -38,6 +43,9 @@ export class TournamentAdminService {
                 tournamentTimes: true
             }
         });
+        this.isExists(instance, id);
+
+        return instance;
     }
 
     async create(createData: TournamentAdminCreateDto): Promise<TournamentAdminRetrieveDto> {

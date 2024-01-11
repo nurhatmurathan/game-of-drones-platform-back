@@ -4,7 +4,9 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { TournamentTimeAdminCreateDto } from "./dto";
+import {
+    TournamentTimeAdminCreateDto
+} from "./dto";
 import { TournamentTime } from "./tournament.time.entity";
 
 @Injectable()

@@ -13,7 +13,12 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
-import { TournamentAdminCreateDto, TournamentAdminListDto, TournamentAdminRetrieveDto, TournamentAdminUpdateDto } from "./dto";
+import {
+    TournamentAdminCreateDto,
+    TournamentAdminListDto,
+    TournamentAdminRetrieveDto,
+    TournamentAdminUpdateDto
+} from "./dto";
 import { TournamentAdminService } from "./tournament.admin.service";
 
 

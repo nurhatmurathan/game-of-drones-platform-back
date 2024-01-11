@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { RouteRetrieveDto } from "../../route/dto/route.retrieve.dto";
-import { IsDate, IsInt, IsNumber, IsString } from "class-validator";
+import { IsInt, IsNumber, IsString } from "class-validator";
+import { RouteRetrieveDto } from "../../../route/dto";
 
 export class TournamentListDto {
     @ApiProperty()

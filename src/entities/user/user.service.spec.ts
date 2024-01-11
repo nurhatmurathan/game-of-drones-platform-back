@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { UserService } from "./user.service";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { User } from "./user.entity";
 import * as bcrypt from "bcrypt";
+import { User } from "./user.entity";
+import { UserService } from "./user.service";
 
 // Mock Repository
 const mockUserRepository = () => ({
@@ -75,7 +75,7 @@ describe("UserService", () => {
 
             repository.save.mockResolvedValue(updatedUser);
 
-            const result = await service.profileEdit({ ...user, ...editData });
+            const result = await service.editProfile({ ...user, ...editData });
             expect(result).toEqual(updatedUser);
             expect(repository.save).toHaveBeenCalledWith({
                 ...user,
