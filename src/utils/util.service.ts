@@ -13,10 +13,6 @@ export class UtilService {
         ) {
             return "ru";
         }
-        console.log(
-            !languageHeader ||
-                !new Set(["en", "ru", "kz"]).has(languageHeader as string)
-        );
         const language = languageHeader.toString();
         return language;
     }

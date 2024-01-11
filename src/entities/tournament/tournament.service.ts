@@ -1,12 +1,11 @@
-import { Injectable, Req } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { MoreThanOrEqual, Repository } from "typeorm";
 
+import { LanguagesEnum } from "src/common/enums";
 import { UtilService } from "../../utils/util.service";
-import { LigaService } from "../liga/liga.service";
 import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
-import { UserService } from "../user/user.service";
 import {
     TournamentListDto,
     TournamentRetrieveDto
@@ -20,16 +19,14 @@ export class TournamentService {
         private readonly tournamentRepository: Repository<Tournament>,
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly routeService: RouteService,
-        private readonly ligaService: LigaService,
         private readonly utilService: UtilService,
-        private readonly userService: UserService
     ) { }
 
-    async findAll(@Req() request): Promise<TournamentListDto[]> {
+    async findAll(language: LanguagesEnum): Promise<TournamentListDto[]> {
         console.log("Step in Service");
 
-        const language = this.utilService.getLanguageFromHeaders(request);
-        console.log("Language: " + language);
+        const languageType = this.utilService.getLanguage(language);
+        console.log("Language: " + languageType);
 
         const tournaments = await this.tournamentRepository.find({
             relations: ["route", "coverDescription"],
@@ -42,7 +39,7 @@ export class TournamentService {
 
         const tournamentListDtos = await Promise.all(
             tournaments.map(async (tournament) =>
-                this.mapTournamentToListDto(tournament, language)
+                this.mapTournamentToListDto(tournament, language, languageType)
             )
         );
 
@@ -50,35 +47,29 @@ export class TournamentService {
         return tournamentListDtos;
     }
 
-    async findOne(id: number, @Req() request): Promise<TournamentRetrieveDto> {
-        const language = this.utilService.getLanguageFromHeaders(request);
+    async findOne(id: number, language: LanguagesEnum): Promise<TournamentRetrieveDto> {
+        const languageType = this.utilService.getLanguage(language);
 
         const tournament = await this.tournamentRepository.findOne({
             relations: ["liga", "route", "description"],
             where: { id },
         });
 
-        return this.mapTournamentToRetrieveDto(tournament, language);
+        return this.mapTournamentToRetrieveDto(tournament, language, languageType);
     }
 
     private async mapTournamentToListDto(
         tournament: Tournament,
-        language: string
+        language: LanguagesEnum,
+        languageType: string
     ): Promise<TournamentListDto> {
-        console.log("Step in DTO function 1");
         const tournamentDto = new TournamentListDto();
-        console.log("Step in DTO function 1 sub 2");
         tournamentDto.id = tournament.id;
-        console.log("Step in DTO function 1 sub 3");
         tournamentDto.name = tournament.name;
-        console.log("Step in DTO function 1 sub 4");
-        tournamentDto.description = tournament.coverDescription[language];
-        console.log("Step in DTO function 1 sub 5");
+        tournamentDto.description = tournament.coverDescription[languageType];
         tournamentDto.startDate = tournament.startDate;
-        console.log("Step in DTO function 1 sub 5");
         tournamentDto.price = tournament.price;
 
-        console.log("Step in DTO function 2");
         if (tournament.route) {
             tournamentDto.route = await this.routeService.findOne(
                 tournament.route.id,
@@ -86,18 +77,18 @@ export class TournamentService {
             );
         }
 
-        console.log("Step in function 4");
         return tournamentDto;
     }
 
     private async mapTournamentToRetrieveDto(
         tournament: Tournament,
-        language: string
+        language: LanguagesEnum,
+        languageType: string
     ): Promise<TournamentRetrieveDto> {
         const tournamentDto = new TournamentRetrieveDto();
         tournamentDto.id = tournament.id;
         tournamentDto.name = tournament.name;
-        tournamentDto.description = tournament.description[language];
+        tournamentDto.description = tournament.description[languageType];
         tournamentDto.startDate = tournament.startDate;
         tournamentDto.price = tournament.price;
 

@@ -2,16 +2,19 @@ import {
     Body,
     Controller,
     Get,
+    Headers,
     HttpCode,
     HttpStatus,
     Param,
     ParseIntPipe,
     Post,
+    Req,
     Request,
-    UseGuards,
+    UseGuards
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "src/auth/guards/auth.guard";
+import { LanguagesEnum } from "src/common/enums";
 import { TrainingIdDto } from "../training/dto/training.turnamenttime.dto";
 import {
     UserFutureTournamnetTimeDto,
@@ -19,8 +22,9 @@ import {
 } from "./dto";
 import { UserTournamentTimeService } from "./user.tournament.time.service";
 
+
 @ApiTags("UserTournamentTime")
-@Controller("UserTournamentTime")
+@Controller("user-tournament-time")
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard)
 export class UserTournamentTimeController {
@@ -45,17 +49,25 @@ export class UserTournamentTimeController {
     })
     @Get("tournaments/future")
     @HttpCode(HttpStatus.ACCEPTED)
-    async userFutureTournamneTimes(@Request() request) {
+    async userFutureTournamneTimes(
+        @Req() request,
+        @Headers("Accept-Language") language: LanguagesEnum
+    ) {
         return await this.usertournamenttimeService.userFutureTournamentTimes(
-            request
+            language,
+            request.user.sub
         );
     }
 
     @Get("tournaments/pasted")
     @HttpCode(HttpStatus.ACCEPTED)
-    async userPastedTournamneTimes(@Request() request) {
+    async userPastedTournamneTimes(
+        @Req() request,
+        @Headers("Accept-Language") language: LanguagesEnum
+    ) {
         return await this.usertournamenttimeService.userPastedTournamentTimes(
-            request
+            language,
+            request.user.sub
         );
     }
 
