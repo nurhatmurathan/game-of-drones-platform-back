@@ -6,10 +6,7 @@ import { LanguagesEnum } from "src/common/enums";
 import { UtilService } from "../../utils/util.service";
 import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
-import {
-    TournamentListDto,
-    TournamentRetrieveDto
-} from "./dto";
+import { TournamentListDto, TournamentRetrieveDto } from "./dto";
 import { Tournament } from "./tournament.entity";
 
 @Injectable()
@@ -19,8 +16,8 @@ export class TournamentService {
         private readonly tournamentRepository: Repository<Tournament>,
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly routeService: RouteService,
-        private readonly utilService: UtilService,
-    ) { }
+        private readonly utilService: UtilService
+    ) {}
 
     async findAll(language: LanguagesEnum): Promise<TournamentListDto[]> {
         console.log("Step in Service");
@@ -47,15 +44,22 @@ export class TournamentService {
         return tournamentListDtos;
     }
 
-    async findOne(id: number, language: LanguagesEnum): Promise<TournamentRetrieveDto> {
+    async findOne(
+        id: number,
+        language: LanguagesEnum
+    ): Promise<TournamentRetrieveDto> {
         const languageType = this.utilService.getLanguage(language);
 
         const tournament = await this.tournamentRepository.findOne({
-            relations: ["liga", "route", "description"],
+            relations: ["route", "description"],
             where: { id },
         });
 
-        return this.mapTournamentToRetrieveDto(tournament, language, languageType);
+        return this.mapTournamentToRetrieveDto(
+            tournament,
+            language,
+            languageType
+        );
     }
 
     private async mapTournamentToListDto(
