@@ -21,7 +21,7 @@ export class UserService {
         private readonly billingAccountServise: BillingAccountService,
         private readonly userPasswordresetTokenService: UserPasswordresetTokenService,
         private readonly mailService: MailService
-    ) { }
+    ) {}
 
     async create(userData: UserCreateDto, isAdmin?: boolean) {
         console.log("I'm here in User service - create function ");
@@ -82,8 +82,18 @@ export class UserService {
         };
     }
 
-    async editProfile(userData): Promise<User> {
-        return await this.userRepository.save(userData);
+    async editProfile(
+        id: number,
+        firstName: string,
+        lastName: string,
+        avatar: string
+    ): Promise<User> {
+        return await this.userRepository.save({
+            id,
+            firstName,
+            lastName,
+            avatar,
+        });
     }
 
     async editPassword(id: number, oldPassword: string, newPassword: string) {

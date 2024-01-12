@@ -51,10 +51,12 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(CustomAuthGuard)
     async egitProfile(@Request() req, @Body() userData: UserProfileEditDto) {
-        return await this.userService.editProfile({
-            id: req.user.sub,
-            ...userData,
-        });
+        return await this.userService.editProfile(
+            req.user.sub,
+            userData.firstName,
+            userData.lastName,
+            userData.lastName
+        );
     }
 
     @ApiBearerAuth()
