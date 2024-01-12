@@ -96,10 +96,12 @@ export class AuthService {
         );
 
         user = await this.userService.create(userDto);
-        await this.userService.editProfile({
-            id: user.id,
-            ...profileDto,
-        });
+        await this.userService.editProfile(
+            user.id,
+            profileDto.firstName,
+            profileDto.lastName,
+            profileDto.avatar
+        );
 
         return user;
     }
