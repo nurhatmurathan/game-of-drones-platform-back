@@ -11,13 +11,13 @@ import {
     Put,
     UseGuards,
 } from "@nestjs/common";
-import { ApiBearerAuth } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
 import { LigaCoverDto, LigaCreateDto, LigaRetrieveAdminDto } from "./dto";
 import { LigaUpdateDto } from "./dto/liga.update.admin.dto";
 import { LigaAdminService } from "./liga.admin.service";
 
-// @ApiTags("Admin Liga")
+@ApiTags("Admin Liga")
 @Controller("admin-liga")
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard, IsAdminGuard)
