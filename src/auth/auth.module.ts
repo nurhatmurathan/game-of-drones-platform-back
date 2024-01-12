@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
-import { TokenModule } from "src/entities/token/token.module";
+import { TokenModule } from "src/entities/register.token/register.token.module";
 import { UserModule } from "../entities/user/user.module";
 import { MailModule } from "./../mail/mail.module";
 import { AuthController } from "./auth.controller";
@@ -22,6 +22,6 @@ import { FacebookStrategy, GoogleStrategy } from "./strategies";
     providers: [AuthService, GoogleStrategy, FacebookStrategy],
     exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}
 
-console.log(process.env.JWT_SECRET)
+console.log(process.env.JWT_SECRET);
