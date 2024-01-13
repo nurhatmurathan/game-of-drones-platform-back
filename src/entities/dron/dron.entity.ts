@@ -9,7 +9,10 @@ export class Dron {
     @Column({ name: "name", type: "varchar" })
     name: string;
 
+    @Column({ name: "isOnline", type: "boolean" })
+    isOnline: boolean;
+
     @OneToOne(() => User, { nullable: true })
     @JoinColumn()
-    description: User;
+    user: User;
 }

@@ -82,7 +82,7 @@ export class AuthController {
         console.log("I'm in - googleAuthRedirect funtion");
         console.log(req.user);
 
-        const jwt = await this.authService.loginOAuthUser(req.user);
+        const jwt = await this.authService.signInByUserInstance(req.user);
         return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
     }
 
@@ -98,7 +98,7 @@ export class AuthController {
         console.log("I'm here in - facebookAuthRedirect");
         console.log(req.user);
 
-        const jwt = await this.authService.loginOAuthUser(req.user);
+        const jwt = await this.authService.signInByUserInstance(req.user);
         return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
     }
 }

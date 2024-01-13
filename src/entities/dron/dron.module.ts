@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "../user/user.module";
+import { DronController } from './dron.controller';
 import { Dron } from "./dron.entity";
 import { DronService } from "./dron.service";
-import { DronController } from './dron.controller';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Dron]), UserModule],
+    controllers: [DronController],
     providers: [DronService],
     exports: [DronService],
-    controllers: [DronController],
 })
-export class DronModule {}
+export class DronModule { }

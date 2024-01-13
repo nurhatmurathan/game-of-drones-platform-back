@@ -6,6 +6,9 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
+import { AuthService } from "src/auth/auth.service";
+import { Dron } from "../dron/dron.entity";
+import { DronService } from "../dron/dron.service";
 import { Tournament } from "../tournament/tournament.entity";
 import { User } from "../user/user.entity";
 import { UserService } from "../user/user.service";
@@ -19,11 +22,31 @@ export class TournamentTimeService {
     constructor(
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
+        private readonly authService: AuthService,
+        private readonly droneService: DronService,
         private readonly userService: UserService
     ) { }
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
+    }
+
+    async assignUserToDron(userId: number): Promise<any> {
+        const onlineDrons: Dron[] = await this.droneService.findAvailableDrones();
+        const drone: Dron = this.retrieveRandomDorne(onlineDrons);
+
+        const user: User = await this.userService.findOneById(userId);
+        const savedDrone: Dron = await this.droneService.bindUserWithDrone(user, drone);
+
+        const jwt = this.authService.signInByUserInstance(user);
+        return {
+            jwt: jwt,
+            drone: savedDrone
+        }
+    }
+
+    private retrieveRandomDorne(instances: Dron[]): Dron {
+        return instances[Math.floor(Math.random() * instances.length)];
     }
 
     async findAllByTournamentId(
