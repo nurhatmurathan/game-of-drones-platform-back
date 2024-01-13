@@ -14,3 +14,4 @@ const config: TypeOrmModuleOptions = {
 export = config;
 
 console.log(process.env.CLOUD_DATABASE_USER);
+console.log(process.env.CLOUD_DATABASE_NAME);

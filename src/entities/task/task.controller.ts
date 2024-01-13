@@ -46,6 +46,7 @@ export class TaskController {
         @Param("id", ParseIntPipe) id: number,
         @Req() request
     ): Promise<TaskRetrieveDto> {
+        console.log("In Task controller")
         return this.taskService.findOne(id, request.user.sub, language);
     }
 }

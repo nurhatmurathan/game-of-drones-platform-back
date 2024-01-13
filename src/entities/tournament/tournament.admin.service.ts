@@ -51,7 +51,7 @@ export class TournamentAdminService {
     async create(createData: TournamentAdminCreateDto): Promise<TournamentAdminRetrieveDto> {
         const { description, coverDescription, routeId, tournamentTimes, ...tournamentData } = createData;
 
-        const routeInstance = await this.routeAdminService.findOneInstance(routeId);
+        const instance = await this.routeAdminService.findOneInstance(routeId);
         const descriptionEntity = await this.multilingualTextService.create(description);
         const coverDescriptionEntity = await this.multilingualTextService.create(coverDescription);
 
@@ -59,7 +59,7 @@ export class TournamentAdminService {
             ...tournamentData,
             description: descriptionEntity,
             coverDescription: coverDescriptionEntity,
-            route: routeInstance,
+            route: instance,
         });
 
         const createdInstance = await this.tournamentRepository.save(tournamentInstance);
@@ -116,16 +116,9 @@ export class TournamentAdminService {
             relations: {
                 description: true,
                 coverDescription: true,
-                tournamentTimes: true
             }
         });
         this.isExists(instance, id);
-
-        instance.tournamentTimes.forEach(async (tournamentTime) => {
-            if (tournamentTime.id)
-                this.tournamentTimeAdminService.delete(tournamentTime.id);
-        });
-        await this.tournamentRepository.save(instance);
 
         const descriptionId = instance.description.id;
         const coverDescriptionId = instance.coverDescription.id;

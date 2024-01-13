@@ -51,6 +51,8 @@ export class TaskService {
     ): Promise<TaskRetrieveDto> {
         const languageType = this.utilSevice.getLanguage(language);
 
+        console.log("Step 1");
+        console.log(`id: ${id}, userId: ${userId}, language: ${languageType}`);
         const taskInstance = await this.taskRepository.findOne({
             where: { id: id },
             relations: {
@@ -59,20 +61,28 @@ export class TaskService {
             },
         });
 
+        console.log("Step 2");
+        console.log(taskInstance);
+
         const listOfTournamentsIdsOfGivenUser =
             await this.userTournamentTimeService.getListOfTournamentsIdsOfGivenUser(
                 userId
             );
 
+        console.log("Step 3");
         let doneCount = 0;
-        if (taskInstance.inOneGame)
+        if (taskInstance.inOneGame) {
+            console.log("Step 4.1");
             doneCount = await this.actionService.maxActionCountInOneTournament(taskInstance.id, listOfTournamentsIdsOfGivenUser);
-        else
+        } else {
+            console.log("Step 4.2");
             doneCount = await this.actionService.countActionsInAllTournaments(
                 taskInstance.id,
                 listOfTournamentsIdsOfGivenUser
             );
+        }
 
+        console.log("Step 5");
         return {
             id: taskInstance.id,
             name: taskInstance.name,
