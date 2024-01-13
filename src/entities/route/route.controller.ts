@@ -5,23 +5,17 @@ import {
     HttpCode,
     HttpStatus,
     Param,
-    ParseIntPipe
+    ParseIntPipe,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { LanguagesEnum } from "../../common/enums";
-import {
-    RouteListDto,
-    RouteRetrieveDto
-} from "./dto";
+import { RouteListDto, RouteRetrieveDto } from "./dto";
 import { RouteService } from "./route.service";
-
 
 @ApiTags("Route")
 @Controller("route")
 export class RouteController {
-    constructor(
-        private readonly routeSerevice: RouteService,
-    ) { }
+    constructor(private readonly routeSerevice: RouteService) {}
 
     @Get()
     @HttpCode(HttpStatus.ACCEPTED)
