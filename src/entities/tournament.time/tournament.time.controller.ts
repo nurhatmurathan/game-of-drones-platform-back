@@ -1,8 +1,8 @@
 import {
-    Controller, Get, Req, Res
+    Controller, Get, Req, Res, UseGuards
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { TournamentStartGameDto } from "./dto";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { CustomAuthGuard } from "../../auth/guards";
 import { TournamentTimeService } from "./tournament.time.service";
 
 @ApiTags("Tournament Time")
@@ -13,9 +13,13 @@ export class TournamentTimeController {
     ) { }
 
     @Get("start-game")
-    async startTournament(tournamentStartGameDto: TournamentStartGameDto, @Req() req, @Res() res) {
-        const data = await this.tournamentTimeService.assignUserToDron(tournamentStartGameDto, req.user.sub);
+    @ApiBearerAuth()
+    @UseGuards(CustomAuthGuard)
+    async startTournament(@Req() req, @Res() res): Promise<any> {
+        console.log(req.user);
+        const data = await this.tournamentTimeService.assignUserToDron(req.user.sub);
 
-        return res.redirect(`${process.env.REDIRECT_TO_GAME_PLATFORM_URL}/${data.drone.id}/${data.jwt.access}`)
+        console.log(data);
+        return res.redirect(`${process.env.REDIRECT_TO_GAME_PLATFORM_URL}/${data.drone}/${data.jwt.access}`)
     }
 }

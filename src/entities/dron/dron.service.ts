@@ -40,6 +40,15 @@ export class DronService {
         return instances;
     }
 
+    async update(id: string, name: string, isOnline: boolean): Promise<Dron> {
+        return await this.dronRepository.save({ id, name, isOnline });
+    }
+
+    async delete(id: string) {
+        await this.dronRepository.delete({ id });
+        return { message: `Dron ${id} is deleted` };
+    }
+
     async bindUserWithDrone(user: User, dron: Dron): Promise<Dron> {
         dron.user = user;
         return this.dronRepository.save(dron);
@@ -50,12 +59,4 @@ export class DronService {
             throw new NotFoundException(`No available drones`);
     }
 
-    async update(id: string, name: string, isOnline: boolean): Promise<Dron> {
-        return await this.dronRepository.save({ id, name, isOnline });
-    }
-
-    async delete(id: string) {
-        await this.dronRepository.delete({ id });
-        return { message: `Dron ${id} is deleted` };
-    }
 }
