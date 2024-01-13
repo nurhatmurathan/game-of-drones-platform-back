@@ -13,6 +13,7 @@ import { Tournament } from "../tournament/tournament.entity";
 import { User } from "../user/user.entity";
 import { UserService } from "../user/user.service";
 import {
+    TournamentStartGameDto,
     TournamentTimeListDto
 } from "./dto";
 import { TournamentTime } from "./tournament.time.entity";
@@ -31,7 +32,7 @@ export class TournamentTimeService {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
     }
 
-    async assignUserToDron(userId: number): Promise<any> {
+    async assignUserToDron(tournamentStartGameDto: TournamentStartGameDto, userId: number): Promise<any> {
         const onlineDrons: Dron[] = await this.droneService.findAvailableDrones();
         const drone: Dron = this.retrieveRandomDorne(onlineDrons);
 

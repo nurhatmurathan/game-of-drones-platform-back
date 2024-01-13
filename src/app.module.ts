@@ -6,6 +6,7 @@ import { ValidatorModule } from "./common/validations/validator.module";
 import { ConfigModule } from "./config.module";
 import { DatabaseModule } from "./database/database.module";
 import { ActionModule } from "./entities/action/action.module";
+import { DronModule } from "./entities/dron/dron.module";
 import { LigaModule } from "./entities/liga/liga.module";
 import { MultilingualtextModule } from "./entities/multilingualtext/multilingualtext.module";
 import { TokenModule } from "./entities/register.token/register.token.module";
@@ -38,6 +39,7 @@ import { UtilModule } from "./utils/util.module";
         ActionModule,
         TrainingModule,
         MailModule,
+        DronModule,
     ],
     controllers: [AuthController],
     providers: [AuthService],
