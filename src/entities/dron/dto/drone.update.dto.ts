@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsString } from "class-validator";
 
-export class DronUpdateDto {
+export class DroneUpdateDto {
     @ApiProperty()
     @IsString()
     name: string;

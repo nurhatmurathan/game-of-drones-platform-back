@@ -4,12 +4,12 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from "class-validator";
-import { DronService } from "./../../entities/dron/dron.service";
+import { DroneService } from "../../entities/dron/drone.service";
 
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class IsDronAlreadyExist implements ValidatorConstraintInterface {
-    constructor(private readonly dronService: DronService) {}
+    constructor(private readonly dronService: DroneService) { }
 
     async validate(id: string, args: ValidationArguments) {
         return await this.dronService.findOne(id).then((dron) => {

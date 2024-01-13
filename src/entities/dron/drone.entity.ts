@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import { User } from "../user/user.entity";
 
-@Entity("dron")
-export class Dron {
+@Entity("drone")
+export class Drone {
     @PrimaryColumn()
     id: string;
 

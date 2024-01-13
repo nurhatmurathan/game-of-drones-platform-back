@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { TournamentTime } from "./tournament.time.entity";
 
 import { AuthModule } from "src/auth/auth.module";
-import { DronModule } from "../dron/dron.module";
+import { DronModule } from "../dron/drone.module";
 import { UserModule } from '../user/user.module';
 import { TournamentTimeAdminController } from "./tournament.time.admin.controller";
 import { TournamentTimeAdminService } from "./tournament.time.admin.service";

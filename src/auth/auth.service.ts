@@ -44,7 +44,7 @@ export class AuthService {
     async verifyJWTToken(token: string) {
         const decodedToken = await this.jwtService.verify(token);
 
-        return {};
+        return decodedToken;
     }
 
     async register(token: string, password: string) {
