@@ -1,4 +1,3 @@
-import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
 import {
     Body,
     Controller,
@@ -8,23 +7,22 @@ import {
     HttpStatus,
     Param,
     ParseIntPipe,
-    Patch,
     Post,
     Put,
-    Req,
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { LigaAdminService } from "./liga.admin.service";
-import { LigaCoverDto, LigaRetrieveAdminDto, LigaCreateDto } from "./dto";
+import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
+import { LigaCoverDto, LigaCreateDto, LigaRetrieveAdminDto } from "./dto";
 import { LigaUpdateDto } from "./dto/liga.update.admin.dto";
+import { LigaAdminService } from "./liga.admin.service";
 
 @ApiTags("Admin Liga")
 @Controller("admin-liga")
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard, IsAdminGuard)
 export class LigaAdminController {
-    constructor(private readonly ligaAdminService: LigaAdminService) { }
+    constructor(private readonly ligaAdminService: LigaAdminService) {}
 
     @Get()
     @HttpCode(HttpStatus.ACCEPTED)
@@ -55,10 +53,9 @@ export class LigaAdminController {
         return this.ligaAdminService.update(id, ligaUpdateDto);
     }
 
-    @Delete('/:id')
+    @Delete("/:id")
     @HttpCode(HttpStatus.NO_CONTENT)
-    remove(@Param('id', ParseIntPipe) id: number) {
+    remove(@Param("id", ParseIntPipe) id: number) {
         return this.ligaAdminService.delete(id);
     }
-
 }

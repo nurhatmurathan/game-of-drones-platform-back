@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 
 import * as bcrypt from "bcrypt";
 
-import { TokenService } from "../entities/token/token.service";
+import { TokenService } from "../entities/register.token/register.token.service";
 import { UserCreateDto, UserProfileEditDto } from "../entities/user/dto";
 import { User } from "../entities/user/user.entity";
 import { UserService } from "../entities/user/user.service";
@@ -15,7 +15,7 @@ export class AuthService {
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly mailService: MailService,
-        private readonly tokenService: TokenService
+        private readonly registerTokenService: TokenService
     ) {}
 
     async signIn(email: string, password: string) {
@@ -48,24 +48,25 @@ export class AuthService {
     }
 
     async register(token: string, password: string) {
-        const email: string = await this.tokenService.verifyToken(token);
+        const email: string =
+            await this.registerTokenService.verifyToken(token);
 
         const userInstanse = await this.userService.create({ email, password });
 
-        this.tokenService.clearRegisterTokens(email);
+        this.registerTokenService.clearRegisterTokens(email);
 
         return await this.signIn(email, password);
     }
 
     async verifyMail(email: string) {
         const code: string =
-            await this.tokenService.createSixNumberedCode(email);
+            await this.registerTokenService.createSixNumberedCode(email);
 
         return await this.mailService.sendUserConfirmation(email, code);
     }
 
     async verifyCode(code: string) {
-        const token: string = await this.tokenService.verifyCode(code);
+        const token: string = await this.registerTokenService.verifyCode(code);
 
         return { token };
     }
@@ -95,10 +96,12 @@ export class AuthService {
         );
 
         user = await this.userService.create(userDto);
-        await this.userService.editProfile({
-            id: user.id,
-            ...profileDto,
-        });
+        await this.userService.editProfile(
+            user.id,
+            profileDto.firstName,
+            profileDto.lastName,
+            profileDto.avatar
+        );
 
         return user;
     }

@@ -4,7 +4,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from "class-validator";
-import { TokenService } from "../../entities/token/token.service";
+import { TokenService } from "../../entities/register.token/register.token.service";
 
 @ValidatorConstraint({ async: true })
 @Injectable()

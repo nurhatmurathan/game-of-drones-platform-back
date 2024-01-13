@@ -8,9 +8,9 @@ import { DatabaseModule } from "./database/database.module";
 import { ActionModule } from "./entities/action/action.module";
 import { LigaModule } from "./entities/liga/liga.module";
 import { MultilingualtextModule } from "./entities/multilingualtext/multilingualtext.module";
+import { TokenModule } from "./entities/register.token/register.token.module";
 import { RouteModule } from "./entities/route/route.module";
 import { TaskModule } from "./entities/task/task.module";
-import { TokenModule } from "./entities/token/token.module";
 import { TournamentTimeModule } from "./entities/tournament.time/tournament.time.module";
 import { TournamentModule } from "./entities/tournament/tournament.module";
 import { TrainingModule } from "./entities/training/training.module";
@@ -42,4 +42,4 @@ import { UtilModule } from "./utils/util.module";
     controllers: [AuthController],
     providers: [AuthService],
 })
-export class AppModule { }
+export class AppModule {}
