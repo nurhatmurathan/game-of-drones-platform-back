@@ -1,12 +1,11 @@
-import { Route } from "../../entities/route/route.entity";
 import {
-    Entity,
     Column,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-    OneToMany,
+    Entity,
     ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn
 } from "typeorm";
+import { Route } from "../../entities/route/route.entity";
 import { UserTournamentTime } from "../user.tournament.time/user.tournament.time.entity";
 
 @Entity("training")
@@ -23,7 +22,13 @@ export class Training {
     @Column({ name: "reserved", type: "integer", default: 0 })
     reserved: number;
 
-    @ManyToOne(() => Route, (route) => route.trainings)
+    @ManyToOne(
+        () => Route,
+        (route) => route.trainings,
+        {
+            onDelete: 'SET NULL'
+        }
+    )
     route: Route;
 
     @ManyToMany(

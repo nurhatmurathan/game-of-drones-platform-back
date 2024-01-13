@@ -2,12 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomBytes } from "crypto";
 import { Repository } from "typeorm";
-import { Token } from "./token.entity";
+import { RegisterToken } from "./register.token.entity";
 @Injectable()
 export class TokenService {
     constructor(
-        @InjectRepository(Token)
-        private readonly tokenRepository: Repository<Token>
+        @InjectRepository(RegisterToken)
+        private readonly tokenRepository: Repository<RegisterToken>
     ) {}
 
     async createSixNumberedCode(email: string): Promise<string> {
@@ -20,7 +20,7 @@ export class TokenService {
         const expirationDate = new Date();
         expirationDate.setHours(expirationDate.getHours() + 1);
 
-        const instance: Token = this.tokenRepository.create({
+        const instance: RegisterToken = this.tokenRepository.create({
             email,
             code,
             expirationDate,
@@ -30,7 +30,7 @@ export class TokenService {
     }
 
     async verifyCode(code: string): Promise<string> {
-        const instance: Token = await this.tokenRepository.findOne({
+        const instance: RegisterToken = await this.tokenRepository.findOne({
             where: { code },
         });
 
@@ -40,7 +40,7 @@ export class TokenService {
     }
 
     async verifyToken(token: string): Promise<string> {
-        const instance: Token = await this.tokenRepository.findOne({
+        const instance: RegisterToken = await this.tokenRepository.findOne({
             where: { token },
         });
 
@@ -51,11 +51,11 @@ export class TokenService {
         await this.tokenRepository.delete({ email });
     }
 
-    async findOneByCode(code: string): Promise<Token | undefined> {
+    async findOneByCode(code: string): Promise<RegisterToken | undefined> {
         return await this.tokenRepository.findOne({ where: { code } });
     }
 
-    async findOneByToken(token: string): Promise<Token | undefined> {
+    async findOneByToken(token: string): Promise<RegisterToken | undefined> {
         return await this.tokenRepository.findOne({ where: { token } });
     }
 }

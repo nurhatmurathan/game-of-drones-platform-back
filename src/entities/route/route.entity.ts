@@ -1,14 +1,14 @@
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
 import { Tournament } from "../../entities/tournament/tournament.entity";
 import { Training } from "../../entities/training/training.entity";
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    OneToMany,
-    OneToOne,
-    JoinColumn,
-} from "typeorm";
 
 @Entity("route")
 export class Route {
@@ -18,7 +18,10 @@ export class Route {
     @Column({ name: "name", type: "varchar", length: 50 })
     name: string;
 
-    @OneToOne(() => MultilingualText)
+    @OneToOne(() => MultilingualText, {
+        // cascade: ['remove'],
+        // onDelete: 'CASCADE'
+    })
     @JoinColumn()
     description: MultilingualText;
 
@@ -31,9 +34,13 @@ export class Route {
     @Column({ name: "map", type: "varchar", length: 255 })
     map: string;
 
-    @OneToMany(() => Tournament, (tournament) => tournament.route)
+    @OneToMany(() => Tournament, (tournament) => tournament.route, {
+        cascade: ['remove']
+    })
     tournaments: Tournament[];
 
-    @OneToMany(() => Training, (training) => training.route)
+    @OneToMany(() => Training, (training) => training.route, {
+        cascade: ['remove']
+    })
     trainings: Training[];
 }

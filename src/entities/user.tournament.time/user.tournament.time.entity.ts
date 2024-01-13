@@ -1,16 +1,16 @@
+import {
+    Column,
+    Entity,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    Unique,
+} from "typeorm";
 import { Action } from "../../entities/action/action.entity";
 import { TournamentTime } from "../../entities/tournament.time/tournament.time.entity";
 import { User } from "../../entities/user/user.entity";
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    ManyToOne,
-    OneToMany,
-    ManyToMany,
-    Unique,
-    JoinTable,
-} from "typeorm";
 import { Training } from "../training/training.entity";
 
 @Entity("user_tournamenttime")
@@ -24,17 +24,35 @@ export class UserTournamentTime {
 
     @ManyToOne(
         () => TournamentTime,
-        (tournamentTime) => tournamentTime.userTournamentTimes
+        (tournamentTime) => tournamentTime.userTournamentTimes,
+        {
+            onDelete: 'SET NULL'
+        }
     )
     tournamentTime: TournamentTime;
 
-    @ManyToOne(() => User, (user) => user.userTournamentTimes)
+    @ManyToOne(
+        () => User,
+        (user) => user.userTournamentTimes,
+        {
+            onDelete: 'CASCADE'
+        }
+    )
     user: User;
 
-    @OneToMany(() => Action, (action) => action.userTournamentTime)
+    @OneToMany(
+        () => Action,
+        (action) => action.userTournamentTime,
+        {
+            cascade: ['remove']
+        }
+    )
     actions: Action[];
 
-    @ManyToMany(() => Training, (training) => training.userTournamentTimes)
+    @ManyToMany(
+        () => Training,
+        (training) => training.userTournamentTimes,
+    )
     @JoinTable()
     trainings: Training[];
 }

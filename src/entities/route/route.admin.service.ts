@@ -84,12 +84,12 @@ export class RouteAdminService {
             where: { id },
             relations: { description: true }
         });
-
-        const multilingualtextId = routeInstance.description.id;
         this.isExists(routeInstance, id);
 
+        const descriptiontId = routeInstance.description.id;
+
         await this.routeRepository.remove(routeInstance);
-        await this.multilingualTextService.delete(multilingualtextId);
+        await this.multilingualTextService.delete(descriptiontId);
 
         return { "message": "OK!" }
     }

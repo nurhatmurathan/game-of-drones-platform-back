@@ -43,7 +43,10 @@ export class User {
 
     @OneToMany(
         () => UserTournamentTime,
-        (userTournamentTime) => userTournamentTime.user
+        (userTournamentTime) => userTournamentTime.user,
+        {
+            cascade: ['remove']
+        }
     )
     userTournamentTimes: UserTournamentTime[];
 }

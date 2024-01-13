@@ -30,20 +30,35 @@ export class Tournament {
     // })
     // liga: Liga;
 
-    @ManyToOne(() => Route, (route) => route.tournaments)
+    @ManyToOne(
+        () => Route,
+        (route) => route.tournaments,
+        {
+            onDelete: 'SET NULL'
+        }
+    )
     route: Route;
 
-    @OneToOne(() => MultilingualText)
+    @OneToOne(() => MultilingualText, {
+        // cascade: true,
+        // onDelete: 'CASCADE'
+    })
     @JoinColumn()
     coverDescription: MultilingualText;
 
-    @OneToOne(() => MultilingualText)
+    @OneToOne(() => MultilingualText, {
+        // cascade: true,
+        // onDelete: 'CASCADE'
+    })
     @JoinColumn()
     description: MultilingualText;
 
     @OneToMany(
         () => TournamentTime,
-        (tournamentTime) => tournamentTime.tournament
+        (tournamentTime) => tournamentTime.tournament,
+        {
+            cascade: ['remove']
+        }
     )
     tournamentTimes: TournamentTime[];
 }

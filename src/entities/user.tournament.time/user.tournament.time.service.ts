@@ -224,8 +224,12 @@ export class UserTournamentTimeService {
         const userTournamentTimes =
             await this.userTournamentTimeRepository.find({
                 where: { user: { id: userId } },
+                relations: {
+                    tournamentTime: true
+                }
             });
 
+        console.log(userTournamentTimes);
         return userTournamentTimes.map(
             (userTournamentTime) => userTournamentTime.tournamentTime.id
         );

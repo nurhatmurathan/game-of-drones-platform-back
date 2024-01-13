@@ -1,13 +1,13 @@
-import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
-import { Action } from "../../entities/action/action.entity";
 import {
-    Entity,
     Column,
-    PrimaryGeneratedColumn,
-    OneToOne,
-    OneToMany,
+    Entity,
     JoinColumn,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
 } from "typeorm";
+import { Action } from "../../entities/action/action.entity";
+import { MultilingualText } from "../../entities/multilingualtext/multilingualtext.entity";
 
 @Entity("task")
 export class Task {
@@ -34,6 +34,12 @@ export class Task {
     @Column({ name: "reward", type: "varchar" })
     reward: string;
 
-    @OneToMany(() => Action, (action) => action.task)
+    @OneToMany(
+        () => Action,
+        (action) => action.task,
+        {
+            cascade: ['remove']
+        }
+    )
     actions: Action[];
 }

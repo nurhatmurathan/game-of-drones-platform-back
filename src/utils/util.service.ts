@@ -21,6 +21,6 @@ export class UtilService {
         if (!language || !LanguagesEnum[language]) {
             return LanguagesEnum.ru;
         }
-        return LanguagesEnum[language];
+        return language;
     }
 }

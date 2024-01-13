@@ -1,12 +1,12 @@
-import { Tournament } from "../../entities/tournament/tournament.entity";
-import { UserTournamentTime } from "../../entities/user.tournament.time/user.tournament.time.entity";
 import {
-    Entity,
     Column,
-    PrimaryGeneratedColumn,
+    Entity,
     ManyToOne,
     OneToMany,
+    PrimaryGeneratedColumn,
 } from "typeorm";
+import { Tournament } from "../../entities/tournament/tournament.entity";
+import { UserTournamentTime } from "../../entities/user.tournament.time/user.tournament.time.entity";
 
 @Entity("tournamenttime")
 export class TournamentTime {
@@ -22,12 +22,21 @@ export class TournamentTime {
     @Column({ name: "reserved", type: "integer", default: 0 })
     reserved: number;
 
-    @ManyToOne(() => Tournament, (tournament) => tournament.tournamentTimes)
+    @ManyToOne(
+        () => Tournament,
+        (tournament) => tournament.tournamentTimes,
+        {
+            onDelete: 'SET NULL'
+        }
+    )
     tournament: Tournament;
 
     @OneToMany(
         () => UserTournamentTime,
-        (userTournamentTime) => userTournamentTime.tournamentTime
+        (userTournamentTime) => userTournamentTime.tournamentTime,
+        {
+            cascade: ['remove']
+        }
     )
     userTournamentTimes: UserTournamentTime[];
 }

@@ -90,16 +90,9 @@ export class TaskAdminService {
             relations: {
                 description: true,
                 taskDescription: true,
-                actions: true
             }
         });
         this.isExists(instance, id);
-
-        instance.actions.forEach((action) => {
-            if (action.id)
-                this.actrionAdminService.delete(action.id);
-        });
-        await this.taskRepository.save(instance);
 
         const descriptionId = instance.description.id;
         const taskDescriptionId = instance.taskDescription.id;
