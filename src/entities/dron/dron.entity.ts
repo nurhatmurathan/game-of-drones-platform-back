@@ -9,7 +9,7 @@ export class Dron {
     @Column({ name: "name", type: "varchar" })
     name: string;
 
-    @Column({ name: "is_online", type: "boolean" })
+    @Column({ name: "is_online", type: "boolean", default: false })
     isOnline: boolean;
 
     @OneToOne(() => User, { nullable: true })
