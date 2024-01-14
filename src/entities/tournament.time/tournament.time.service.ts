@@ -12,9 +12,7 @@ import { DroneService } from "../dron/drone.service";
 import { Tournament } from "../tournament/tournament.entity";
 import { User } from "../user/user.entity";
 import { UserService } from "../user/user.service";
-import {
-    TournamentTimeListDto
-} from "./dto";
+import { TournamentTimeListDto } from "./dto";
 import { TournamentTime } from "./tournament.time.entity";
 
 @Injectable()
@@ -25,24 +23,28 @@ export class TournamentTimeService {
         private readonly authService: AuthService,
         private readonly droneService: DroneService,
         private readonly userService: UserService
-    ) { }
+    ) {}
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
     }
 
     async assignUserToDron(userId: number): Promise<any> {
-        const onlineDrons: Drone[] = await this.droneService.findAvailableDrones();
+        const onlineDrons: Drone[] =
+            await this.droneService.findAvailableDrones();
         const drone: Drone = this.retrieveRandomDorne(onlineDrons);
 
         const user: User = await this.userService.findOneById(userId);
-        const savedDrone: Drone = await this.droneService.bindUserWithDrone(user, drone);
+        const savedDrone: Drone = await this.droneService.bindUserWithDrone(
+            user,
+            drone
+        );
 
-        const jwt = this.authService.signInByUserInstance(user);
+        const jwt = await this.authService.signInByUserInstance(user);
         return {
             jwt: jwt,
-            drone: savedDrone.id
-        }
+            drone: savedDrone.id,
+        };
     }
 
     private retrieveRandomDorne(instances: Drone[]): Drone {
