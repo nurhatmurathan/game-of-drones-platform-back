@@ -16,7 +16,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly mailService: MailService,
         private readonly registerTokenService: TokenService
-    ) {}
+    ) { }
 
     async signIn(email: string, password: string) {
         console.log("Im in - signIn function");
@@ -44,7 +44,7 @@ export class AuthService {
     async verifyJWTToken(token: string) {
         const decodedToken = await this.jwtService.verify(token);
 
-        return {};
+        return decodedToken;
     }
 
     async register(token: string, password: string) {
@@ -71,7 +71,7 @@ export class AuthService {
         return { token };
     }
 
-    async loginOAuthUser(user: User) {
+    async signInByUserInstance(user: User) {
         console.log("In AuthService - loginOAuthUser function");
         return this.getAccessRefreshToken(user);
     }
