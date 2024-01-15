@@ -32,6 +32,11 @@ export class TournamentTimeService {
     }
 
     async assignUserToDron(userId: number): Promise<any> {
+        // const instance: TournamentTime = await this.tournamentTimeRepository.findOne({
+        //     where: { id: tournamentStartGame.id }
+        // });
+        // this.isWithinTenMinutes(instance);
+
         const onlineDrons: Drone[] = await this.droneService.findAvailableDrones();
         const drone: Drone = this.retrieveRandomDorne(onlineDrons);
 
@@ -43,6 +48,16 @@ export class TournamentTimeService {
             jwt: jwt,
             drone: savedDrone.id
         }
+    }
+
+    isWithinTenMinutes(instance: TournamentTime): any {
+        const timeInMilliseconds = Date.now() - instance.startTime;
+        const tenMinutesInMilliseconds = 10 * 60 * 1000;
+
+        if (timeInMilliseconds < 0)
+            throw new BadRequestException("The tournament hasn't started yet.");
+        else if (timeInMilliseconds > tenMinutesInMilliseconds)
+            throw new BadRequestException("The tournament has already ended");
     }
 
     private retrieveRandomDorne(instances: Drone[]): Drone {
