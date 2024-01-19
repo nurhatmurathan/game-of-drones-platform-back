@@ -6,23 +6,20 @@ import {
     HttpStatus,
     Param,
     ParseIntPipe,
-    UseGuards
+    Request,
+    UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import { LanguagesEnum } from "../../common/enums";
-import {
-    TournamentListDto,
-    TournamentRetrieveDto
-} from "./dto";
+import { TournamentListDto, TournamentRetrieveDto } from "./dto";
 import { TournamentService } from "./tournament.service";
-
 
 @ApiTags("Tournament")
 @Controller("tournament")
 export class TournamentController {
-    constructor(private readonly tournamentService: TournamentService) { }
+    constructor(private readonly tournamentService: TournamentService) {}
 
     @Get()
     @ApiBearerAuth()
@@ -32,8 +29,7 @@ export class TournamentController {
         @Headers("Accept-Language") language: LanguagesEnum
     ): Promise<TournamentListDto[]> {
         console.log("Step in Controller");
-        const tournamentListDto =
-            this.tournamentService.findAll(language);
+        const tournamentListDto = this.tournamentService.findAll(language);
         return tournamentListDto;
     }
 
@@ -43,11 +39,13 @@ export class TournamentController {
     @HttpCode(HttpStatus.ACCEPTED)
     async findOne(
         @Param("id", ParseIntPipe) id: number,
-        @Headers("Accept-Language") language: LanguagesEnum
+        @Headers("Accept-Language") language: LanguagesEnum,
+        @Request() request
     ): Promise<TournamentRetrieveDto> {
         const tournamentRetrieveDto = this.tournamentService.findOne(
             id,
-            language
+            language,
+            request.user.sub
         );
         return tournamentRetrieveDto;
     }
