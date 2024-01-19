@@ -46,7 +46,8 @@ export class TournamentService {
 
     async findOne(
         id: number,
-        language: LanguagesEnum
+        language: LanguagesEnum,
+        userId: number
     ): Promise<TournamentRetrieveDto> {
         const languageType = this.utilService.getLanguage(language);
 
@@ -58,7 +59,8 @@ export class TournamentService {
         return this.mapTournamentToRetrieveDto(
             tournament,
             language,
-            languageType
+            languageType,
+            userId
         );
     }
 
@@ -87,7 +89,8 @@ export class TournamentService {
     private async mapTournamentToRetrieveDto(
         tournament: Tournament,
         language: LanguagesEnum,
-        languageType: string
+        languageType: string,
+        userId: number
     ): Promise<TournamentRetrieveDto> {
         const tournamentDto = new TournamentRetrieveDto();
         tournamentDto.id = tournament.id;
@@ -110,7 +113,8 @@ export class TournamentService {
 
         tournamentDto.tournamentTimes =
             await this.tournamentTimeService.findAllByTournamentId(
-                tournament.id
+                tournament.id,
+                userId
             );
         return tournamentDto;
     }

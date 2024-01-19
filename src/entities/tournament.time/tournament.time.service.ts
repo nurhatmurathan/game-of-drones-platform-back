@@ -1,7 +1,9 @@
 import {
     BadRequestException,
+    Inject,
     Injectable,
     NotFoundException,
+    forwardRef,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -10,6 +12,7 @@ import { AuthService } from "src/auth/auth.service";
 import { Drone } from "../dron/drone.entity";
 import { DroneService } from "../dron/drone.service";
 import { Tournament } from "../tournament/tournament.entity";
+import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
 import { User } from "../user/user.entity";
 import { UserService } from "../user/user.service";
 import { TournamentTimeListDto } from "./dto";
@@ -22,7 +25,9 @@ export class TournamentTimeService {
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
         private readonly authService: AuthService,
         private readonly droneService: DroneService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        @Inject(forwardRef(() => UserTournamentTimeService))
+        private readonly userTournamentTimeService: UserTournamentTimeService
     ) {}
 
     async findOne(id: number) {
@@ -52,23 +57,34 @@ export class TournamentTimeService {
     }
 
     async findAllByTournamentId(
-        tournamentId: number
+        tournamentId: number,
+        userId: number
     ): Promise<TournamentTimeListDto[]> {
         const tournamentTimes = await this.tournamentTimeRepository.find({
             where: { tournament: { id: tournamentId } },
         });
 
-        return tournamentTimes.map((tournamentTime) =>
-            this.mapToDto(tournamentTime)
+        const dtoPromises = tournamentTimes.map((tournamentTime) =>
+            this.mapToDto(tournamentTime, userId)
         );
+
+        return Promise.all(dtoPromises);
     }
 
-    private mapToDto(tournamentTime: TournamentTime): TournamentTimeListDto {
+    private async mapToDto(
+        tournamentTime: TournamentTime,
+        userId: number
+    ): Promise<TournamentTimeListDto> {
         const dto = new TournamentTimeListDto();
         dto.id = tournamentTime.id;
         dto.startTime = tournamentTime.startTime;
         dto.places = tournamentTime.places;
         dto.reserved = tournamentTime.reserved;
+        dto.isSelected =
+            await this.userTournamentTimeService.isSelectedTournamentTime(
+                userId,
+                tournamentTime.id
+            );
         return dto;
     }
 

@@ -1,7 +1,9 @@
 import {
     ConflictException,
+    Inject,
     Injectable,
-    NotFoundException
+    NotFoundException,
+    forwardRef,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOptionsRelations, LessThan, MoreThan, Repository } from "typeorm";
@@ -18,9 +20,10 @@ export class UserTournamentTimeService {
     constructor(
         @InjectRepository(UserTournamentTime)
         private readonly userTournamentTimeRepository: Repository<UserTournamentTime>,
+        @Inject(forwardRef(() => TournamentTimeService))
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly utilService: UtilService
-    ) { }
+    ) {}
 
     async create(
         userId: number,
@@ -61,6 +64,21 @@ export class UserTournamentTimeService {
         }
     }
 
+    async findOne(
+        userId: number,
+        tournamentTimeId: number
+    ): Promise<UserTournamentTime> {
+        const instance: UserTournamentTime =
+            await this.userTournamentTimeRepository.findOne({
+                where: {
+                    user: { id: userId },
+                    tournamentTime: { id: tournamentTimeId },
+                },
+            });
+
+        return instance;
+    }
+
     async userFutureTournamentTimes(
         language: LanguagesEnum,
         userId: number
@@ -78,10 +96,7 @@ export class UserTournamentTimeService {
         );
     }
 
-    async userPastedTournamentTimes(
-        language: LanguagesEnum,
-        userId: number
-    ) {
+    async userPastedTournamentTimes(language: LanguagesEnum, userId: number) {
         const languageType = this.utilService.getLanguage(language);
 
         return await Promise.all(
@@ -225,13 +240,30 @@ export class UserTournamentTimeService {
             await this.userTournamentTimeRepository.find({
                 where: { user: { id: userId } },
                 relations: {
-                    tournamentTime: true
-                }
+                    tournamentTime: true,
+                },
             });
 
         console.log(userTournamentTimes);
         return userTournamentTimes.map(
             (userTournamentTime) => userTournamentTime.tournamentTime.id
         );
+    }
+
+    async isSelectedTournamentTime(
+        userId: number,
+        tournamentTimeId: number
+    ): Promise<boolean> {
+        const instance: UserTournamentTime = await this.findOne(
+            userId,
+            tournamentTimeId
+        );
+
+        return this.isExist(instance);
+    }
+
+    isExist(instance: UserTournamentTime): boolean {
+        if (instance) return true;
+        return false;
     }
 }
