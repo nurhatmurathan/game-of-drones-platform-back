@@ -1,13 +1,11 @@
 import {
-    Body,
     Controller,
     Get,
     HttpCode,
     HttpStatus,
     Param,
     ParseIntPipe,
-    Post,
-    UseGuards,
+    UseGuards
 } from "@nestjs/common";
 import {
     ApiBearerAuth,
@@ -15,7 +13,7 @@ import {
     ApiTags
 } from "@nestjs/swagger";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
-import { TrainingCreateDto } from "./dto";
+
 import { Training } from "./training.entity";
 import { TrainingService } from "./training.service";
 
@@ -23,12 +21,6 @@ import { TrainingService } from "./training.service";
 @Controller("training")
 export class TrainingController {
     constructor(private readonly trainingService: TrainingService) { }
-
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    async create(@Body() trainingData: TrainingCreateDto): Promise<Training> {
-        return await this.trainingService.create(trainingData);
-    }
 
     @Get("trainings/:tournamentTimeId")
     @ApiBearerAuth()

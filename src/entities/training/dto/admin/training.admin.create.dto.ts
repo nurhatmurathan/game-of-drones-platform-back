@@ -1,8 +1,8 @@
-import { IsDate, IsInt } from "class-validator";
-import { Route } from "./../../route/route.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { IsInt } from "class-validator";
+import { Route } from "../../../route/route.entity";
 
-export class TrainingCreateDto {
+export class TrainingAdminCreateDto {
     @ApiProperty({ example: Date.now() })
     readonly startTime: number;
 

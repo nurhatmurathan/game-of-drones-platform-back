@@ -1,2 +1,2 @@
-export * from "./training.create.dto";
-export * from "./training.turnamenttime.dto";
+export * from "./admin";
+export * from "./user";

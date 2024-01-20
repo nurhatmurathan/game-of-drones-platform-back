@@ -15,7 +15,7 @@ import {
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "src/auth/guards/auth.guard";
 import { LanguagesEnum } from "src/common/enums";
-import { TrainingIdDto } from "../training/dto/training.turnamenttime.dto";
+import { TrainingIdDto } from "../training/dto/user/training.turnamenttime.dto";
 import {
     UserFutureTournamnetTimeDto,
     UserTournamnetTimeCreateDto
