@@ -4,6 +4,7 @@ import { UserTournamentTimeModule } from "./../user.tournament.time/user.tournam
 import { TournamentTime } from "./tournament.time.entity";
 
 import { AuthModule } from "src/auth/auth.module";
+import { BillingAccountModule } from "../billing.account/billing.account.module";
 import { DronModule } from "../dron/drone.module";
 import { UserModule } from "../user/user.module";
 import { TournamentTimeAdminController } from "./tournament.time.admin.controller";
@@ -14,6 +15,7 @@ import { TournamentTimeService } from "./tournament.time.service";
 @Module({
     imports: [
         TypeOrmModule.forFeature([TournamentTime]),
+        BillingAccountModule,
         UserModule,
         DronModule,
         AuthModule,
@@ -23,4 +25,4 @@ import { TournamentTimeService } from "./tournament.time.service";
     providers: [TournamentTimeService, TournamentTimeAdminService],
     exports: [TournamentTimeService, TournamentTimeAdminService],
 })
-export class TournamentTimeModule {}
+export class TournamentTimeModule { }

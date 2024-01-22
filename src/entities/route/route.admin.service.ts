@@ -80,15 +80,14 @@ export class RouteAdminService {
 
 
     async delete(id: number): Promise<any> {
-        const routeInstance = await this.routeRepository.findOne({
+        const instance = await this.routeRepository.findOne({
             where: { id },
-            relations: { description: true }
+            relations: { description: true, trainings: true }
         });
-        this.isExists(routeInstance, id);
+        this.isExists(instance, id);
 
-        const descriptiontId = routeInstance.description.id;
-
-        await this.routeRepository.remove(routeInstance);
+        const descriptiontId = instance.description.id;
+        await this.routeRepository.remove(instance);
         await this.multilingualTextService.delete(descriptiontId);
 
         return { "message": "OK!" }

@@ -40,12 +40,11 @@ export class TournamentAdminService {
                 route: true,
                 description: true,
                 coverDescription: true,
-                tournamentTimes: true
             }
         });
         this.isExists(instance, id);
 
-        return instance;
+        return this.mapEntityToRetrieveDto(instance);
     }
 
     async create(createData: TournamentAdminCreateDto): Promise<TournamentAdminRetrieveDto> {
@@ -130,7 +129,9 @@ export class TournamentAdminService {
         return { "message": "OK!" }
     }
 
-    private mapEntityToRetrieveDto(entity: Tournament): TournamentAdminRetrieveDto {
+    private async mapEntityToRetrieveDto(entity: Tournament): Promise<TournamentAdminRetrieveDto> {
+        const tournamentTimes = await this.tournamentTimeAdminService.findAllByTournamentId(entity.id);
+
         return {
             id: entity.id,
             name: entity.name,
@@ -139,7 +140,7 @@ export class TournamentAdminService {
             startDate: entity.startDate,
             price: entity.price,
             route: entity.route,
-            tournamentTimes: entity.tournamentTimes
+            tournamentTimes: tournamentTimes
         };
     }
 

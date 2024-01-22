@@ -1,6 +1,7 @@
-import { Controller, Get, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "../../auth/guards";
+import { TournamentStartGameDto } from "./dto";
 import { TournamentTimeService } from "./tournament.time.service";
 
 @ApiTags("Tournament Time")
@@ -8,7 +9,7 @@ import { TournamentTimeService } from "./tournament.time.service";
 export class TournamentTimeController {
     constructor(
         private readonly tournamentTimeService: TournamentTimeService
-    ) {}
+    ) { }
 
     @Get("start-game")
     @ApiBearerAuth()
@@ -23,5 +24,20 @@ export class TournamentTimeController {
         return {
             redirect: `${process.env.REDIRECT_TO_GAME_PLATFORM_URL}/${data.drone}/${data.jwt.access}`,
         };
+    }
+
+
+    @Post("validate-tournament")
+    @ApiBearerAuth()
+    @HttpCode(HttpStatus.ACCEPTED)
+    @UseGuards(CustomAuthGuard)
+    async validateTournament(
+        @Body() startGameDto: TournamentStartGameDto,
+        @Request() req,
+    ): Promise<any> {
+        return this.tournamentTimeService.tournamentStartedAndExistsValidator(
+            startGameDto.id,
+            req.user.sub
+        );
     }
 }

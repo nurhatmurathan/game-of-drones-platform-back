@@ -17,7 +17,7 @@ export class TournamentService {
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly routeService: RouteService,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
     async findAll(language: LanguagesEnum): Promise<TournamentListDto[]> {
         console.log("Step in Service");
@@ -26,10 +26,13 @@ export class TournamentService {
         console.log("Language: " + languageType);
 
         const tournaments = await this.tournamentRepository.find({
-            relations: ["route", "coverDescription"],
             where: {
                 startDate: MoreThanOrEqual(Date.now()),
             },
+            relations: {
+                route: true,
+                coverDescription: true
+            }
         });
 
         console.log(tournaments);
@@ -52,8 +55,11 @@ export class TournamentService {
         const languageType = this.utilService.getLanguage(language);
 
         const tournament = await this.tournamentRepository.findOne({
-            relations: ["route", "description"],
             where: { id },
+            relations: {
+                route: true,
+                description: true
+            }
         });
 
         return this.mapTournamentToRetrieveDto(

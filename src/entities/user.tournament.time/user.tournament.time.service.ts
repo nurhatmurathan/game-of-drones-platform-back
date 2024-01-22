@@ -23,9 +23,9 @@ export class UserTournamentTimeService {
         @Inject(forwardRef(() => TournamentTimeService))
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
-    async create(
+    async registerUserToTournamentTime(
         userId: number,
         tournamentTimeId: number
     ): Promise<{
@@ -33,9 +33,12 @@ export class UserTournamentTimeService {
         tournamentTimeId: number;
         reservedPlaces: number;
     }> {
+
+        const reservedPlaces = await this.countReservedPlaces(tournamentTimeId);
         const reserved =
             await this.tournamentTimeService.reservePlaceInTheTournament(
                 tournamentTimeId,
+                reservedPlaces,
                 userId
             );
 
@@ -62,6 +65,12 @@ export class UserTournamentTimeService {
             }
             throw error;
         }
+    }
+
+    async countReservedPlaces(tournamentTimeId: number): Promise<number> {
+        return await this.userTournamentTimeRepository.count({
+            where: { tournamentTime: { id: tournamentTimeId } }
+        });
     }
 
     async findOne(
