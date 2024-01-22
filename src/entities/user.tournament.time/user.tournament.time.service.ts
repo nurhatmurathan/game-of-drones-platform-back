@@ -34,7 +34,7 @@ export class UserTournamentTimeService {
         reservedPlaces: number;
     }> {
 
-        const reservedPlaces = await this.constReservedPlaces(tournamentTimeId);
+        const reservedPlaces = await this.countReservedPlaces(tournamentTimeId);
         const reserved =
             await this.tournamentTimeService.reservePlaceInTheTournament(
                 tournamentTimeId,
@@ -67,7 +67,7 @@ export class UserTournamentTimeService {
         }
     }
 
-    async constReservedPlaces(tournamentTimeId: number): Promise<number> {
+    async countReservedPlaces(tournamentTimeId: number): Promise<number> {
         return await this.userTournamentTimeRepository.count({
             where: { tournamentTime: { id: tournamentTimeId } }
         });

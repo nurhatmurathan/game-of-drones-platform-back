@@ -100,7 +100,7 @@ export class TournamentTimeService {
         dto.startTime = tournamentTime.startTime;
         dto.places = tournamentTime.places;
         dto.reserved =
-            await this.userTournamentTimeService.constReservedPlaces(
+            await this.userTournamentTimeService.countReservedPlaces(
                 tournamentTime.id
             );
         dto.isSelected =
@@ -108,6 +108,8 @@ export class TournamentTimeService {
                 userId,
                 tournamentTime.id
             );
+
+        console.log(dto);
         return dto;
     }
 
