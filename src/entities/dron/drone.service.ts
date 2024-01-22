@@ -12,10 +12,14 @@ export class DroneService {
         @InjectRepository(Drone)
         private readonly dronRepository: Repository<Drone>,
         private readonly authService: AuthService
-    ) { }
+    ) {}
 
     async findAll(): Promise<Drone[]> {
-        return this.dronRepository.find();
+        const instances: Drone[] = await this.dronRepository.find({
+            relations: { user: true },
+        });
+
+        return instances;
     }
 
     async findOne(
@@ -30,12 +34,11 @@ export class DroneService {
         return await this.dronRepository.save(instance);
     }
 
-
     async findAvailableDrones(): Promise<Drone[]> {
         const instances: Drone[] = await this.dronRepository.find({
             where: {
                 user: null,
-                isOnline: true
+                isOnline: true,
             },
         });
         console.log(instances);
@@ -58,24 +61,31 @@ export class DroneService {
         return this.dronRepository.save(dron);
     }
 
-    async verifyBindingUserWithDrone(verifyDto: DroneVerifyDto): Promise<boolean> {
-        const decodedToken = await this.authService.verifyJWTToken(verifyDto.token);
+    async verifyBindingUserWithDrone(
+        verifyDto: DroneVerifyDto
+    ): Promise<boolean> {
+        const decodedToken = await this.authService.verifyJWTToken(
+            verifyDto.token
+        );
 
         console.log(decodedToken);
         const instance = await this.dronRepository.findOne({
             where: {
                 id: verifyDto.id,
-                user: { id: decodedToken.sub }
-            }
+                user: { id: decodedToken.sub },
+            },
         });
 
         return instance ? true : false;
     }
-
 
     private isExists(instances: Drone[]): void {
         if (instances.length === 0)
             throw new NotFoundException(`No available drones`);
     }
 
+    async unbindUser(id: string) {
+        this.dronRepository.save({ id, user: null });
+        return { mesage: `User is unbinted from drone ${id}` };
+    }
 }

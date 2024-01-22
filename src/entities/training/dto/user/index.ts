@@ -1,2 +1,2 @@
-export * from "./training.turnamenttime.dto";
+export * from "./training.tournamenttime.dto";
 

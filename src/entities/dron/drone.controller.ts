@@ -19,7 +19,7 @@ import { DroneCreateDto, DroneUpdateDto, DroneVerifyDto } from "./dto";
 @ApiTags("Dron")
 @Controller("dron")
 export class DroneController {
-    constructor(private readonly dronService: DroneService) { }
+    constructor(private readonly dronService: DroneService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
@@ -47,16 +47,27 @@ export class DroneController {
         return this.dronService.update(id, dronData.name, dronData.isOnline);
     }
 
+    @Put("unbind-user/:id")
+    async unbindUser(@Param("id") id: string) {
+        return this.dronService.unbindUser(id);
+    }
+
     @Delete("/:id")
     @HttpCode(HttpStatus.OK)
     async delete(@Param("id") id: string) {
         return this.dronService.delete(id);
     }
 
-    @Post('/verify')
-    async verifyDrone(@Body() droneVerifyDto: DroneVerifyDto, @Res() response: Response) {
-        const isBind = await this.dronService.verifyBindingUserWithDrone(droneVerifyDto);
+    @Post("/verify")
+    async verifyDrone(
+        @Body() droneVerifyDto: DroneVerifyDto,
+        @Res() response: Response
+    ) {
+        const isBind =
+            await this.dronService.verifyBindingUserWithDrone(droneVerifyDto);
 
-        return isBind ? response.status(HttpStatus.OK).send() : response.status(HttpStatus.NOT_FOUND).send();
+        return isBind
+            ? response.status(HttpStatus.OK).send()
+            : response.status(HttpStatus.NOT_FOUND).send();
     }
 }

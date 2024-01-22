@@ -1,10 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-validator";
+import {
+    IsArray,
+    IsInt,
+    IsNumber,
+    IsString,
+    ValidateNested,
+} from "class-validator";
 import { MultilingualtextDto } from "../../../multilingualtext/dto";
 import { RouteAdminRetrieveDto } from "../../../route/dto";
 import { TournamentTimeListDto } from "../../../tournament.time/dto";
-
+import { TournamentTimeAdminListDto } from "./../../../tournament.time/dto/admin/tournament.time.admin.list.dto";
 
 export class TournamentAdminRetrieveDto {
     @ApiProperty()
@@ -18,12 +24,12 @@ export class TournamentAdminRetrieveDto {
     @ApiProperty()
     @ValidateNested()
     @Type(() => MultilingualtextDto)
-    description: MultilingualtextDto
+    description: MultilingualtextDto;
 
     @ApiProperty()
     @ValidateNested()
     @Type(() => MultilingualtextDto)
-    coverDescription: MultilingualtextDto
+    coverDescription: MultilingualtextDto;
 
     @ApiProperty({ example: Date.now() })
     @IsNumber()
@@ -42,5 +48,5 @@ export class TournamentAdminRetrieveDto {
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => TournamentTimeListDto)
-    tournamentTimes: TournamentTimeListDto[];
+    tournamentTimes: TournamentTimeAdminListDto[];
 }

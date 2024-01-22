@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsInt } from "class-validator";
+import { IsInt } from "class-validator";
 
-export class TournamentTimeListDto {
+export class TournamentTimeAdminListDto {
     @ApiProperty()
     @IsInt()
     id: number;
@@ -17,8 +17,4 @@ export class TournamentTimeListDto {
     @ApiProperty()
     @IsInt()
     reserved: number;
-
-    @ApiProperty()
-    @IsBoolean()
-    isSelected: boolean;
 }

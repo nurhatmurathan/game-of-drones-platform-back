@@ -15,4 +15,8 @@ export class BillingAccountService {
 
         return await this.billingAccountRepository.save(instance);
     }
+
+    async save(instance: BillingAccount): Promise<BillingAccount> {
+        return await this.billingAccountRepository.save(instance);
+    }
 }

@@ -1,15 +1,19 @@
 import {
     BadRequestException,
+    Inject,
     Injectable,
     NotFoundException,
+    forwardRef,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { AuthService } from "src/auth/auth.service";
+import { BillingAccountService } from "../billing.account/billing.account.service";
 import { Drone } from "../dron/drone.entity";
 import { DroneService } from "../dron/drone.service";
 import { Tournament } from "../tournament/tournament.entity";
+import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
 import { User } from "../user/user.entity";
 import { UserService } from "../user/user.service";
 import { TournamentTimeListDto } from "./dto";
@@ -20,9 +24,12 @@ export class TournamentTimeService {
     constructor(
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
+        @Inject(forwardRef(() => UserTournamentTimeService))
+        private readonly userTournamentTimeService: UserTournamentTimeService,
         private readonly authService: AuthService,
         private readonly droneService: DroneService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly billingAccountService: BillingAccountService,
     ) { }
 
     async findOne(id: number) {
@@ -30,11 +37,6 @@ export class TournamentTimeService {
     }
 
     async assignUserToDron(userId: number): Promise<any> {
-        // const instance: TournamentTime = await this.tournamentTimeRepository.findOne({
-        //     where: { id: tournamentStartGame.id }
-        // });
-        // this.isWithinTenMinutes(instance);
-
         const onlineDrons: Drone[] =
             await this.droneService.findAvailableDrones();
         const drone: Drone = this.retrieveRandomDorne(onlineDrons);
@@ -52,70 +54,97 @@ export class TournamentTimeService {
         };
     }
 
-    isWithinTenMinutes(instance: TournamentTime): any {
-        const timeInMilliseconds = Date.now() - instance.startTime;
-        const tenMinutesInMilliseconds = 10 * 60 * 1000;
-
-        if (timeInMilliseconds < 0)
-            throw new BadRequestException("The tournament hasn't started yet.");
-        else if (timeInMilliseconds > tenMinutesInMilliseconds)
-            throw new BadRequestException("The tournament has already ended");
-    }
-
     private retrieveRandomDorne(instances: Drone[]): Drone {
         return instances[Math.floor(Math.random() * instances.length)];
     }
 
+    async tournamentStartedAndExistsValidator(id: number, userId: number): Promise<any> {
+        await this.userTournamentTimeService.getInstanceByUserIdtournamentTimeId(
+            userId,
+            id
+        );
+
+        const instance = await this.tournamentTimeRepository.findOne({ where: { id: id } });
+        this.isTournamentStarted(instance);
+    }
+
+    isTournamentStarted(instance: TournamentTime): any {
+        const timeInMilliseconds = Date.now() - instance.startTime;
+        const accessTimeToTournamentInMilliseconds = 10 * 60 * 1000;
+
+        if (timeInMilliseconds < 0)
+            throw new BadRequestException("The tournament hasn't started yet.");
+        else if (timeInMilliseconds > accessTimeToTournamentInMilliseconds)
+            throw new BadRequestException("The tournament has already ended");
+    }
+
+
     async findAllByTournamentId(
-        tournamentId: number
+        tournamentId: number,
+        userId: number
     ): Promise<TournamentTimeListDto[]> {
         const tournamentTimes = await this.tournamentTimeRepository.find({
             where: { tournament: { id: tournamentId } },
         });
 
-        return tournamentTimes.map((tournamentTime) =>
-            this.mapToDto(tournamentTime)
-        );
+        return Promise.all(tournamentTimes.map((tournamentTime) =>
+            this.mapToDto(tournamentTime, userId)));
     }
 
-    private mapToDto(tournamentTime: TournamentTime): TournamentTimeListDto {
+    private async mapToDto(
+        tournamentTime: TournamentTime,
+        userId: number
+    ): Promise<TournamentTimeListDto> {
         const dto = new TournamentTimeListDto();
         dto.id = tournamentTime.id;
         dto.startTime = tournamentTime.startTime;
         dto.places = tournamentTime.places;
-        dto.reserved = tournamentTime.reserved;
+        dto.reserved =
+            await this.userTournamentTimeService.constReservedPlaces(
+                tournamentTime.id
+            );
+        dto.isSelected =
+            await this.userTournamentTimeService.isSelectedTournamentTime(
+                userId,
+                tournamentTime.id
+            );
         return dto;
     }
 
     async reservePlaceInTheTournament(
         id: number,
+        reservedPlaces: number,
         userId: number
     ): Promise<number> {
         const userInstance = await this.userService.findOneById(userId, {
             billingAccount: true,
         });
+
         const tournamentTimeInstance =
             await this.tournamentTimeRepository.findOne({
                 where: { id: id },
-                relations: ["tournament"],
+                relations: {
+                    tournament: true
+                },
             });
         const tournamentInstance = tournamentTimeInstance.tournament;
 
         console.log(tournamentInstance);
-
-        // this.validateTournamentTimeInstance(
-        //     tournamentTimeInstance,
-        //     tournamentTimeInstance.id,
-        //     userInstance.billingAccount.balance,
-        //     tournamentInstance.price
-        // );
+        this.validateTournamentTimeInstance(
+            tournamentTimeInstance,
+            tournamentTimeInstance.places,
+            reservedPlaces,
+            tournamentTimeInstance.id,
+            userInstance.billingAccount.balance,
+            tournamentInstance.price,
+        );
         this.takeThePlaceAndSubtractBalance(
             userInstance,
             tournamentTimeInstance,
             tournamentInstance
         );
 
-        return tournamentTimeInstance.reserved;
+        return reservedPlaces + 1;
     }
 
     private async takeThePlaceAndSubtractBalance(
@@ -126,12 +155,15 @@ export class TournamentTimeService {
         // userInstance.billingAccount.balance -= tournamentInstance.price;
         tournamentTimeInstance.reserved++;
 
+        this.billingAccountService.save(userInstance.billingAccount);
         this.userService.save(userInstance);
         await this.tournamentTimeRepository.save(tournamentTimeInstance);
     }
 
     private validateTournamentTimeInstance(
         tournamentTimeInstance: TournamentTime,
+        places: number,
+        reserved: number,
         tournamentTimeId: number,
         userBalance: number,
         tournamentPrice: number
@@ -145,7 +177,7 @@ export class TournamentTimeService {
         if (userBalance < tournamentPrice)
             throw new BadRequestException("You don't have enough balance.");
 
-        if (tournamentTimeInstance.places <= tournamentTimeInstance.reserved)
+        if (places <= reserved)
             throw new BadRequestException("No available places.");
     }
 }

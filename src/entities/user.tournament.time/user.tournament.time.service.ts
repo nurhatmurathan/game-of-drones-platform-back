@@ -1,7 +1,9 @@
 import {
     ConflictException,
+    Inject,
     Injectable,
-    NotFoundException
+    NotFoundException,
+    forwardRef,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOptionsRelations, LessThan, MoreThan, Repository } from "typeorm";
@@ -18,11 +20,12 @@ export class UserTournamentTimeService {
     constructor(
         @InjectRepository(UserTournamentTime)
         private readonly userTournamentTimeRepository: Repository<UserTournamentTime>,
+        @Inject(forwardRef(() => TournamentTimeService))
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly utilService: UtilService
     ) { }
 
-    async create(
+    async registerUserToTournamentTime(
         userId: number,
         tournamentTimeId: number
     ): Promise<{
@@ -30,9 +33,12 @@ export class UserTournamentTimeService {
         tournamentTimeId: number;
         reservedPlaces: number;
     }> {
+
+        const reservedPlaces = await this.constReservedPlaces(tournamentTimeId);
         const reserved =
             await this.tournamentTimeService.reservePlaceInTheTournament(
                 tournamentTimeId,
+                reservedPlaces,
                 userId
             );
 
@@ -61,6 +67,27 @@ export class UserTournamentTimeService {
         }
     }
 
+    async constReservedPlaces(tournamentTimeId: number): Promise<number> {
+        return await this.userTournamentTimeRepository.count({
+            where: { tournamentTime: { id: tournamentTimeId } }
+        });
+    }
+
+    async findOne(
+        userId: number,
+        tournamentTimeId: number
+    ): Promise<UserTournamentTime> {
+        const instance: UserTournamentTime =
+            await this.userTournamentTimeRepository.findOne({
+                where: {
+                    user: { id: userId },
+                    tournamentTime: { id: tournamentTimeId },
+                },
+            });
+
+        return instance;
+    }
+
     async userFutureTournamentTimes(
         language: LanguagesEnum,
         userId: number
@@ -78,10 +105,7 @@ export class UserTournamentTimeService {
         );
     }
 
-    async userPastedTournamentTimes(
-        language: LanguagesEnum,
-        userId: number
-    ) {
+    async userPastedTournamentTimes(language: LanguagesEnum, userId: number) {
         const languageType = this.utilService.getLanguage(language);
 
         return await Promise.all(
@@ -225,13 +249,30 @@ export class UserTournamentTimeService {
             await this.userTournamentTimeRepository.find({
                 where: { user: { id: userId } },
                 relations: {
-                    tournamentTime: true
-                }
+                    tournamentTime: true,
+                },
             });
 
         console.log(userTournamentTimes);
         return userTournamentTimes.map(
             (userTournamentTime) => userTournamentTime.tournamentTime.id
         );
+    }
+
+    async isSelectedTournamentTime(
+        userId: number,
+        tournamentTimeId: number
+    ): Promise<boolean> {
+        const instance: UserTournamentTime = await this.findOne(
+            userId,
+            tournamentTimeId
+        );
+
+        return this.isExist(instance);
+    }
+
+    isExist(instance: UserTournamentTime): boolean {
+        if (instance) return true;
+        return false;
     }
 }
