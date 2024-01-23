@@ -66,6 +66,8 @@ export class TournamentTimeService {
 
         const instance = await this.tournamentTimeRepository.findOne({ where: { id: id } });
         this.isTournamentStarted(instance);
+
+        return { startTime: instance.startTime }
     }
 
     isTournamentStarted(instance: TournamentTime): any {
