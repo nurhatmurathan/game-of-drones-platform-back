@@ -66,6 +66,8 @@ export class TournamentTimeService {
 
         const instance = await this.tournamentTimeRepository.findOne({ where: { id: id } });
         this.isTournamentStarted(instance);
+
+        return { startTime: instance.startTime }
     }
 
     isTournamentStarted(instance: TournamentTime): any {
@@ -176,8 +178,8 @@ export class TournamentTimeService {
             );
         }
 
-        if (userBalance < tournamentPrice)
-            throw new BadRequestException("You don't have enough balance.");
+        // if (userBalance < tournamentPrice)
+        //     throw new BadRequestException("You don't have enough balance.");
 
         if (places <= reserved)
             throw new BadRequestException("No available places.");
