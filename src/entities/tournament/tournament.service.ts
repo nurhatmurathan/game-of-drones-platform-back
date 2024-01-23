@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { MoreThanOrEqual, Repository } from "typeorm";
+import { MoreThan, Repository } from "typeorm";
 
 import { LanguagesEnum } from "src/common/enums";
 import { UtilService } from "../../utils/util.service";
@@ -17,7 +17,7 @@ export class TournamentService {
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly routeService: RouteService,
         private readonly utilService: UtilService
-    ) { }
+    ) {}
 
     async findAll(language: LanguagesEnum): Promise<TournamentListDto[]> {
         console.log("Step in Service");
@@ -27,12 +27,12 @@ export class TournamentService {
 
         const tournaments = await this.tournamentRepository.find({
             where: {
-                startDate: MoreThanOrEqual(Date.now()),
+                tournamentTimes: { startTime: MoreThan(Date.now()) },
             },
             relations: {
                 route: true,
-                coverDescription: true
-            }
+                coverDescription: true,
+            },
         });
 
         console.log(tournaments);
@@ -58,8 +58,8 @@ export class TournamentService {
             where: { id },
             relations: {
                 route: true,
-                description: true
-            }
+                description: true,
+            },
         });
 
         return this.mapTournamentToRetrieveDto(
