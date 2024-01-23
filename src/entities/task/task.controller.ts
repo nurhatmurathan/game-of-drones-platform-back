@@ -33,8 +33,7 @@ export class TaskController {
     async findAll(
         @Headers("Accept-Language") language: LanguagesEnum
     ): Promise<TaskListDto[]> {
-        const taskListDto = this.taskService.findAll(language);
-        return taskListDto;
+        return await this.taskService.findAll(language);
     }
 
     @Get("/:id")

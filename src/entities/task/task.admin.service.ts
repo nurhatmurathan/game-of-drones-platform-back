@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ActionAdminService } from "../action/action.admin.service";
 import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import {
     TaskAdminCreateDto,
@@ -17,8 +16,7 @@ export class TaskAdminService {
     constructor(
         @InjectRepository(Task)
         private readonly taskRepository: Repository<Task>,
-        private readonly multilingualTextService: MultilingualtextService,
-        private readonly actrionAdminService: ActionAdminService
+        private readonly multilingualTextService: MultilingualtextService
     ) { }
 
     findAll(): Promise<TaskAdminListDto[]> {
@@ -68,21 +66,8 @@ export class TaskAdminService {
 
         Object.assign(instance, updateData);
         const updatedInstance = await this.taskRepository.save(instance);
-        return this.mapEntityToRetrieveDto(updatedInstance);
+        return updatedInstance;
     }
-
-    private mapEntityToRetrieveDto(instance: Task): TaskAdminRetrieveDto {
-        return {
-            id: instance.id,
-            name: instance.name,
-            inOneGame: instance.inOneGame,
-            maxCount: instance.maxCount,
-            reward: instance.reward,
-            description: instance.description,
-            taskDescription: instance.taskDescription
-        }
-    }
-
 
     async delete(id: number): Promise<any> {
         const instance = await this.taskRepository.findOne({

@@ -15,7 +15,7 @@ import { RouteService } from "./route.service";
 @ApiTags("Route")
 @Controller("route")
 export class RouteController {
-    constructor(private readonly routeSerevice: RouteService) {}
+    constructor(private readonly routeSerevice: RouteService) { }
 
     @Get()
     @HttpCode(HttpStatus.ACCEPTED)
@@ -29,18 +29,6 @@ export class RouteController {
         @Param("id", ParseIntPipe) id: number,
         @Headers("Accept-Language") language: LanguagesEnum
     ): Promise<RouteRetrieveDto> {
-        const routeRetrieveDtoInstance = await this.routeSerevice.findOne(
-            id,
-            language
-        );
-
-        return {
-            id: routeRetrieveDtoInstance.id,
-            name: routeRetrieveDtoInstance.name,
-            length: routeRetrieveDtoInstance.length,
-            bestTime: routeRetrieveDtoInstance.bestTime,
-            map: routeRetrieveDtoInstance.map,
-            description: routeRetrieveDtoInstance.description,
-        };
+        return await this.routeSerevice.findOne(id, language);
     }
 }
