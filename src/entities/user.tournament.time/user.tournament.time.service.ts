@@ -23,7 +23,7 @@ export class UserTournamentTimeService {
         @Inject(forwardRef(() => TournamentTimeService))
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly utilService: UtilService
-    ) { }
+    ) {}
 
     async registerUserToTournamentTime(
         userId: number,
@@ -33,7 +33,6 @@ export class UserTournamentTimeService {
         tournamentTimeId: number;
         reservedPlaces: number;
     }> {
-
         const reservedPlaces = await this.countReservedPlaces(tournamentTimeId);
         const reserved =
             await this.tournamentTimeService.reservePlaceInTheTournament(
@@ -68,8 +67,9 @@ export class UserTournamentTimeService {
     }
 
     async countReservedPlaces(tournamentTimeId: number): Promise<number> {
+        console.log(tournamentTimeId);
         return await this.userTournamentTimeRepository.count({
-            where: { tournamentTime: { id: tournamentTimeId } }
+            where: { tournamentTime: { id: tournamentTimeId } },
         });
     }
 
@@ -168,6 +168,7 @@ export class UserTournamentTimeService {
         userTournamentTime: UserTournamentTime,
         languageType: string
     ) {
+        console.log(userTournamentTime);
         return {
             id: userTournamentTime.id,
             place: userTournamentTime.place,
@@ -175,13 +176,13 @@ export class UserTournamentTimeService {
                 id: userTournamentTime.tournamentTime.id,
                 startTime: userTournamentTime.tournamentTime.startTime,
                 tournament: {
-                    id: userTournamentTime.tournamentTime.tournament.id,
-                    name: userTournamentTime.tournamentTime.tournament.name,
+                    id: userTournamentTime.tournamentTime.tournament?.id,
+                    name: userTournamentTime.tournamentTime.tournament?.name,
                     description:
                         userTournamentTime.tournamentTime.tournament
-                            .description[languageType],
+                            ?.description[languageType],
                     startDate:
-                        userTournamentTime.tournamentTime.tournament.startDate,
+                        userTournamentTime.tournamentTime.tournament?.startDate,
                 },
             },
         };
