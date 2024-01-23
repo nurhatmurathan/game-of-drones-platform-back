@@ -1,1 +1,2 @@
-export * from './action.create.dto';
+export * from './action.admin.create.dto';
+

@@ -19,8 +19,8 @@ export class Action {
     @JoinColumn()
     description: MultilingualText;
 
-    @Column({ name: "time", type: "timestamp" })
-    time: Date;
+    @Column({ name: "time", type: "bigint" })
+    time: number;
 
     @ManyToOne(
         () => UserTournamentTime,
