@@ -123,7 +123,6 @@ export class TournamentService {
         //         tournament.liga.id,
         //         language
         //     );
-
         if (tournament.route)
             tournamentDto.route = await this.routeService.findOne(
                 tournament.route.id,
