@@ -178,8 +178,8 @@ export class TournamentTimeService {
             );
         }
 
-        if (userBalance < tournamentPrice)
-            throw new BadRequestException("You don't have enough balance.");
+        // if (userBalance < tournamentPrice)
+        //     throw new BadRequestException("You don't have enough balance.");
 
         if (places <= reserved)
             throw new BadRequestException("No available places.");
