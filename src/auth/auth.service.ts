@@ -4,7 +4,6 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
 import { TokenService } from "../entities/register.token/register.token.service";
-import { UserCreateDto, UserProfileEditDto } from "../entities/user/dto";
 import { User } from "../entities/user/user.entity";
 import { UserService } from "../entities/user/user.service";
 import { MailService } from "../mail/mail.service";
@@ -33,7 +32,6 @@ export class AuthService {
 
     async refreshJWTToken(refreshToken: string) {
         const decodedToken = await this.jwtService.verify(refreshToken);
-
         const payload = { sub: decodedToken.sub, email: decodedToken.email };
 
         return {
@@ -43,7 +41,6 @@ export class AuthService {
 
     async verifyJWTToken(token: string) {
         const decodedToken = await this.jwtService.verify(token);
-
         return decodedToken;
     }
 
@@ -52,7 +49,6 @@ export class AuthService {
             await this.registerTokenService.verifyToken(token);
 
         const userInstanse = await this.userService.create({ email, password });
-
         this.registerTokenService.clearRegisterTokens(email);
 
         return await this.signIn(email, password);
@@ -67,7 +63,6 @@ export class AuthService {
 
     async verifyCode(code: string) {
         const token: string = await this.registerTokenService.verifyCode(code);
-
         return { token };
     }
 
@@ -82,52 +77,24 @@ export class AuthService {
         const { name, emails, photos } = profile;
         const email = emails[0].value;
 
-        let user = await this.userService.findOneByEmail(email);
+        const user = await this.userService.findOneByEmail(email);
         if (user) return user;
 
-        const userDto = this.createUserDto(
-            email,
-            process.env.GOOGLE_COMMON_USER_PASSWORD
-        );
-        const profileDto = this.createUserProfileDto(
+        const password = process.env.GOOGLE_COMMON_USER_PASSWORD;
+        const newUser = await this.userService.create({ email, password });
+
+        await this.userService.editProfile(
+            newUser.id,
             name.givenName,
             name.familyName,
             photos[0].value
         );
 
-        user = await this.userService.create(userDto);
-        await this.userService.editProfile(
-            user.id,
-            profileDto.firstName,
-            profileDto.lastName,
-            profileDto.avatar
-        );
-
-        return user;
-    }
-
-    private createUserDto(email: string, password: string): UserCreateDto {
-        const userDto = new UserCreateDto();
-        userDto.email = email;
-        userDto.password = password;
-        return userDto;
-    }
-
-    private createUserProfileDto(
-        firstName: string,
-        lastName: string,
-        avatar: string
-    ): UserProfileEditDto {
-        const userProfileDto = new UserProfileEditDto();
-        (userProfileDto.firstName = firstName),
-            (userProfileDto.lastName = lastName),
-            (userProfileDto.avatar = avatar);
-        return userProfileDto;
+        return newUser;
     }
 
     private async getAccessRefreshToken(user: User) {
         const payload = { sub: user.id, isAdmin: user.isAdmin };
-
         console.log("get-tokens", user);
 
         return {
