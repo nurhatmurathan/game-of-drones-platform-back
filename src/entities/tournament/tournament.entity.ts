@@ -30,13 +30,9 @@ export class Tournament {
     // })
     // liga: Liga;
 
-    @ManyToOne(
-        () => Route,
-        (route) => route.tournaments,
-        {
-            onDelete: 'SET NULL'
-        }
-    )
+    @ManyToOne(() => Route, (route) => route.tournaments, {
+        onDelete: "SET NULL",
+    })
     route: Route;
 
     @OneToOne(() => MultilingualText, {
@@ -57,7 +53,7 @@ export class Tournament {
         () => TournamentTime,
         (tournamentTime) => tournamentTime.tournament,
         {
-            cascade: ['remove']
+            cascade: ["remove"],
         }
     )
     tournamentTimes: TournamentTime[];
