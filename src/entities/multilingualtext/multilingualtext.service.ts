@@ -12,31 +12,31 @@ export class MultilingualtextService {
     ) { }
 
     async create(
-        multilingualtextData: MultilingualtextDto
+        createData: MultilingualtextDto
     ): Promise<MultilingualText> {
-        const newMultilingualtext =
-            this.multilingualtextRepository.create(multilingualtextData);
+        const instance =
+            this.multilingualtextRepository.create(createData);
 
-        return await this.multilingualtextRepository.save(newMultilingualtext);
+        return await this.multilingualtextRepository.save(instance);
     }
 
     async update(
-        multilingualtextData: MultilingualtextUpdateDto
+        updateData: MultilingualtextUpdateDto
     ): Promise<MultilingualtextUpdateDto> {
-        const { id, ...updatedMultilingualtextData } = multilingualtextData;
-        const multilingualtextInstance = await this.multilingualtextRepository.findOne({ where: { id } });
+        const { id, ...updatedMultilingualtextData } = updateData;
 
-        this.isExists(multilingualtextInstance, id);
+        const instance = await this.multilingualtextRepository.findOne({ where: { id } });
+        this.isExists(instance, id);
 
-        Object.assign(multilingualtextInstance, updatedMultilingualtextData);
-        return await this.multilingualtextRepository.save(multilingualtextInstance);
+        Object.assign(instance, updateData);
+        return await this.multilingualtextRepository.save(instance);
     }
 
     async delete(id: number): Promise<any> {
-        const multilingualtextInstance = await this.multilingualtextRepository.findOne({ where: { id } });
+        const instance = await this.multilingualtextRepository.findOne({ where: { id } });
+        this.isExists(instance, id);
 
-        this.isExists(multilingualtextInstance, id);
-        this.multilingualtextRepository.remove(multilingualtextInstance);
+        this.multilingualtextRepository.remove(instance);
     }
 
     private isExists(instance: MultilingualText, id: number): void {

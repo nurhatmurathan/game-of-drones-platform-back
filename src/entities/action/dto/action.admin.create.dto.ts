@@ -4,7 +4,7 @@ import { Type } from "class-transformer";
 import { IsInt, ValidateNested } from "class-validator";
 import { MultilingualtextDto } from "../../multilingualtext/dto";
 
-export class ActionCreateDto {
+export class ActionAdminCreateDto {
     @ApiProperty()
     @ValidateNested()
     @Type(() => MultilingualtextDto)

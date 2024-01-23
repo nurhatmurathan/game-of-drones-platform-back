@@ -36,8 +36,6 @@ export class ActionService {
             .getRawMany();
 
         return counts.reduce(
-            (max, current) => Math.max(max, parseInt(current.count)),
-            0
-        );
+            (max, current) => Math.max(max, parseInt(current.count)), 0);
     }
 }
