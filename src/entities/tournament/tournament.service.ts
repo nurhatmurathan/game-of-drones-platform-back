@@ -31,16 +31,29 @@ export class TournamentService {
             },
             relations: {
                 route: true,
-                coverDescription: true
+                coverDescription: true,
+                tournamentTimes: true,
             }
         });
 
         console.log(tournaments);
 
         const tournamentListDtos = await Promise.all(
-            tournaments.map(async (tournament) =>
-                this.mapTournamentToListDto(tournament, language, languageType)
-            )
+            tournaments.map(async (tournament) => {
+                const nearestTournamentTime = tournament.tournamentTimes
+                    .filter(tournamentTime => tournamentTime.startTime > Date.now())
+                    .sort((a, b) => a.startTime - b.startTime)
+                [0];
+
+                const dto =
+                    await this.mapTournamentToListDto(tournament, language, languageType);
+
+                dto.startDate = nearestTournamentTime
+                    ? nearestTournamentTime.startTime
+                    : tournament.startDate;
+
+                return dto;
+            })
         );
 
         console.log("Exit from service");

@@ -8,7 +8,7 @@ export class TokenService {
     constructor(
         @InjectRepository(RegisterToken)
         private readonly tokenRepository: Repository<RegisterToken>
-    ) {}
+    ) { }
 
     async createSixNumberedCode(email: string): Promise<string> {
         await this.clearRegisterTokens(email);
@@ -35,7 +35,6 @@ export class TokenService {
         });
 
         instance.token = randomBytes(20).toString("hex");
-
         return (await this.tokenRepository.save(instance)).token;
     }
 

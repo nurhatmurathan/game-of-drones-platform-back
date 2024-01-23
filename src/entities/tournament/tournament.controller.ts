@@ -19,7 +19,7 @@ import { TournamentService } from "./tournament.service";
 @ApiTags("Tournament")
 @Controller("tournament")
 export class TournamentController {
-    constructor(private readonly tournamentService: TournamentService) {}
+    constructor(private readonly tournamentService: TournamentService) { }
 
     @Get()
     @ApiBearerAuth()
@@ -29,8 +29,8 @@ export class TournamentController {
         @Headers("Accept-Language") language: LanguagesEnum
     ): Promise<TournamentListDto[]> {
         console.log("Step in Controller");
-        const tournamentListDto = this.tournamentService.findAll(language);
-        return tournamentListDto;
+        return this.tournamentService.findAll(language);
+
     }
 
     @Get("/:id")
