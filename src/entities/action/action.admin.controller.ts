@@ -4,11 +4,11 @@ import {
     HttpCode,
     HttpStatus,
     Post,
-    UseGuards
+    UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
 
-import { CustomAuthGuard, IsAdminGuard } from "src/auth/guards";
 import { ActionAdminService } from "./action.admin.service";
 import { Action } from "./action.entity";
 import { ActionAdminCreateDto } from "./dto";
@@ -17,12 +17,14 @@ import { ActionAdminCreateDto } from "./dto";
 @Controller("action")
 @UseGuards(CustomAuthGuard, IsAdminGuard)
 export class ActionAdminController {
-    constructor(private readonly actionAdminService: ActionAdminService) { }
+    constructor(private readonly actionAdminService: ActionAdminService) {}
 
     @Post()
     @ApiBearerAuth()
     @HttpCode(HttpStatus.CREATED)
-    createActionDuringTheTournament(@Body() actionCreateDto: ActionAdminCreateDto): Promise<Action> {
+    createActionDuringTheTournament(
+        @Body() actionCreateDto: ActionAdminCreateDto
+    ): Promise<Action> {
         return this.actionAdminService.create(actionCreateDto);
     }
 }
