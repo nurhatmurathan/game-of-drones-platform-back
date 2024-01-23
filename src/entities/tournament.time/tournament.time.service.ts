@@ -136,10 +136,10 @@ export class TournamentTimeService {
         console.log(tournamentInstance);
         this.validateTournamentTimeInstance(
             tournamentTimeInstance,
-            tournamentTimeInstance.places,
+            tournamentTimeInstance?.places,
             reservedPlaces,
             tournamentTimeInstance.id,
-            userInstance.billingAccount.balance,
+            userInstance?.billingAccount?.balance,
             tournamentInstance.price,
         );
         this.takeThePlaceAndSubtractBalance(
