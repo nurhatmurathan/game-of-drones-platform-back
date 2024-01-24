@@ -50,7 +50,7 @@ export class TournamentAdminService {
     async create(createData: TournamentAdminCreateDto): Promise<TournamentAdminRetrieveDto> {
         const { description, coverDescription, routeId, tournamentTimes, ...tournamentData } = createData;
 
-        const instance = await this.routeAdminService.findOneInstance(routeId);
+        const instance = await this.routeAdminService.findOne(routeId);
         const descriptionEntity = await this.multilingualTextService.create(description);
         const coverDescriptionEntity = await this.multilingualTextService.create(coverDescription);
 

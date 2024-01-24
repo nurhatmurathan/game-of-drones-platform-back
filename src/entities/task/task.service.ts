@@ -19,29 +19,24 @@ export class TaskService {
     constructor(
         @InjectRepository(Task)
         private readonly taskRepository: Repository<Task>,
-        private readonly utilSevice: UtilService,
         @Inject(forwardRef(() => ActionService))
         private readonly actionService: ActionService,
+        private readonly utilSevice: UtilService,
         private readonly userTournamentTimeService: UserTournamentTimeService
     ) { }
 
     async findAll(language: LanguagesEnum): Promise<TaskListDto[]> {
         const languageType = this.utilSevice.getLanguage(language);
 
-        const taskList = await this.taskRepository.find({
+        const instances = await this.taskRepository.find({
             relations: { taskDescription: true }
         });
 
-        const taskListDto = taskList.map((task) => {
-            const taskDescription = task.taskDescription[languageType];
-            return {
-                id: task.id,
-                name: task.name,
-                taskDescription: taskDescription
-            }
-        });
-
-        return taskListDto;
+        return instances.map((instance) => ({
+            id: instance.id,
+            name: instance.name,
+            taskDescription: instance.taskDescription[languageType]
+        }));
     }
 
     async findOne(
@@ -53,7 +48,8 @@ export class TaskService {
 
         console.log("Step 1");
         console.log(`id: ${id}, userId: ${userId}, language: ${languageType}`);
-        const taskInstance = await this.taskRepository.findOne({
+
+        const instance = await this.taskRepository.findOne({
             where: { id: id },
             relations: {
                 description: true,
@@ -62,36 +58,31 @@ export class TaskService {
         });
 
         console.log("Step 2");
-        console.log(taskInstance);
+        console.log(instance);
+        console.log(userId);
 
-        const listOfTournamentsIdsOfGivenUser =
-            await this.userTournamentTimeService.getListOfTournamentsIdsOfGivenUser(
-                userId
-            );
+        const listOfUserTournamentTimesIdsOfGivenUser =
+            await this.userTournamentTimeService
+                .getListOfUserTournamentTimesIdsOfGivenUser(userId);
 
         console.log("Step 3");
-        let doneCount = 0;
-        if (taskInstance.inOneGame) {
-            console.log("Step 4.1");
-            doneCount = await this.actionService.maxActionCountInOneTournament(taskInstance.id, listOfTournamentsIdsOfGivenUser);
-        } else {
-            console.log("Step 4.2");
-            doneCount = await this.actionService.countActionsInAllTournaments(
-                taskInstance.id,
-                listOfTournamentsIdsOfGivenUser
+        const doneCount = instance.inOneGame
+            ? await this.actionService.maxActionCountInOneTournament(
+                instance.id,
+                listOfUserTournamentTimesIdsOfGivenUser
+            )
+            : await this.actionService.countActionsInAllTournaments(
+                instance.id,
+                listOfUserTournamentTimesIdsOfGivenUser
             );
-        }
 
-        console.log("Step 5");
-        return {
-            id: taskInstance.id,
-            name: taskInstance.name,
-            description: taskInstance.description[languageType],
-            taskDescription: taskInstance.taskDescription[languageType],
-            maxCount: taskInstance.maxCount,
-            doneCount: doneCount,
-            reward: taskInstance.reward,
-        };
+        const retrieveDto = new TaskRetrieveDto();
+        Object.assign(retrieveDto, instance);
+        retrieveDto.doneCount = doneCount;
+        retrieveDto.description = instance.description[languageType];
+        retrieveDto.taskDescription = instance.taskDescription[languageType];
+
+        return retrieveDto;
     }
 
     getInstance(id: number): Promise<Task> {

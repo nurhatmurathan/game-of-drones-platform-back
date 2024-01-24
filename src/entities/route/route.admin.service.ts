@@ -19,9 +19,9 @@ export class RouteAdminService {
     ) { }
 
     async findAll(): Promise<RouteListDto[]> {
-        const routeInstances = await this.routeRepository.find();
+        const instances = await this.routeRepository.find();
 
-        return routeInstances.map((route) => ({
+        return instances.map((route) => ({
             id: route.id,
             name: route.name,
         }));
@@ -37,47 +37,32 @@ export class RouteAdminService {
         return instance;
     }
 
-    async findOneInstance(id: number): Promise<Route> {
-        return await this.routeRepository.findOne({ where: { id } });
-    }
-
-    async create(routeData: RouteAdminCreateDto): Promise<RouteAdminRetrieveDto> {
-        const { description, ...routeInformation } = routeData;
+    async create(createData: RouteAdminCreateDto): Promise<RouteAdminRetrieveDto> {
+        const { description, ...routeData } = createData;
 
         const multilingualTextInstance =
             await this.multilingualTextService.create(description);
 
-        const newInstance = this.routeRepository.create({
-            ...routeInformation,
+        const createdInstance = this.routeRepository.create({
+            ...routeData,
             description: multilingualTextInstance,
         });
 
-        return this.routeRepository.save(newInstance);
+        return this.routeRepository.save(createdInstance);
     }
 
     async update(id: number, updateData: RouteAdminUpdateDto): Promise<RouteAdminRetrieveDto> {
-        const { description, ...route } = updateData;
-        const routeInstance = await this.routeRepository.findOne({ where: { id } });
+        const { description, ...routeData } = updateData;
 
-        this.isExists(routeInstance, id);
+        const instance = await this.routeRepository.findOne({ where: { id } });
+        this.isExists(instance, id);
+
         updateData.description = await this.multilingualTextService.update(description);
-        Object.assign(routeInstance, updateData)
+        Object.assign(instance, updateData)
 
-        const updatedInstance = await this.routeRepository.save(routeInstance);
-        return this.mapEntityToRetrieveDto(updatedInstance);
+        const updatedInstance = await this.routeRepository.save(instance);
+        return updatedInstance;
     }
-
-    private mapEntityToRetrieveDto(entity: Route): RouteAdminRetrieveDto {
-        return {
-            id: entity.id,
-            name: entity.name,
-            length: entity.length,
-            bestTime: entity.bestTime,
-            map: entity.map,
-            description: entity.description
-        };
-    }
-
 
     async delete(id: number): Promise<any> {
         const instance = await this.routeRepository.findOne({

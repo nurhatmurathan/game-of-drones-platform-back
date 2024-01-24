@@ -25,27 +25,16 @@ export class Tournament {
     @Column({ name: "price", type: "double precision" })
     price: number;
 
-    // @ManyToOne(() => Liga, (liga) => liga.tournaments, {
-    //     onDelete: "SET NULL",
-    // })
-    // liga: Liga;
-
     @ManyToOne(() => Route, (route) => route.tournaments, {
         onDelete: "SET NULL",
     })
     route: Route;
 
-    @OneToOne(() => MultilingualText, {
-        // cascade: true,
-        // onDelete: 'CASCADE'
-    })
+    @OneToOne(() => MultilingualText)
     @JoinColumn()
     coverDescription: MultilingualText;
 
-    @OneToOne(() => MultilingualText, {
-        // cascade: true,
-        // onDelete: 'CASCADE'
-    })
+    @OneToOne(() => MultilingualText)
     @JoinColumn()
     description: MultilingualText;
 
@@ -57,4 +46,9 @@ export class Tournament {
         }
     )
     tournamentTimes: TournamentTime[];
+
+    // @ManyToOne(() => Liga, (liga) => liga.tournaments, {
+    //     onDelete: "SET NULL",
+    // })
+    // liga: Liga;
 }

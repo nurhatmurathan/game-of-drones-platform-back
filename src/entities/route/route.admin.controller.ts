@@ -45,8 +45,8 @@ export class RouteAdminController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() createDate: RouteAdminCreateDto): Promise<RouteAdminCreateDto> {
-        return this.routeAdminSerevice.create(createDate);
+    create(@Body() createData: RouteAdminCreateDto): Promise<RouteAdminCreateDto> {
+        return this.routeAdminSerevice.create(createData);
     }
 
     @Put("/:id")

@@ -23,7 +23,7 @@ export class UserTournamentTimeService {
         @Inject(forwardRef(() => TournamentTimeService))
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
     async registerUserToTournamentTime(
         userId: number,
@@ -243,7 +243,7 @@ export class UserTournamentTimeService {
         return instance;
     }
 
-    async getListOfTournamentsIdsOfGivenUser(
+    async getListOfUserTournamentTimesIdsOfGivenUser(
         userId: number
     ): Promise<number[]> {
         const userTournamentTimes =
@@ -256,7 +256,7 @@ export class UserTournamentTimeService {
 
         console.log(userTournamentTimes);
         return userTournamentTimes.map(
-            (userTournamentTime) => userTournamentTime.tournamentTime.id
+            (userTournamentTime) => userTournamentTime.id
         );
     }
 

@@ -18,10 +18,7 @@ export class Route {
     @Column({ name: "name", type: "varchar", length: 50 })
     name: string;
 
-    @OneToOne(() => MultilingualText, {
-        // cascade: ['remove'],
-        // onDelete: 'CASCADE'
-    })
+    @OneToOne(() => MultilingualText)
     @JoinColumn()
     description: MultilingualText;
 
