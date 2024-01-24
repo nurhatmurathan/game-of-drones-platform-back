@@ -74,7 +74,7 @@ export class TournamentTimeService {
         const timeInMilliseconds = Date.now() - instance.startTime;
         const accessTimeToTournamentInMilliseconds = 10 * 60 * 1000;
 
-        if (timeInMilliseconds < 0)
+        if (timeInMilliseconds < (-1 * 1000 * 60 * 5))
             throw new BadRequestException("The tournament hasn't started yet.");
         else if (timeInMilliseconds > accessTimeToTournamentInMilliseconds)
             throw new BadRequestException("The tournament has already ended");
