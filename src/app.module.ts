@@ -44,4 +44,4 @@ import { UtilModule } from "./utils/util.module";
     controllers: [AuthController],
     providers: [AuthService],
 })
-export class AppModule { }
+export class AppModule {}

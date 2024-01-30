@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { UtilModule } from "../../utils/util.module";
@@ -20,10 +20,11 @@ import { TournamentService } from "./tournament.service";
         RouteModule,
         UtilModule,
         UserModule,
-        TournamentTimeModule,
-        MultilingualtextModule
+        MultilingualtextModule,
+        forwardRef(() => TournamentTimeModule),
     ],
     controllers: [TournamentController, TournamentAdminController],
     providers: [TournamentService, TournamentAdminService],
+    exports: [TournamentService, TournamentAdminService],
 })
-export class TournamentModule { }
+export class TournamentModule {}

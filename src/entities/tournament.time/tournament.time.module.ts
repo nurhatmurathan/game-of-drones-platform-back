@@ -6,6 +6,7 @@ import { TournamentTime } from "./tournament.time.entity";
 import { AuthModule } from "src/auth/auth.module";
 import { BillingAccountModule } from "../billing.account/billing.account.module";
 import { DronModule } from "../dron/drone.module";
+import { TournamentModule } from "../tournament/tournament.module";
 import { UserModule } from "../user/user.module";
 import { TournamentTimeAdminController } from "./tournament.time.admin.controller";
 import { TournamentTimeAdminService } from "./tournament.time.admin.service";
@@ -19,10 +20,11 @@ import { TournamentTimeService } from "./tournament.time.service";
         UserModule,
         DronModule,
         AuthModule,
+        forwardRef(() => TournamentModule),
         forwardRef(() => UserTournamentTimeModule),
     ],
     controllers: [TournamentTimeController, TournamentTimeAdminController],
     providers: [TournamentTimeService, TournamentTimeAdminService],
     exports: [TournamentTimeService, TournamentTimeAdminService],
 })
-export class TournamentTimeModule { }
+export class TournamentTimeModule {}

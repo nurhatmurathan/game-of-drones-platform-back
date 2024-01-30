@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -9,27 +9,27 @@ import {
     TournamentAdminCreateDto,
     TournamentAdminListDto,
     TournamentAdminRetrieveDto,
-    TournamentAdminUpdateDto
+    TournamentAdminUpdateDto,
 } from "./dto";
 import { Tournament } from "./tournament.entity";
-
 
 @Injectable()
 export class TournamentAdminService {
     constructor(
         @InjectRepository(Tournament)
         private readonly tournamentRepository: Repository<Tournament>,
+        @Inject(forwardRef(() => TournamentTimeAdminService))
         private readonly tournamentTimeAdminService: TournamentTimeAdminService,
         private readonly multilingualTextService: MultilingualtextService,
         private readonly routeAdminService: RouteAdminService
-    ) { }
+    ) {}
 
     async findAll(): Promise<TournamentAdminListDto[]> {
         return await this.tournamentRepository.find({
             relations: {
                 route: true,
-                description: true
-            }
+                description: true,
+            },
         });
     }
 
@@ -40,7 +40,7 @@ export class TournamentAdminService {
                 route: true,
                 description: true,
                 coverDescription: true,
-            }
+            },
         });
         this.isExists(instance, id);
 
@@ -79,7 +79,7 @@ export class TournamentAdminService {
     async update(id: number, updateData: TournamentAdminUpdateDto): Promise<TournamentAdminRetrieveDto> {
         const instance = await this.tournamentRepository.findOne({
             where: { id },
-            relations: { tournamentTimes: true }
+            relations: { tournamentTimes: true },
         });
         this.isExists(instance, id);
 
@@ -88,22 +88,24 @@ export class TournamentAdminService {
         updateData.description = await this.multilingualTextService.update(description);
         updateData.coverDescription = await this.multilingualTextService.update(coverDescription);
 
-        const tournamentTimeInstance = await Promise.all(tournamentTimes.map(async (tournamentTime) => {
-            const id = tournamentTime.id;
-            if (!id) {
-                tournamentTime.tournament = instance;
-                return this.tournamentTimeAdminService.create(tournamentTime);
-            }
+        const tournamentTimeInstance = await Promise.all(
+            tournamentTimes.map(async (tournamentTime) => {
+                const id = tournamentTime.id;
+                if (!id) {
+                    tournamentTime.tournament = instance;
+                    return this.tournamentTimeAdminService.create(tournamentTime);
+                }
 
-            const tournamentTimeinstance = await this.tournamentTimeAdminService.findOne(id)
-            if (tournamentTimeinstance) {
-                Object.assign(tournamentTimeinstance, tournamentTime);
-                return this.tournamentTimeAdminService.save(tournamentTimeinstance);
-            }
-        }));
+                const tournamentTimeinstance = await this.tournamentTimeAdminService.findOne(id);
+                if (tournamentTimeinstance) {
+                    Object.assign(tournamentTimeinstance, tournamentTime);
+                    return this.tournamentTimeAdminService.save(tournamentTimeinstance);
+                }
+            })
+        );
 
         updateData.tournamentTimes = tournamentTimeInstance;
-        Object.assign(instance, updateData)
+        Object.assign(instance, updateData);
 
         const updatedInstance = await this.tournamentRepository.save(instance);
         return this.mapEntityToRetrieveDto(updatedInstance);
@@ -115,7 +117,7 @@ export class TournamentAdminService {
             relations: {
                 description: true,
                 coverDescription: true,
-            }
+            },
         });
         this.isExists(instance, id);
 
@@ -126,7 +128,7 @@ export class TournamentAdminService {
         await this.multilingualTextService.delete(descriptionId);
         await this.multilingualTextService.delete(coverDescriptionId);
 
-        return { "message": "OK!" }
+        return { message: "OK!" };
     }
 
     private async mapEntityToRetrieveDto(entity: Tournament): Promise<TournamentAdminRetrieveDto> {
@@ -140,12 +142,11 @@ export class TournamentAdminService {
             startDate: entity.startDate,
             price: entity.price,
             route: entity.route,
-            tournamentTimes: tournamentTimes
+            tournamentTimes: tournamentTimes,
         };
     }
 
     private isExists(instance: Tournament, id: number): void {
-        if (!instance)
-            throw new NotFoundException(`Tournament with id ${id} not found`);
+        if (!instance) throw new NotFoundException(`Tournament with id ${id} not found`);
     }
 }

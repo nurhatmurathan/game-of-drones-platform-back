@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { MoreThan, Repository } from "typeorm";
+import { FindOptionsRelations, MoreThan, Repository } from "typeorm";
 
 import { LanguagesEnum } from "src/common/enums";
 import { UtilService } from "../../utils/util.service";
@@ -14,10 +14,11 @@ export class TournamentService {
     constructor(
         @InjectRepository(Tournament)
         private readonly tournamentRepository: Repository<Tournament>,
+        @Inject(forwardRef(() => TournamentTimeService))
         private readonly tournamentTimeService: TournamentTimeService,
         private readonly routeService: RouteService,
         private readonly utilService: UtilService
-    ) { }
+    ) {}
 
     async findAll(language: LanguagesEnum): Promise<TournamentListDto[]> {
         console.log("Step in Service");
@@ -33,7 +34,7 @@ export class TournamentService {
                 route: true,
                 coverDescription: true,
                 tournamentTimes: true,
-            }
+            },
         });
 
         console.log(tournaments);
@@ -41,12 +42,10 @@ export class TournamentService {
         const tournamentListDtos = await Promise.all(
             tournaments.map(async (tournament) => {
                 const nearestTournamentTime = tournament.tournamentTimes
-                    .filter(tournamentTime => tournamentTime.startTime > Date.now())
-                    .sort((a, b) => a.startTime - b.startTime)
-                [0];
+                    .filter((tournamentTime) => tournamentTime.startTime > Date.now())
+                    .sort((a, b) => a.startTime - b.startTime)[0];
 
-                const dto =
-                    await this.mapTournamentToListDto(tournament, language, languageType);
+                const dto = await this.mapTournamentToListDto(tournament, language, languageType);
 
                 dto.startDate = nearestTournamentTime
                     ? nearestTournamentTime.startTime
@@ -60,11 +59,7 @@ export class TournamentService {
         return tournamentListDtos;
     }
 
-    async findOne(
-        id: number,
-        language: LanguagesEnum,
-        userId: number
-    ): Promise<TournamentRetrieveDto> {
+    async findOne(id: number, language: LanguagesEnum, userId: number): Promise<TournamentRetrieveDto> {
         const languageType = this.utilService.getLanguage(language);
 
         const tournament = await this.tournamentRepository.findOne({
@@ -75,12 +70,11 @@ export class TournamentService {
             },
         });
 
-        return this.mapTournamentToRetrieveDto(
-            tournament,
-            language,
-            languageType,
-            userId
-        );
+        return this.mapTournamentToRetrieveDto(tournament, language, languageType, userId);
+    }
+
+    async findOneById(id: number, relations?: FindOptionsRelations<Tournament>): Promise<Tournament> {
+        return await this.tournamentRepository.findOne({ where: { id }, relations });
     }
 
     private async mapTournamentToListDto(
@@ -96,10 +90,7 @@ export class TournamentService {
         tournamentDto.price = tournament.price;
 
         if (tournament.route) {
-            tournamentDto.route = await this.routeService.findOne(
-                tournament.route.id,
-                language
-            );
+            tournamentDto.route = await this.routeService.findOne(tournament.route.id, language);
         }
 
         return tournamentDto;
@@ -124,16 +115,12 @@ export class TournamentService {
         //         language
         //     );
         if (tournament.route)
-            tournamentDto.route = await this.routeService.findOne(
-                tournament.route.id,
-                language
-            );
+            tournamentDto.route = await this.routeService.findOne(tournament.route.id, language);
 
-        tournamentDto.tournamentTimes =
-            await this.tournamentTimeService.findAllByTournamentId(
-                tournament.id,
-                userId
-            );
+        tournamentDto.tournamentTimes = await this.tournamentTimeService.findAllByTournamentId(
+            tournament.id,
+            userId
+        );
         return tournamentDto;
     }
 }
