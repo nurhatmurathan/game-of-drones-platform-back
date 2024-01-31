@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, Repository } from "typeorm";
-import { TournamentTime } from "../tournament.time/tournament.time.entity";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
+import { Tournament } from "../tournament/tournament.entity";
+import { TournamentService } from "../tournament/tournament.service";
 import { Training } from "./training.entity";
 
 @Injectable()
@@ -10,15 +11,15 @@ export class TrainingService {
     constructor(
         @InjectRepository(Training)
         private readonly trainingRepository: Repository<Training>,
-        private readonly tournamentTimeService: TournamentTimeService
-    ) { }
+        private readonly tournamentTimeService: TournamentTimeService,
+        private readonly tournamentService: TournamentService
+    ) {}
 
-    async availableTrainings(tournamentTimeId: number): Promise<Training[]> {
-        const tournamentTimeInstance: TournamentTime =
-            await this.tournamentTimeService.findOne(tournamentTimeId);
+    async availableTrainings(tournamentId: number): Promise<Training[]> {
+        const tournamentInstance: Tournament = await this.tournamentService.findOneById(tournamentId);
 
         return await this.trainingRepository.find({
-            where: { startTime: LessThan(tournamentTimeInstance.startTime) },
+            where: { startTime: LessThan(tournamentInstance.startDate) },
             order: { startTime: "ASC" },
         });
     }
