@@ -19,6 +19,7 @@ import { TrainingIdDto } from "../training/dto/user/training.tournamenttime.dto"
 import {
     UserFutureTournamnetTimeDto,
     UserTournamnetTimeCreateDto,
+    UserTournamnetTimeRegisterDto,
 } from "./dto";
 import { UserTournamentTimeService } from "./user.tournament.time.service";
 
@@ -27,20 +28,21 @@ import { UserTournamentTimeService } from "./user.tournament.time.service";
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard)
 export class UserTournamentTimeController {
-    constructor(
-        private readonly usertournamenttimeService: UserTournamentTimeService
-    ) {}
+    constructor(private readonly usertournamenttimeService: UserTournamentTimeService) {}
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async registerUserToTournamentTime(
-        @Body() body: UserTournamnetTimeCreateDto,
-        @Request() req
-    ) {
+    async registerUserToTournamentTime(@Body() body: UserTournamnetTimeCreateDto, @Request() req) {
         return await this.usertournamenttimeService.registerUserToTournamentTime(
             req.user.sub,
             body.tournamentTimeId
         );
+    }
+
+    @Post("select")
+    @HttpCode(HttpStatus.CREATED)
+    async registerUserToTournament(@Body() body: UserTournamnetTimeRegisterDto, @Request() req) {
+        return await this.usertournamenttimeService.registerUserToTournament(req.user.sub, body.tournamentId);
     }
 
     @ApiResponse({
@@ -51,38 +53,20 @@ export class UserTournamentTimeController {
     })
     @Get("tournaments/future")
     @HttpCode(HttpStatus.ACCEPTED)
-    async userFutureTournamentTimes(
-        @Req() request,
-        @Headers("Accept-Language") language: LanguagesEnum
-    ) {
-        return await this.usertournamenttimeService.userFutureTournamentTimes(
-            language,
-            request.user.sub
-        );
+    async userFutureTournamentTimes(@Req() request, @Headers("Accept-Language") language: LanguagesEnum) {
+        return await this.usertournamenttimeService.userFutureTournamentTimes(language, request.user.sub);
     }
 
     @Get("tournaments/pasted")
     @HttpCode(HttpStatus.ACCEPTED)
-    async userPastedTournamentTimes(
-        @Req() request,
-        @Headers("Accept-Language") language: LanguagesEnum
-    ) {
-        return await this.usertournamenttimeService.userPastedTournamentTimes(
-            language,
-            request.user.sub
-        );
+    async userPastedTournamentTimes(@Req() request, @Headers("Accept-Language") language: LanguagesEnum) {
+        return await this.usertournamenttimeService.userPastedTournamentTimes(language, request.user.sub);
     }
 
     @Get("tournaments/passed")
     @HttpCode(HttpStatus.ACCEPTED)
-    async userPassedTournamentTimes(
-        @Req() request,
-        @Headers("Accept-Language") language: LanguagesEnum
-    ) {
-        return await this.usertournamenttimeService.userPastedTournamentTimes(
-            language,
-            request.user.sub
-        );
+    async userPassedTournamentTimes(@Req() request, @Headers("Accept-Language") language: LanguagesEnum) {
+        return await this.usertournamenttimeService.userPastedTournamentTimes(language, request.user.sub);
     }
 
     @Post("/:tournamentTimeId/add-training")
