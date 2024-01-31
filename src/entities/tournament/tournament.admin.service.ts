@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -18,11 +18,10 @@ export class TournamentAdminService {
     constructor(
         @InjectRepository(Tournament)
         private readonly tournamentRepository: Repository<Tournament>,
-        @Inject(forwardRef(() => TournamentTimeAdminService))
         private readonly tournamentTimeAdminService: TournamentTimeAdminService,
         private readonly multilingualTextService: MultilingualtextService,
         private readonly routeAdminService: RouteAdminService
-    ) {}
+    ) { }
 
     async findAll(): Promise<TournamentAdminListDto[]> {
         return await this.tournamentRepository.find({
@@ -50,18 +49,18 @@ export class TournamentAdminService {
     async create(createData: TournamentAdminCreateDto): Promise<TournamentAdminRetrieveDto> {
         const { description, coverDescription, routeId, tournamentTimes, ...tournamentData } = createData;
 
-        const instance = await this.routeAdminService.findOne(routeId);
+        const routeInstance = await this.routeAdminService.findOne(routeId);
         const descriptionEntity = await this.multilingualTextService.create(description);
         const coverDescriptionEntity = await this.multilingualTextService.create(coverDescription);
 
-        const tournamentInstance = this.tournamentRepository.create({
+        const instance = this.tournamentRepository.create({
             ...tournamentData,
             description: descriptionEntity,
             coverDescription: coverDescriptionEntity,
-            route: instance,
+            route: routeInstance,
         });
 
-        const createdInstance = await this.tournamentRepository.save(tournamentInstance);
+        const createdInstance = await this.tournamentRepository.save(instance);
         const tournamentTimeInstances = await Promise.all(
             tournamentTimes.map(async (tournamentTime) => {
                 tournamentTime.tournament = createdInstance;

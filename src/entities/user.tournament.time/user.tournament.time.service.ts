@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOptionsRelations, LessThan, MoreThan, Repository } from "typeorm";
 import { Training } from "./../training/training.entity";
@@ -7,35 +7,22 @@ import { UserTournamentTime } from "./user.tournament.time.entity";
 
 import { UtilService } from "src/utils/util.service";
 import { LanguagesEnum } from "../../common/enums";
-import { TournamentTime } from "../tournament.time/tournament.time.entity";
-import { TournamentTimeService } from "../tournament.time/tournament.time.service";
 
 @Injectable()
 export class UserTournamentTimeService {
     constructor(
         @InjectRepository(UserTournamentTime)
         private readonly userTournamentTimeRepository: Repository<UserTournamentTime>,
-        @Inject(forwardRef(() => TournamentTimeService))
-        private readonly tournamentTimeService: TournamentTimeService,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
     async registerUserToTournamentTime(
         userId: number,
         tournamentTimeId: number
-    ): Promise<{
-        userId: number;
-        tournamentTimeId: number;
-        reservedPlaces: number;
-    }> {
-        const reservedPlaces = await this.countReservedPlaces(tournamentTimeId);
-        const reserved = await this.tournamentTimeService.reservePlaceInTheTournament(
-            tournamentTimeId,
-            reservedPlaces,
-            userId
-        );
+    ) {
 
         try {
+
             await this.userTournamentTimeRepository.manager.transaction(async (entityManager) => {
                 await entityManager.save(UserTournamentTime, {
                     user: { id: userId },
@@ -43,27 +30,21 @@ export class UserTournamentTimeService {
                 });
             });
 
-            return {
-                userId,
-                tournamentTimeId,
-                reservedPlaces: reserved,
-            };
         } catch (error) {
             console.log(userId);
             console.log(tournamentTimeId);
-            if (error.code === "23505") {
+            if (error.code === "23505")
                 throw new ConflictException("This user is already registered for this tournament time.");
-            }
             throw error;
         }
     }
 
-    async registerUserToTournament(userId: number, tournamentId: number) {
-        const tournamentTime: TournamentTime =
-            await this.tournamentTimeService.getOrCreateTournamentTime(tournamentId);
+    // async registerUserToTournament(userId: number, tournamentId: number) {
+    //     const tournamentTime: TournamentTime =
+    //         await this.tournamentTimeService.getOrCreateTournamentTime(tournamentId);
 
-        return await this.registerUserToTournamentTime(userId, tournamentTime.id);
-    }
+    //     return await this.registerUserToTournamentTime(userId, tournamentTime.id);
+    // }
 
     async countReservedPlaces(tournamentTimeId: number): Promise<number> {
         console.log(tournamentTimeId);

@@ -1,7 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt } from "class-validator";
 
-export class TrainingAdminCreateDto {
+export class TrainingListDto {
+    @ApiProperty()
+    @IsInt()
+    readonly id: number;
+
     @ApiProperty({ example: Date.now() })
     @IsInt()
     readonly startTime: number;
@@ -10,7 +14,7 @@ export class TrainingAdminCreateDto {
     @IsInt()
     readonly places: number;
 
-    @ApiProperty({ type: Number })
+    @ApiProperty()
     @IsInt()
-    readonly routeId: number;
+    readonly reserved: number;
 }
