@@ -12,9 +12,10 @@ export class UserTournamentTrainingsService {
     ) {}
 
     async getUserTournamentTrainings(userId: number, tournamentId: number): Promise<Training[]> {
-        const instance: UserTournamentTrainings = this.userTournamentTrainingsRepository.findOne({
+        const instance: UserTournamentTrainings = await this.userTournamentTrainingsRepository.findOne({
             where: { user: { id: userId }, tournament: { id: tournamentId } },
+            relations: { trainings: true },
         });
-        return;
+        return instance.trainings;
     }
 }

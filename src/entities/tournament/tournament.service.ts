@@ -8,6 +8,7 @@ import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
 import { TrainingListDto } from "../training/dto";
 import { TrainingService } from "../training/training.service";
+import { UserTournamentTrainings } from "../user.tournament.trainings/user.tournament.trainings.entity";
 import { TournamentListDto, TournamentRetrieveDto } from "./dto";
 import { Tournament } from "./tournament.entity";
 
@@ -20,13 +21,12 @@ export class TournamentService {
         private readonly routeService: RouteService,
         private readonly utilService: UtilService,
         private readonly trainingService: TrainingService,
-    ) { }
-
+        private readonly userTournamentTrainings: UserTournamentTrainings
+    ) {}
 
     async findOneById(id: number, relations?: FindOptionsRelations<Tournament>): Promise<Tournament> {
         return await this.tournamentRepository.findOne({ where: { id }, relations });
     }
-
 
     async findOne(id: number, language: LanguagesEnum, userId: number): Promise<TournamentRetrieveDto> {
         const languageType = this.utilService.getLanguage(language);
@@ -41,7 +41,6 @@ export class TournamentService {
 
         return this.mapTournamentToRetrieveDto(instance, userId, language, languageType);
     }
-
 
     async findAll(language: LanguagesEnum): Promise<TournamentListDto[]> {
         const languageType = this.utilService.getLanguage(language);
@@ -59,7 +58,6 @@ export class TournamentService {
 
         const tournamentListDtos = await Promise.all(
             tournaments.map(async (tournament) => {
-
                 const nearestTournamentTime = tournament.tournamentTimes
                     .filter((tournamentTime) => tournamentTime.startTime > Date.now())
                     .sort((a, b) => a.startTime - b.startTime)[0];
@@ -81,7 +79,7 @@ export class TournamentService {
     async registerUserToTournament(userId: number, id: number) {
         const instance: Tournament = await this.tournamentRepository.findOne({
             where: { id },
-            relations: { tournamentTimes: { userTournamentTimes: true } }
+            relations: { tournamentTimes: { userTournamentTimes: true } },
         });
 
         return await this.tournamentTimeService.getOrCreateTournamentTime(userId, instance);
@@ -130,13 +128,11 @@ export class TournamentService {
         return tournamentDto;
     }
 
-
     private async findTrainings(instance: Tournament, userId: number): Promise<TrainingListDto[]> {
         const isTheUserRegisteredForTheTournament =
             await this.tournamentTimeService.isTheUserRegisteredForTheTournament(instance.id, userId);
 
-        if (!isTheUserRegisteredForTheTournament)
-            return [];
+        if (!isTheUserRegisteredForTheTournament) return [];
 
         return await this.trainingService.getAvailableTrainings(instance);
     }
