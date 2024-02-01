@@ -1,26 +1,31 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, Repository } from "typeorm";
-import { TournamentTime } from "../tournament.time/tournament.time.entity";
-import { TournamentTimeService } from "../tournament.time/tournament.time.service";
+import { Tournament } from "../tournament/tournament.entity";
+import { TrainingListDto } from "./dto";
 import { Training } from "./training.entity";
 
 @Injectable()
 export class TrainingService {
     constructor(
         @InjectRepository(Training)
-        private readonly trainingRepository: Repository<Training>,
-        private readonly tournamentTimeService: TournamentTimeService
-    ) { }
+        private readonly trainingRepository: Repository<Training>
+    ) {}
 
-    async availableTrainings(tournamentTimeId: number): Promise<Training[]> {
-        const tournamentTimeInstance: TournamentTime =
-            await this.tournamentTimeService.findOne(tournamentTimeId);
-
-        return await this.trainingRepository.find({
-            where: { startTime: LessThan(tournamentTimeInstance.startTime) },
+    async getAvailableTrainings(tournamentInstance: Tournament): Promise<TrainingListDto[]> {
+        const instances: Training[] = await this.trainingRepository.find({
+            where: { startTime: LessThan(tournamentInstance.startDate) },
             order: { startTime: "ASC" },
         });
+
+        const trainingListDtoArray: TrainingListDto[] = instances.map((instance) => ({
+            id: instance.id,
+            startTime: instance.startTime,
+            places: instance.places,
+            reserved: 0,
+        }));
+
+        return trainingListDtoArray;
     }
 
     async userTrainings(userId: number) {

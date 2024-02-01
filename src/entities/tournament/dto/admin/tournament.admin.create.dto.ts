@@ -1,9 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-validator";
 import { MultilingualtextDto } from "../../../multilingualtext/dto";
 import { TournamentTimeAdminCreateDto } from "../../../tournament.time/dto";
-
 
 export class TournamentAdminCreateDto {
     @ApiProperty()
@@ -34,6 +33,7 @@ export class TournamentAdminCreateDto {
 
     @ApiProperty({ type: [TournamentTimeAdminCreateDto] })
     @IsArray()
+    @ArrayNotEmpty()
     @ValidateNested({ each: true })
     @Type(() => TournamentTimeAdminCreateDto)
     tournamentTimes: TournamentTimeAdminCreateDto[];

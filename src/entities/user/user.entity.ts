@@ -1,13 +1,7 @@
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    OneToMany,
-    OneToOne,
-    PrimaryGeneratedColumn
-} from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserTournamentTime } from "../../entities/user.tournament.time/user.tournament.time.entity";
 import { BillingAccount } from "../billing.account/billing.account.entity";
+import { UserTournamentTrainings } from "../user.tournament.trainings/user.tournament.trainings.entity";
 
 @Entity("users")
 export class User {
@@ -41,12 +35,11 @@ export class User {
     // })
     // liga: Liga;
 
-    @OneToMany(
-        () => UserTournamentTime,
-        (userTournamentTime) => userTournamentTime.user,
-        {
-            cascade: ['remove']
-        }
-    )
+    @OneToMany(() => UserTournamentTime, (userTournamentTime) => userTournamentTime.user, {
+        cascade: ["remove"],
+    })
     userTournamentTimes: UserTournamentTime[];
+
+    @OneToMany(() => UserTournamentTrainings, (userTournamentTrainings) => userTournamentTrainings.user)
+    userTournamentTrainings: UserTournamentTrainings[];
 }

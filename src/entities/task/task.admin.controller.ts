@@ -1,7 +1,9 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard, IsAdminGuard } from "src/auth/guards";
+import { Action } from "../action/action.entity";
 import {
+    TaskActionAdminCreateDto,
     TaskAdminCreateDto,
     TaskAdminListDto,
     TaskAdminRetrieveDto,
@@ -58,4 +60,12 @@ export class TaskAdminController {
         return this.taskAdminService.delete(id);
     }
 
+    @Post("/create-action")
+    @ApiBearerAuth()
+    @HttpCode(HttpStatus.CREATED)
+    createActionDuringTheTournament(
+        @Body() createData: TaskActionAdminCreateDto
+    ): Promise<Action> {
+        return this.taskAdminService.createActionDuringTheTournament(createData);
+    }
 }

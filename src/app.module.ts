@@ -16,6 +16,7 @@ import { TournamentTimeModule } from "./entities/tournament.time/tournament.time
 import { TournamentModule } from "./entities/tournament/tournament.module";
 import { TrainingModule } from "./entities/training/training.module";
 import { UserTournamentTimeModule } from "./entities/user.tournament.time/user.tournament.time.module";
+import { UserTournamentTrainingsModule } from "./entities/user.tournament.trainings/user.tournament.trainings.module";
 import { UserModule } from "./entities/user/user.module";
 import { MailModule } from "./mail/mail.module";
 import { UtilModule } from "./utils/util.module";
@@ -35,6 +36,7 @@ import { UtilModule } from "./utils/util.module";
         UtilModule,
         TournamentTimeModule,
         UserTournamentTimeModule,
+        UserTournamentTrainingsModule,
         TaskModule,
         ActionModule,
         TrainingModule,
@@ -44,4 +46,4 @@ import { UtilModule } from "./utils/util.module";
     controllers: [AuthController],
     providers: [AuthService],
 })
-export class AppModule { }
+export class AppModule {}
