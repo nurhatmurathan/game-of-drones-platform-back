@@ -16,10 +16,12 @@ export class TrainingService {
     ) {}
 
     async availableTrainings(tournamentId: number): Promise<Training[]> {
-        const tournamentInstance: Tournament = await this.tournamentService.findOneById(tournamentId);
+        const tournamentInstance: Tournament = await this.tournamentService.findOneById(tournamentId, {
+            route: true,
+        });
 
         return await this.trainingRepository.find({
-            where: { startTime: LessThan(tournamentInstance.startDate) },
+            where: { startTime: LessThan(tournamentInstance.startDate), route: tournamentInstance.route },
             order: { startTime: "ASC" },
         });
     }

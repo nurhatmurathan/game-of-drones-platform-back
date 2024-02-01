@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGene
 import { Route } from "../../entities/route/route.entity";
 import { TournamentTime } from "../../entities/tournament.time/tournament.time.entity";
 import { MultilingualText } from "../multilingualtext/multilingualtext.entity";
+import { UserTournamentTrainings } from "../user.tournament.trainings/user.tournament.trainings.entity";
 
 @Entity("tournament")
 export class Tournament {
@@ -42,4 +43,7 @@ export class Tournament {
     //     onDelete: "SET NULL",
     // })
     // liga: Liga;
+
+    @ManyToOne(() => UserTournamentTrainings, (userTournamentTrainings) => userTournamentTrainings.tournament)
+    userTournamentTrainings: UserTournamentTrainings;
 }
