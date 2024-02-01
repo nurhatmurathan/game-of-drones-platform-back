@@ -2,9 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 import { Type } from "class-transformer";
 import { IsInt, ValidateNested } from "class-validator";
-import { MultilingualtextDto } from "../../multilingualtext/dto";
+import { MultilingualtextDto } from "src/entities/multilingualtext/dto";
 
-export class ActionAdminCreateDto {
+export class TaskActionAdminCreateDto {
     @ApiProperty()
     @ValidateNested()
     @Type(() => MultilingualtextDto)
@@ -17,4 +17,8 @@ export class ActionAdminCreateDto {
     @ApiProperty()
     @IsInt()
     userTournamentTimeId: number;
+
+    @ApiProperty()
+    @IsInt()
+    taskId: number;
 }

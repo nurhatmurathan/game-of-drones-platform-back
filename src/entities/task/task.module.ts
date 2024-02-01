@@ -1,4 +1,4 @@
-import { Module, forwardRef } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { UtilModule } from "../../utils/util.module";
@@ -18,7 +18,7 @@ import { TaskService } from "./task.service";
         MultilingualtextModule,
         UserModule,
         UtilModule,
-        forwardRef(() => ActionModule),
+        ActionModule,
         UserTournamentTimeModule,
     ],
     controllers: [TaskController, TaskAdminController],

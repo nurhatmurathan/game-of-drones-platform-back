@@ -17,9 +17,7 @@ import { CustomAuthGuard } from "src/auth/guards/auth.guard";
 import { LanguagesEnum } from "src/common/enums";
 import { TrainingIdDto } from "../training/dto/user/training.tournamenttime.dto";
 import {
-    UserFutureTournamnetTimeDto,
-    UserTournamnetTimeCreateDto,
-    UserTournamnetTimeRegisterDto,
+    UserFutureTournamnetTimeDto
 } from "./dto";
 import { UserTournamentTimeService } from "./user.tournament.time.service";
 
@@ -28,22 +26,7 @@ import { UserTournamentTimeService } from "./user.tournament.time.service";
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard)
 export class UserTournamentTimeController {
-    constructor(private readonly usertournamenttimeService: UserTournamentTimeService) {}
-
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    async registerUserToTournamentTime(@Body() body: UserTournamnetTimeCreateDto, @Request() req) {
-        return await this.usertournamenttimeService.registerUserToTournamentTime(
-            req.user.sub,
-            body.tournamentTimeId
-        );
-    }
-
-    @Post("select")
-    @HttpCode(HttpStatus.CREATED)
-    async registerUserToTournament(@Body() body: UserTournamnetTimeRegisterDto, @Request() req) {
-        return await this.usertournamenttimeService.registerUserToTournament(req.user.sub, body.tournamentId);
-    }
+    constructor(private readonly usertournamenttimeService: UserTournamentTimeService) { }
 
     @ApiResponse({
         status: 200,

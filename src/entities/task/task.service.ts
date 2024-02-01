@@ -1,4 +1,4 @@
-import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -19,7 +19,6 @@ export class TaskService {
     constructor(
         @InjectRepository(Task)
         private readonly taskRepository: Repository<Task>,
-        @Inject(forwardRef(() => ActionService))
         private readonly actionService: ActionService,
         private readonly utilSevice: UtilService,
         private readonly userTournamentTimeService: UserTournamentTimeService

@@ -14,9 +14,6 @@ export class Training {
     @Column({ name: "places", type: "integer" })
     places: number;
 
-    @Column({ name: "reserved", type: "integer", default: 0 })
-    reserved: number;
-
     @ManyToOne(() => Route, (route) => route.trainings, {
         onDelete: "SET NULL",
     })
