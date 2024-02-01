@@ -14,12 +14,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 import { LanguagesEnum } from "./../../common/enums/languages";
 import { UtilService } from "./../../utils/util.service";
-import {
-    UserEmailDto,
-    UserPasswordDto,
-    UserPasswordEditDto,
-    UserProfileEditDto,
-} from "./dto";
+import { UserEmailDto, UserPasswordDto, UserPasswordEditDto, UserProfileEditDto } from "./dto";
 import { UserService } from "./user.service";
 
 @ApiTags("User")
@@ -55,7 +50,7 @@ export class UserController {
             req.user.sub,
             userData.firstName,
             userData.lastName,
-            userData.lastName
+            userData.avatar
         );
     }
 
@@ -64,11 +59,7 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(CustomAuthGuard)
     async editPassword(@Request() req, @Body() userData: UserPasswordEditDto) {
-        return await this.userService.editPassword(
-            req.user.sub,
-            userData.oldPassword,
-            userData.newPassword
-        );
+        return await this.userService.editPassword(req.user.sub, userData.oldPassword, userData.newPassword);
     }
 
     @Post("password/reset")
@@ -78,21 +69,12 @@ export class UserController {
         @Headers("Accept-Language") language: LanguagesEnum
     ) {
         language = this.utilService.getLanguage(language);
-        return await this.userService.getPasswordResetLink(
-            userData.email,
-            language
-        );
+        return await this.userService.getPasswordResetLink(userData.email, language);
     }
 
     @Post("password/reset/:token")
     @HttpCode(HttpStatus.ACCEPTED)
-    async pesetPasswordWithToken(
-        @Param("token") token: string,
-        @Body() userData: UserPasswordDto
-    ) {
-        return await this.userService.passwordResetWithToken(
-            token,
-            userData.password
-        );
+    async pesetPasswordWithToken(@Param("token") token: string, @Body() userData: UserPasswordDto) {
+        return await this.userService.passwordResetWithToken(token, userData.password);
     }
 }
