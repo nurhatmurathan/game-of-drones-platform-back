@@ -6,7 +6,6 @@ import { LigaRetrieveDto } from "../../../liga/dto";
 import { RouteRetrieveDto } from "../../../route/dto";
 import { TournamentTimeListDto } from "../../../tournament.time/dto";
 
-
 export class TournamentRetrieveDto {
     @ApiProperty()
     @IsInt()
@@ -18,7 +17,7 @@ export class TournamentRetrieveDto {
 
     @ApiProperty()
     @IsString()
-    description: string
+    description: string;
 
     @ApiProperty()
     @IsNumber()
@@ -48,5 +47,5 @@ export class TournamentRetrieveDto {
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => TrainingListDto)
-    trainings: TrainingListDto[]
+    trainings: { status: string; trainings: TrainingListDto[] };
 }

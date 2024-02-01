@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOptionsRelations, MoreThan, Repository } from "typeorm";
+import { UserTournamentTrainings } from "./../user.tournament.trainings/user.tournament.trainings.entity";
 
 import { LanguagesEnum } from "src/common/enums";
 import { UtilService } from "../../utils/util.service";
@@ -8,7 +9,7 @@ import { RouteService } from "../route/route.service";
 import { TournamentTimeService } from "../tournament.time/tournament.time.service";
 import { TrainingListDto } from "../training/dto";
 import { TrainingService } from "../training/training.service";
-import { UserTournamentTrainings } from "../user.tournament.trainings/user.tournament.trainings.entity";
+import { UserTournamentTrainingsService } from "../user.tournament.trainings/user.tournament.trainings.service";
 import { TournamentListDto, TournamentRetrieveDto } from "./dto";
 import { Tournament } from "./tournament.entity";
 
@@ -21,7 +22,7 @@ export class TournamentService {
         private readonly routeService: RouteService,
         private readonly utilService: UtilService,
         private readonly trainingService: TrainingService,
-        private readonly userTournamentTrainings: UserTournamentTrainings
+        private readonly userTournamentTrainingsService: UserTournamentTrainingsService
     ) {}
 
     async findOneById(id: number, relations?: FindOptionsRelations<Tournament>): Promise<Tournament> {
@@ -81,7 +82,7 @@ export class TournamentService {
             where: { id },
             relations: { tournamentTimes: { userTournamentTimes: true } },
         });
-
+        await this.userTournamentTrainingsService.create(userId, id);
         return await this.tournamentTimeService.getOrCreateTournamentTime(userId, instance);
     }
 
@@ -128,12 +129,28 @@ export class TournamentService {
         return tournamentDto;
     }
 
-    private async findTrainings(instance: Tournament, userId: number): Promise<TrainingListDto[]> {
-        const isTheUserRegisteredForTheTournament =
-            await this.tournamentTimeService.isTheUserRegisteredForTheTournament(instance.id, userId);
+    private async findTrainings(
+        instance: Tournament,
+        userId: number
+    ): Promise<{ status: string; trainings: TrainingListDto[] }> {
+        const userTournament: UserTournamentTrainings = await this.userTournamentTrainingsService.findOne(
+            userId,
+            instance.id,
+            { trainings: true }
+        );
 
-        if (!isTheUserRegisteredForTheTournament) return [];
+        if (!userTournament) return { status: "NotRegistered", trainings: [] };
+        if (userTournament.trainings.length < 1)
+            return {
+                status: "NotChoosenTraining",
+                trainings: await this.trainingService.getAvailableTrainings(instance),
+            };
 
-        return await this.trainingService.getAvailableTrainings(instance);
+        return {
+            status: "ChoosenTraining",
+            trainings: userTournament.trainings.map((training) => {
+                return { ...training, reserved: 0 };
+            }),
+        };
     }
 }
