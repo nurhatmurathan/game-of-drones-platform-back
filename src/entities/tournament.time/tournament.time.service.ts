@@ -92,6 +92,7 @@ export class TournamentTimeService {
     async getUserTournamentTimes(userId: number, tournamentId: number): Promise<TournamentTime[]> {
         return await this.tournamentTimeRepository.find({
             where: { userTournamentTimes: { user: { id: userId } }, tournament: { id: tournamentId } },
+            relations: { userTournamentTimes: { user: true } },
         });
     }
 

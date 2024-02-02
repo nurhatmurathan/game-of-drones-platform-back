@@ -1,11 +1,11 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindOptionsRelations, LessThan, MoreThan, Repository } from "typeorm";
+import { UtilService } from "./../../utils/util.service";
 import { Training } from "./../training/training.entity";
 import { UserFutureTournamnetTimeDto } from "./dto";
 import { UserTournamentTime } from "./user.tournament.time.entity";
 
-import { UtilService } from "src/utils/util.service";
 import { LanguagesEnum } from "../../common/enums";
 
 @Injectable()

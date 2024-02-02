@@ -120,10 +120,14 @@ export class TournamentService {
         if (tournament.route)
             tournamentDto.route = await this.routeService.findOne(tournament.route.id, language);
 
-        tournamentDto.tournamentTimes = await this.tournamentTimeService.getUserTournamentTimes(
-            userId,
-            tournament.id
-        );
+        tournamentDto.tournamentTimes = (
+            await this.tournamentTimeService.getUserTournamentTimes(userId, tournament.id)
+        ).map((tournamentTime) => {
+            const { userTournamentTimes, ...res } = tournamentTime;
+            const place: number = userTournamentTimes.find((obj) => obj.user.id === userId).place;
+
+            return { ...res, place };
+        });
         tournamentDto.trainings = await this.findTrainings(tournament, userId);
 
         return tournamentDto;

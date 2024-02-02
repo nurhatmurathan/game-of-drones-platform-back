@@ -31,4 +31,12 @@ export class TournamentTimeListDtoV2 {
     @ApiProperty({ example: Date.now() })
     @IsInt()
     startTime: number;
+
+    @ApiProperty({ example: 2 })
+    @IsInt()
+    stage: number;
+
+    @ApiProperty({ example: 7 })
+    @IsInt()
+    place: number;
 }

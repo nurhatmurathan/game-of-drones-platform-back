@@ -49,7 +49,7 @@ export class TournamentRetrieveDto {
     @Type(() => RouteRetrieveDto)
     route: RouteRetrieveDto;
 
-    @ApiProperty()
+    @ApiProperty({ type: TournamentTimeListDtoV2 })
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => TournamentTimeListDtoV2)

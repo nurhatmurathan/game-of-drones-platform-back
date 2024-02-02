@@ -1,13 +1,9 @@
-import {
-    Injectable, NotFoundException
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { FindOptionsRelations, Repository } from "typeorm";
 
 import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
-import {
-    TournamentTimeAdminCreateDto
-} from "./dto";
+import { TournamentTimeAdminCreateDto } from "./dto";
 import { TournamentTimeAdminListDto } from "./dto/admin/tournament.time.admin.list.dto";
 import { TournamentTime } from "./tournament.time.entity";
 
@@ -17,7 +13,7 @@ export class TournamentTimeAdminService {
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
         private readonly userTournamentTimeService: UserTournamentTimeService
-    ) { }
+    ) {}
 
     async create(tournamentTimeData: TournamentTimeAdminCreateDto): Promise<TournamentTime> {
         const tournamentTimeInstance = this.tournamentTimeRepository.create(tournamentTimeData);
@@ -29,27 +25,21 @@ export class TournamentTimeAdminService {
             where: { tournament: { id: tournamentId } },
         });
 
-        return Promise.all(tournamentTimes.map((tournamentTime) =>
-            this.mapToDto(tournamentTime)));
+        return Promise.all(tournamentTimes.map((tournamentTime) => this.mapToDto(tournamentTime)));
     }
 
-    private async mapToDto(
-        tournamentTime: TournamentTime
-    ): Promise<TournamentTimeAdminListDto> {
+    private async mapToDto(tournamentTime: TournamentTime): Promise<TournamentTimeAdminListDto> {
         const dto = new TournamentTimeAdminListDto();
         dto.id = tournamentTime.id;
         dto.startTime = tournamentTime.startTime;
         dto.places = tournamentTime.places;
-        dto.reserved =
-            await this.userTournamentTimeService.countReservedPlaces(
-                tournamentTime.id
-            );
+        dto.reserved = await this.userTournamentTimeService.countReservedPlaces(tournamentTime.id);
         console.log(dto);
         return dto;
     }
 
-    async findOne(id: number): Promise<TournamentTime> {
-        return this.tournamentTimeRepository.findOne({ where: { id } });
+    async findOne(id: number, relations?: FindOptionsRelations<TournamentTime>): Promise<TournamentTime> {
+        return await this.tournamentTimeRepository.findOne({ where: { id }, relations });
     }
 
     async save(instance: TournamentTime): Promise<TournamentTime> {
@@ -64,7 +54,6 @@ export class TournamentTimeAdminService {
     }
 
     private isExists(instance: TournamentTime, id: number): void {
-        if (!instance)
-            throw new NotFoundException(`TournamentTime with id ${id} not found`);
+        if (!instance) throw new NotFoundException(`TournamentTime with id ${id} not found`);
     }
 }
