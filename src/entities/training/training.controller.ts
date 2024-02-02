@@ -1,4 +1,4 @@
-import { Controller, UseGuards } from "@nestjs/common";
+import { Controller, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 
@@ -17,4 +17,15 @@ export class TrainingController {
     // async availableTrainings(@Param("tournamentId", ParseIntPipe) tournamentId: number): Promise<Training[]> {
     //     return await this.trainingService.availableTrainings(tournamentId);
     // }
+
+    @Post("/:tournamentId/add-training/:trainingId")
+    @HttpCode(HttpStatus.ACCEPTED)
+    async addTraining(
+        @Param("tournamentId", ParseIntPipe) tournamentId: number,
+        @Param("trainingId", ParseIntPipe) trainingId: number,
+        @Request() request
+    ): Promise<any> {
+        console.log("I'm in addTraining");
+        return this.trainingService.addTraining(request.user.sub, tournamentId, trainingId);
+    }
 }

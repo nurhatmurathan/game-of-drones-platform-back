@@ -1,4 +1,4 @@
-import { Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Entity, JoinTable, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Tournament } from "../tournament/tournament.entity";
 import { Training } from "../training/training.entity";
 import { User } from "../user/user.entity";
@@ -15,7 +15,7 @@ export class UserTournamentTrainings {
     @ManyToOne(() => Tournament, (tournament) => tournament.userTournamentTrainings)
     tournament: Tournament;
 
-    @ManyToMany(() => Training, (training) => training.userTournamentTrainings)
+    @ManyToOne(() => Training, (training) => training.userTournamentTrainings)
     @JoinTable()
-    trainings: Training[];
+    training: Training;
 }

@@ -14,7 +14,7 @@ export class UserTournamentTimeService {
         @InjectRepository(UserTournamentTime)
         private readonly userTournamentTimeRepository: Repository<UserTournamentTime>,
         private readonly utilService: UtilService
-    ) {}
+    ) { }
 
     async registerUserToTournamentTime(userId: number, tournamentTimeId: number) {
         try {
@@ -137,7 +137,7 @@ export class UserTournamentTimeService {
     }
 
     async addTraining(userId: number, tournamentTimeId: number, trainingId: number) {
-        const instance: UserTournamentTime = await this.getInstanceByUserIdtournamentTimeId(
+        const instance: UserTournamentTime = await this.getInstanceByUserIdAndtournamentTimeId(
             userId,
             tournamentTimeId,
             {
@@ -160,7 +160,7 @@ export class UserTournamentTimeService {
         });
     }
 
-    async getInstanceByUserIdtournamentTimeId(
+    async getInstanceByUserIdAndtournamentTimeId(
         userId: number,
         tournamentTimeId: number,
         relations?: FindOptionsRelations<UserTournamentTime>

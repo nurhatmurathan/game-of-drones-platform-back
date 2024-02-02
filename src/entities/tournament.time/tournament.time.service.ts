@@ -8,6 +8,7 @@ import { Drone } from "../dron/drone.entity";
 import { DroneService } from "../dron/drone.service";
 import { Tournament } from "../tournament/tournament.entity";
 import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
+import { UserTournamentTrainingsService } from "../user.tournament.trainings/user.tournament.trainings.service";
 import { User } from "../user/user.entity";
 import { UserService } from "../user/user.service";
 import { TournamentTimeListDto } from "./dto";
@@ -19,11 +20,12 @@ export class TournamentTimeService {
         @InjectRepository(TournamentTime)
         private readonly tournamentTimeRepository: Repository<TournamentTime>,
         private readonly userTournamentTimeService: UserTournamentTimeService,
+        private readonly userTournamentTrainingsService: UserTournamentTrainingsService,
         private readonly authService: AuthService,
         private readonly droneService: DroneService,
         private readonly userService: UserService,
         private readonly billingAccountService: BillingAccountService
-    ) {}
+    ) { }
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
@@ -66,7 +68,7 @@ export class TournamentTimeService {
         }
 
         if (latestTournamentTime.userTournamentTimes.length <= tournamentInstance.maxPLacesInGame) {
-            return latestTournamentTime;
+            return this.registerUserToTournamentTime(userId, latestTournamentTime.id, tournamentInstance.id);
         }
 
         const lastStartTime: Date = new Date(latestTournamentTime.startTime);
@@ -74,13 +76,18 @@ export class TournamentTimeService {
 
         const instance: TournamentTime = await this.create(startTime, tournamentInstance);
 
-        return await this.registerUserToTournamentTime(userId, instance.id);
+        return await this.registerUserToTournamentTime(userId, instance.id, tournamentInstance.id);
     }
 
-    async registerUserToTournamentTime(userId: number, id: number): Promise<any> {
-        await this.userTournamentTimeService.registerUserToTournamentTime(userId, id);
+    async registerUserToTournamentTime(userId: number, id: number, tournamentId?: number): Promise<any> {
         const reservedPlaces = await this.userTournamentTimeService.countReservedPlaces(id);
         const reserved = await this.reservePlaceInTheTournament(id, reservedPlaces, userId);
+
+        await this.userTournamentTimeService.registerUserToTournamentTime(userId, id);
+
+        if (tournamentId)
+            await this.userTournamentTrainingsService.create(userId, tournamentId);
+
 
         return {
             tournamentTimeId: id,
@@ -115,7 +122,7 @@ export class TournamentTimeService {
     }
 
     async tournamentStartedAndExistsValidator(id: number, userId: number): Promise<any> {
-        await this.userTournamentTimeService.getInstanceByUserIdtournamentTimeId(userId, id);
+        await this.userTournamentTimeService.getInstanceByUserIdAndtournamentTimeId(userId, id);
 
         const instance = await this.tournamentTimeRepository.findOne({ where: { id: id } });
         this.isTournamentStarted(instance);

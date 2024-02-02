@@ -11,7 +11,7 @@ export class TournamentTimeController {
         private readonly tournamentTimeService: TournamentTimeService
     ) { }
 
-    @Post()
+    @Post("register")
     @HttpCode(HttpStatus.CREATED)
     async registerUserToTournamentTime(
         @Body() body: TournamentTimeRegisterDto,

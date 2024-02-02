@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindOptionsRelations, Repository } from "typeorm";
+import { FindOptionsRelations, IsNull, Not, Repository } from "typeorm";
 import { Training } from "../training/training.entity";
 import { UserTournamentTrainings } from "./user.tournament.trainings.entity";
 
@@ -9,7 +9,7 @@ export class UserTournamentTrainingsService {
     constructor(
         @InjectRepository(UserTournamentTrainings)
         private readonly userTournamentTrainingsRepository: Repository<UserTournamentTrainings>
-    ) {}
+    ) { }
 
     async findOne(
         userId: number,
@@ -32,18 +32,26 @@ export class UserTournamentTrainingsService {
         return await this.userTournamentTrainingsRepository.save(instance);
     }
 
-    async addTraining(userId: number, tournamentId: number, trainingId: number) {
-        const instance: UserTournamentTrainings = await this.findOne(userId, tournamentId, {
-            trainings: true,
-        });
+    async bindTrainingToUser(
+        userId: number,
+        tournamentId: number,
+        training: Training
+    ): Promise<any> {
+        console.log("Step 1 in bindTrainingToUser");
+        const instance: UserTournamentTrainings = await this.findOne(
+            userId,
+            tournamentId,
+            { training: true }
+        );
 
-        if (instance.trainings.find((t) => t.id === trainingId)) {
-            throw new BadRequestException("Training is already associated with this tournament for the user");
-        }
+        console.log("Step 2 in bindTrainingToUser");
+        if (instance.training?.id === training.id)
+            throw new BadRequestException("Training is already selected.");
 
-        instance.trainings = [...instance.trainings, { id: trainingId } as Training];
-
+        console.log("Step 3 in bindTrainingToUser");
+        instance.training = training;
         await this.userTournamentTrainingsRepository.save(instance);
+        console.log("Step 4 in bindTrainingToUser");
 
         return { message: "Training is selected" };
     }
@@ -52,4 +60,16 @@ export class UserTournamentTrainingsService {
         if (instance) return true;
         return false;
     }
+
+    async countReservedPlaces(trainingId: number, tournamentId: number): Promise<number> {
+        console.log("Step 1 in countReservedPlaces");
+        return await this.userTournamentTrainingsRepository.count({
+            where: {
+                training: { id: trainingId },
+                tournament: { id: tournamentId },
+                user: Not(IsNull())
+            },
+        });
+    }
+
 }

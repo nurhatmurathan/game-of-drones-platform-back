@@ -16,8 +16,9 @@ export class TrainingStatusDto {
     @ApiProperty({ type: [TrainingListDto] })
     @ValidateNested({ each: true })
     @Type(() => TrainingListDto)
-    trainings: TrainingListDto[];
+    trainingTimes: TrainingListDto[];
 }
+
 export class TournamentRetrieveDto {
     @ApiProperty()
     @IsInt()

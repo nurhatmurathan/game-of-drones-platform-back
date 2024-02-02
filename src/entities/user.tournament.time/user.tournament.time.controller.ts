@@ -24,7 +24,7 @@ import { UserTournamentTimeService } from "./user.tournament.time.service";
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard)
 export class UserTournamentTimeController {
-    constructor(private readonly usertournamenttimeService: UserTournamentTimeService) {}
+    constructor(private readonly usertournamenttimeService: UserTournamentTimeService) { }
 
     @ApiResponse({
         status: 200,
@@ -50,7 +50,7 @@ export class UserTournamentTimeController {
         return await this.usertournamenttimeService.userPastedTournamentTimes(language, request.user.sub);
     }
 
-    @Post("/:tournamentTimeId/add-training")
+    @Post("/v1/:tournamentTimeId/add-training")
     @HttpCode(HttpStatus.CREATED)
     async addTraining(
         @Param("tournamentTimeId", ParseIntPipe) tournamentTimeId: number,

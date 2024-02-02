@@ -14,12 +14,12 @@ export class TournamentAdminRetrieveDto {
     @IsString()
     name: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: MultilingualtextDto })
     @ValidateNested()
     @Type(() => MultilingualtextDto)
     description: MultilingualtextDto;
 
-    @ApiProperty()
+    @ApiProperty({ type: MultilingualtextDto })
     @ValidateNested()
     @Type(() => MultilingualtextDto)
     coverDescription: MultilingualtextDto;
@@ -32,12 +32,12 @@ export class TournamentAdminRetrieveDto {
     @IsInt()
     price: number;
 
-    @ApiProperty()
+    @ApiProperty({ type: RouteAdminRetrieveDto })
     @ValidateNested()
     @Type(() => RouteAdminRetrieveDto)
     route: RouteAdminRetrieveDto;
 
-    @ApiProperty()
+    @ApiProperty({ type: TournamentTimeAdminListDto })
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => TournamentTimeAdminListDto)
