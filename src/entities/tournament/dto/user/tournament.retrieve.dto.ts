@@ -13,8 +13,9 @@ export class TrainingStatusDto {
     @ApiProperty({ type: [TrainingListDto] })
     @ValidateNested({ each: true })
     @Type(() => TrainingListDto)
-    trainings: TrainingListDto[];
+    trainingTimes: TrainingListDto[];
 }
+
 export class TournamentRetrieveDto {
     @ApiProperty()
     @IsInt()
@@ -46,7 +47,7 @@ export class TournamentRetrieveDto {
     @Type(() => RouteRetrieveDto)
     route: RouteRetrieveDto;
 
-    @ApiProperty()
+    @ApiProperty({ type: [TournamentTimeListDto] })
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => TournamentTimeListDto)

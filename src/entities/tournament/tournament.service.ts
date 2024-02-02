@@ -23,7 +23,7 @@ export class TournamentService {
         private readonly utilService: UtilService,
         private readonly trainingService: TrainingService,
         private readonly userTournamentTrainingsService: UserTournamentTrainingsService
-    ) {}
+    ) { }
 
     async findOneById(id: number, relations?: FindOptionsRelations<Tournament>): Promise<Tournament> {
         return await this.tournamentRepository.findOne({ where: { id }, relations });
@@ -132,25 +132,28 @@ export class TournamentService {
     private async findTrainings(
         instance: Tournament,
         userId: number
-    ): Promise<{ status: string; trainings: TrainingListDto[] }> {
+    ): Promise<{ status: string; trainingTimes: TrainingListDto[] }> {
         const userTournament: UserTournamentTrainings = await this.userTournamentTrainingsService.findOne(
             userId,
             instance.id,
-            { trainings: true }
+            { training: true }
         );
 
-        if (!userTournament) return { status: "NotRegistered", trainings: [] };
-        if (userTournament.trainings.length < 1)
+        if (!userTournament)
+            return {
+                status: "NotRegistered",
+                trainingTimes: []
+            };
+
+        if (!userTournament.training)
             return {
                 status: "NotChoosenTraining",
-                trainings: await this.trainingService.getAvailableTrainings(instance),
+                trainingTimes: await this.trainingService.getAvailableTrainings(instance),
             };
 
         return {
             status: "ChoosenTraining",
-            trainings: userTournament.trainings.map((training) => {
-                return { ...training, reserved: 0 };
-            }),
+            trainingTimes: [await this.trainingService.retrieveTraining(userTournament?.training, instance)]
         };
     }
 }
