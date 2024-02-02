@@ -23,7 +23,7 @@ export class TournamentTimeService {
         private readonly droneService: DroneService,
         private readonly userService: UserService,
         private readonly billingAccountService: BillingAccountService
-    ) { }
+    ) {}
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
@@ -31,16 +31,16 @@ export class TournamentTimeService {
 
     async isTheUserRegisteredForTheTournament(tournamentId: number, userId: number): Promise<boolean> {
         const tournamentTimes = await this.tournamentTimeRepository.find({
-            where: { tournament: { id: tournamentId } }
+            where: { tournament: { id: tournamentId } },
         });
 
         for (const tournamentTime of tournamentTimes) {
-            const userTournamentTime = await this.userTournamentTimeService
-                .findOne(userId, tournamentTime.id);
+            const userTournamentTime = await this.userTournamentTimeService.findOne(
+                userId,
+                tournamentTime.id
+            );
 
-
-            if (userTournamentTime)
-                return true;
+            if (userTournamentTime) return true;
         }
 
         return false;
@@ -51,16 +51,13 @@ export class TournamentTimeService {
         const instance = this.tournamentTimeRepository.create({
             startTime,
             places,
-            tournament
+            tournament,
         });
 
         return this.tournamentTimeRepository.save(instance);
     }
 
-    async getOrCreateTournamentTime(
-        userId: number,
-        tournamentInstance: Tournament
-    ): Promise<any> {
+    async getOrCreateTournamentTime(userId: number, tournamentInstance: Tournament): Promise<any> {
         let latestTournamentTime: TournamentTime = tournamentInstance.tournamentTimes[0];
         for (const tournamentTime of tournamentInstance.tournamentTimes) {
             if (tournamentTime.startTime > latestTournamentTime.startTime) {
@@ -75,27 +72,27 @@ export class TournamentTimeService {
         const lastStartTime: Date = new Date(latestTournamentTime.startTime);
         const startTime: number = lastStartTime.setMinutes(lastStartTime.getMinutes() + 10);
 
-        const instance: TournamentTime =
-            await this.create(startTime, tournamentInstance);
+        const instance: TournamentTime = await this.create(startTime, tournamentInstance);
 
         return await this.registerUserToTournamentTime(userId, instance.id);
     }
 
-
     async registerUserToTournamentTime(userId: number, id: number): Promise<any> {
         await this.userTournamentTimeService.registerUserToTournamentTime(userId, id);
         const reservedPlaces = await this.userTournamentTimeService.countReservedPlaces(id);
-        const reserved = await this.reservePlaceInTheTournament(
-            id,
-            reservedPlaces,
-            userId
-        );
+        const reserved = await this.reservePlaceInTheTournament(id, reservedPlaces, userId);
 
         return {
             tournamentTimeId: id,
             userId: userId,
             reservedPlaces: reserved,
         };
+    }
+
+    async getUserTournamentTimes(userId: number, tournamentId: number): Promise<TournamentTime[]> {
+        return await this.tournamentTimeRepository.find({
+            where: { userTournamentTimes: { user: { id: userId } }, tournament: { id: tournamentId } },
+        });
     }
 
     async assignUserToDron(userId: number): Promise<any> {

@@ -120,9 +120,9 @@ export class TournamentService {
         if (tournament.route)
             tournamentDto.route = await this.routeService.findOne(tournament.route.id, language);
 
-        tournamentDto.tournamentTimes = await this.tournamentTimeService.findAllByTournamentId(
-            tournament.id,
-            userId
+        tournamentDto.tournamentTimes = await this.tournamentTimeService.getUserTournamentTimes(
+            userId,
+            tournament.id
         );
         tournamentDto.trainings = await this.findTrainings(tournament, userId);
 

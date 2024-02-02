@@ -14,22 +14,16 @@ export class UserTournamentTimeService {
         @InjectRepository(UserTournamentTime)
         private readonly userTournamentTimeRepository: Repository<UserTournamentTime>,
         private readonly utilService: UtilService
-    ) { }
+    ) {}
 
-    async registerUserToTournamentTime(
-        userId: number,
-        tournamentTimeId: number
-    ) {
-
+    async registerUserToTournamentTime(userId: number, tournamentTimeId: number) {
         try {
-
             await this.userTournamentTimeRepository.manager.transaction(async (entityManager) => {
                 await entityManager.save(UserTournamentTime, {
                     user: { id: userId },
                     tournamentTime: { id: tournamentTimeId },
                 });
             });
-
         } catch (error) {
             console.log(userId);
             console.log(tournamentTimeId);

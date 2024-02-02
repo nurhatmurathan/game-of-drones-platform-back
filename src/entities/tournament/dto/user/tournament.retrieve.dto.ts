@@ -4,7 +4,7 @@ import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-valida
 import { TrainingListDto } from "src/entities/training/dto/user/training.list.dto";
 import { LigaRetrieveDto } from "../../../liga/dto";
 import { RouteRetrieveDto } from "../../../route/dto";
-import { TournamentTimeListDto } from "../../../tournament.time/dto";
+import { TournamentTimeListDtoV2 } from "../../../tournament.time/dto";
 
 export class TrainingStatusDto {
     @ApiProperty({
@@ -52,8 +52,8 @@ export class TournamentRetrieveDto {
     @ApiProperty()
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => TournamentTimeListDto)
-    tournamentTimes: TournamentTimeListDto[];
+    @Type(() => TournamentTimeListDtoV2)
+    tournamentTimes: TournamentTimeListDtoV2[];
 
     @ApiProperty()
     @IsArray()
