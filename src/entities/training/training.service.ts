@@ -15,7 +15,9 @@ export class TrainingService {
     ) { }
 
     async addTraining(userId: number, tournamentId: number, id: number): Promise<any> {
+        console.log("I'm in addTraining Service");
         const instance: Training = await this.trainingRepository.findOne({ where: { id: id } });
+
         return await this.userTournamentTrainingsService.bindTrainingToUser(userId, tournamentId, instance);
     }
 

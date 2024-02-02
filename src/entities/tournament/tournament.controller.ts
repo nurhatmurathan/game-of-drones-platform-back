@@ -20,12 +20,12 @@ import { TournamentService } from "./tournament.service";
 
 @ApiTags("Tournament")
 @Controller("tournament")
+@ApiBearerAuth()
 @UseGuards(CustomAuthGuard)
 export class TournamentController {
-    constructor(private readonly tournamentService: TournamentService) {}
+    constructor(private readonly tournamentService: TournamentService) { }
 
     @Get()
-    @ApiBearerAuth()
     @HttpCode(HttpStatus.ACCEPTED)
     async findAll(@Headers("Accept-Language") language: LanguagesEnum): Promise<TournamentListDto[]> {
         console.log("Step in Controller");
@@ -33,7 +33,6 @@ export class TournamentController {
     }
 
     @Get("/:id")
-    @ApiBearerAuth()
     @ApiOkResponse({ type: TournamentRetrieveDto })
     @HttpCode(HttpStatus.ACCEPTED)
     async findOne(
@@ -48,6 +47,7 @@ export class TournamentController {
     @Post("select")
     @HttpCode(HttpStatus.CREATED)
     async registerUserToTournament(@Body() body: TournamentRegisterDto, @Request() req): Promise<any> {
+        console.log("I'am in registerUserToTournament")
         return await this.tournamentService.registerUserToTournament(req.user.sub, body.tournamentId);
     }
 }

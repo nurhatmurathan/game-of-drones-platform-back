@@ -4,11 +4,14 @@ import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-valida
 import { TrainingListDto } from "src/entities/training/dto/user/training.list.dto";
 import { LigaRetrieveDto } from "../../../liga/dto";
 import { RouteRetrieveDto } from "../../../route/dto";
-import { TournamentTimeListDto } from "../../../tournament.time/dto";
+import { TournamentTimeListDtoV2 } from "../../../tournament.time/dto";
 
 export class TrainingStatusDto {
-    @ApiProperty()
-    status: string;
+    @ApiProperty({
+        examples: ["NotRegistered", "NotChoosenTraining", "ChoosenTraining"],
+        example: "'NotRegistered', 'NotChoosenTraining', 'ChoosenTraining'",
+    })
+    status: "NotRegistered" | "NotChoosenTraining" | "ChoosenTraining";
 
     @ApiProperty({ type: [TrainingListDto] })
     @ValidateNested({ each: true })
@@ -47,11 +50,11 @@ export class TournamentRetrieveDto {
     @Type(() => RouteRetrieveDto)
     route: RouteRetrieveDto;
 
-    @ApiProperty({ type: [TournamentTimeListDto] })
+    @ApiProperty({ type: [TournamentTimeListDtoV2] })
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => TournamentTimeListDto)
-    tournamentTimes: TournamentTimeListDto[];
+    @Type(() => TournamentTimeListDtoV2)
+    tournamentTimes: TournamentTimeListDtoV2[];
 
     @ApiProperty()
     @IsArray()

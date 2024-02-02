@@ -25,6 +25,7 @@ export class TrainingController {
         @Param("trainingId", ParseIntPipe) trainingId: number,
         @Request() request
     ): Promise<any> {
+        console.log("I'm in addTraining");
         return this.trainingService.addTraining(request.user.sub, tournamentId, trainingId);
     }
 }

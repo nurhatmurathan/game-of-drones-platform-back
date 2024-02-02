@@ -16,6 +16,7 @@ export class CustomAuthGuard implements CanActivate {
         const token = this.extractTokenFromHeader(request);
 
         if (!token) {
+            console.log("Here CustomAuthGuard 1");
             throw new UnauthorizedException();
         }
 
@@ -26,6 +27,7 @@ export class CustomAuthGuard implements CanActivate {
 
             request["user"] = payload;
         } catch {
+            console.log("Here CustomAuthGuard 2");
             throw new UnauthorizedException();
         }
 

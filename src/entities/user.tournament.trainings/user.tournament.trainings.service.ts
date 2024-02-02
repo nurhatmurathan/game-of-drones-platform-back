@@ -37,17 +37,21 @@ export class UserTournamentTrainingsService {
         tournamentId: number,
         training: Training
     ): Promise<any> {
+        console.log("Step 1 in bindTrainingToUser");
         const instance: UserTournamentTrainings = await this.findOne(
             userId,
             tournamentId,
             { training: true }
         );
 
-        if (instance.training.id === training.id)
+        console.log("Step 2 in bindTrainingToUser");
+        if (instance.training?.id === training.id)
             throw new BadRequestException("Training is already selected.");
 
+        console.log("Step 3 in bindTrainingToUser");
         instance.training = training;
         await this.userTournamentTrainingsRepository.save(instance);
+        console.log("Step 4 in bindTrainingToUser");
 
         return { message: "Training is selected" };
     }
@@ -66,4 +70,5 @@ export class UserTournamentTrainingsService {
             },
         });
     }
+
 }

@@ -22,3 +22,13 @@ export class TournamentTimeListDto {
     @IsBoolean()
     isSelected: boolean;
 }
+
+export class TournamentTimeListDtoV2 {
+    @ApiProperty()
+    @IsInt()
+    id: number;
+
+    @ApiProperty({ example: Date.now() })
+    @IsInt()
+    startTime: number;
+}

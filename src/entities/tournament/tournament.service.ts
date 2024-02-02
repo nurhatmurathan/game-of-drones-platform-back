@@ -82,7 +82,7 @@ export class TournamentService {
             where: { id },
             relations: { tournamentTimes: { userTournamentTimes: true } },
         });
-        await this.userTournamentTrainingsService.create(userId, id);
+
         return await this.tournamentTimeService.getOrCreateTournamentTime(userId, instance);
     }
 
@@ -120,9 +120,9 @@ export class TournamentService {
         if (tournament.route)
             tournamentDto.route = await this.routeService.findOne(tournament.route.id, language);
 
-        tournamentDto.tournamentTimes = await this.tournamentTimeService.findAllByTournamentId(
-            tournament.id,
-            userId
+        tournamentDto.tournamentTimes = await this.tournamentTimeService.getUserTournamentTimes(
+            userId,
+            tournament.id
         );
         tournamentDto.trainings = await this.findTrainings(tournament, userId);
 
@@ -132,7 +132,10 @@ export class TournamentService {
     private async findTrainings(
         instance: Tournament,
         userId: number
-    ): Promise<{ status: string; trainingTimes: TrainingListDto[] }> {
+    ): Promise<{
+        status: "NotRegistered" | "NotChoosenTraining" | "ChoosenTraining";
+        trainingTimes: TrainingListDto[];
+    }> {
         const userTournament: UserTournamentTrainings = await this.userTournamentTrainingsService.findOne(
             userId,
             instance.id,
