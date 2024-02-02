@@ -62,6 +62,7 @@ export class UserTournamentTrainingsService {
     }
 
     async countReservedPlaces(trainingId: number, tournamentId: number): Promise<number> {
+        console.log("Step 1 in countReservedPlaces");
         return await this.userTournamentTrainingsRepository.count({
             where: {
                 training: { id: trainingId },

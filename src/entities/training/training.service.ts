@@ -37,6 +37,7 @@ export class TrainingService {
     }
 
     async retrieveTraining(instance: Training, tournamentInstance: Tournament): Promise<TrainingListDto> {
+        console.log("Step 1 in findTrainings");
         return {
             id: instance.id,
             startTime: instance.startTime,

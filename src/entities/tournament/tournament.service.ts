@@ -136,23 +136,28 @@ export class TournamentService {
         status: "NotRegistered" | "NotChoosenTraining" | "ChoosenTraining";
         trainingTimes: TrainingListDto[];
     }> {
+        console.log("Step 1 in findTrainings");
         const userTournament: UserTournamentTrainings = await this.userTournamentTrainingsService.findOne(
             userId,
             instance.id,
             { training: true }
         );
 
-        if (!userTournament)
+        console.log("Step 2 in findTrainings");
+        if (!userTournament) {
             return {
                 status: "NotRegistered",
                 trainingTimes: []
             };
+        }
 
-        if (!userTournament.training)
+        if (!userTournament.training) {
+            console.log("Step 3 in findTrainings");
             return {
                 status: "NotChoosenTraining",
                 trainingTimes: await this.trainingService.getAvailableTrainings(instance),
             };
+        }
 
         return {
             status: "ChoosenTraining",
