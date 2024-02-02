@@ -132,7 +132,10 @@ export class TournamentService {
     private async findTrainings(
         instance: Tournament,
         userId: number
-    ): Promise<{ status: string; trainings: TrainingListDto[] }> {
+    ): Promise<{
+        status: "NotRegistered" | "NotChoosenTraining" | "ChoosenTraining";
+        trainings: TrainingListDto[];
+    }> {
         const userTournament: UserTournamentTrainings = await this.userTournamentTrainingsService.findOne(
             userId,
             instance.id,

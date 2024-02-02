@@ -7,8 +7,11 @@ import { RouteRetrieveDto } from "../../../route/dto";
 import { TournamentTimeListDto } from "../../../tournament.time/dto";
 
 export class TrainingStatusDto {
-    @ApiProperty()
-    status: string;
+    @ApiProperty({
+        examples: ["NotRegistered", "NotChoosenTraining", "ChoosenTraining"],
+        example: "'NotRegistered', 'NotChoosenTraining', 'ChoosenTraining'",
+    })
+    status: "NotRegistered" | "NotChoosenTraining" | "ChoosenTraining";
 
     @ApiProperty({ type: [TrainingListDto] })
     @ValidateNested({ each: true })
