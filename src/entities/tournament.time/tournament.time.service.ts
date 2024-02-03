@@ -25,7 +25,7 @@ export class TournamentTimeService {
         private readonly droneService: DroneService,
         private readonly userService: UserService,
         private readonly billingAccountService: BillingAccountService
-    ) { }
+    ) {}
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
@@ -85,9 +85,7 @@ export class TournamentTimeService {
 
         await this.userTournamentTimeService.registerUserToTournamentTime(userId, id);
 
-        if (tournamentId)
-            await this.userTournamentTrainingsService.create(userId, tournamentId);
-
+        if (tournamentId) await this.userTournamentTrainingsService.create(userId, tournamentId);
 
         return {
             tournamentTimeId: id,
@@ -170,9 +168,7 @@ export class TournamentTimeService {
 
         const tournamentTimeInstance = await this.tournamentTimeRepository.findOne({
             where: { id: id },
-            relations: {
-                tournament: true,
-            },
+            relations: { tournament: true },
         });
         const tournamentInstance = tournamentTimeInstance.tournament;
 

@@ -9,7 +9,7 @@ import {
     ParseIntPipe,
     Post,
     Put,
-    UseGuards
+    UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
@@ -17,19 +17,16 @@ import {
     TournamentAdminCreateDto,
     TournamentAdminListDto,
     TournamentAdminRetrieveDto,
-    TournamentAdminUpdateDto
+    TournamentAdminUpdateDto,
 } from "./dto";
 import { TournamentAdminService } from "./tournament.admin.service";
 
-
-@ApiBearerAuth()
 @ApiTags("Admin Tournament")
 @Controller("admin-tournament")
+@ApiBearerAuth()
 @UseGuards(CustomAuthGuard, IsAdminGuard)
 export class TournamentAdminController {
-    constructor(
-        private readonly tournamentAdminService: TournamentAdminService
-    ) { }
+    constructor(private readonly tournamentAdminService: TournamentAdminService) {}
 
     @Get()
     @HttpCode(HttpStatus.ACCEPTED)
@@ -39,9 +36,7 @@ export class TournamentAdminController {
 
     @Get("/:id")
     @HttpCode(HttpStatus.ACCEPTED)
-    async findOne(
-        @Param("id", ParseIntPipe) id: number
-    ): Promise<TournamentAdminRetrieveDto> {
+    async findOne(@Param("id", ParseIntPipe) id: number): Promise<TournamentAdminRetrieveDto> {
         return await this.tournamentAdminService.findOne(id);
     }
 
@@ -50,7 +45,6 @@ export class TournamentAdminController {
     create(@Body() createData: TournamentAdminCreateDto): Promise<TournamentAdminRetrieveDto> {
         return this.tournamentAdminService.create(createData);
     }
-
 
     @Put("/:id")
     @HttpCode(HttpStatus.ACCEPTED)

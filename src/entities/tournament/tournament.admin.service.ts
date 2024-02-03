@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { UserTournamentTrainingsAdminService } from "./../user.tournament.trainings/user.tournament.trainings.admin.service";
 
 import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { RouteAdminService } from "../route/route.admin.service";
@@ -20,8 +21,9 @@ export class TournamentAdminService {
         private readonly tournamentRepository: Repository<Tournament>,
         private readonly tournamentTimeAdminService: TournamentTimeAdminService,
         private readonly multilingualTextService: MultilingualtextService,
-        private readonly routeAdminService: RouteAdminService
-    ) { }
+        private readonly routeAdminService: RouteAdminService,
+        private readonly userTournamentTrainingsAdminService: UserTournamentTrainingsAdminService
+    ) {}
 
     async findAll(): Promise<TournamentAdminListDto[]> {
         return await this.tournamentRepository.find({
@@ -144,6 +146,10 @@ export class TournamentAdminService {
             tournamentTimes: tournamentTimes,
         };
     }
+
+    // async tournamentUsers(tournamentId: number){
+    //     const userTournaments: UserTournamentTrainings = await this.userTournamentTrainingsAdminService.getTournamentUsers(tournamentId);
+    // }
 
     private isExists(instance: Tournament, id: number): void {
         if (!instance) throw new NotFoundException(`Tournament with id ${id} not found`);
