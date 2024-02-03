@@ -7,8 +7,10 @@ import { ConfigModule } from "./config.module";
 import { DatabaseModule } from "./database/database.module";
 import { ActionModule } from "./entities/action/action.module";
 import { DronModule } from "./entities/dron/drone.module";
+import { ItemModule } from "./entities/item/item.module";
 import { LigaModule } from "./entities/liga/liga.module";
 import { MultilingualtextModule } from "./entities/multilingualtext/multilingualtext.module";
+import { PaymentModule } from "./entities/payment/payment.module";
 import { TokenModule } from "./entities/register.token/register.token.module";
 import { RouteModule } from "./entities/route/route.module";
 import { TaskModule } from "./entities/task/task.module";
@@ -42,8 +44,10 @@ import { UtilModule } from "./utils/util.module";
         TrainingModule,
         MailModule,
         DronModule,
+        ItemModule,
+        PaymentModule
     ],
     controllers: [AuthController],
     providers: [AuthService],
 })
-export class AppModule {}
+export class AppModule { }
