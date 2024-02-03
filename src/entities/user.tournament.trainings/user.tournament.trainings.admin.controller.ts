@@ -1,5 +1,5 @@
 import { Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { UserCoverDto } from "../user/dto";
 import { User } from "../user/user.entity";
 import { CustomAuthGuard, IsAdminGuard } from "./../../auth/guards";
@@ -14,6 +14,7 @@ export class UserTournamentTrainingsAdminController {
     constructor(private readonly userTournamentTrainingsAdminService: UserTournamentTrainingsAdminService) {}
 
     @Get("/:tournamentId")
+    @ApiOkResponse({ type: UserCoverDto, isArray: true })
     @HttpCode(HttpStatus.ACCEPTED)
     async findTournamentUsers(
         @Param("tournamentId", ParseIntPipe) tournamentId: number
