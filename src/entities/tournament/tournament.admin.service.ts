@@ -147,10 +147,6 @@ export class TournamentAdminService {
         };
     }
 
-    // async tournamentUsers(tournamentId: number){
-    //     const userTournaments: UserTournamentTrainings = await this.userTournamentTrainingsAdminService.getTournamentUsers(tournamentId);
-    // }
-
     private isExists(instance: Tournament, id: number): void {
         if (!instance) throw new NotFoundException(`Tournament with id ${id} not found`);
     }

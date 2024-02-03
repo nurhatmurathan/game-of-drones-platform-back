@@ -46,6 +46,10 @@ export class TournamentTimeAdminService {
         return this.tournamentTimeRepository.save(instance);
     }
 
+    async saveV2(id: number, startTime: number): Promise<TournamentTime> {
+        return this.tournamentTimeRepository.save({ id, startTime });
+    }
+
     async delete(id: number): Promise<any> {
         const instance = await this.tournamentTimeRepository.findOne({ where: { id } });
         this.isExists(instance, id);
