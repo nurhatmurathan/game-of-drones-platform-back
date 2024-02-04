@@ -44,7 +44,7 @@ export class TournamentController {
         return tournamentRetrieveDto;
     }
 
-    @Post("select")
+    @Post("v1/select")
     @HttpCode(HttpStatus.CREATED)
     async registerUserToTournament(@Body() body: TournamentRegisterDto, @Request() req): Promise<any> {
         console.log("I'am in registerUserToTournament")
