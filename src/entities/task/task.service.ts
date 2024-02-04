@@ -20,12 +20,12 @@ export class TaskService {
         @InjectRepository(Task)
         private readonly taskRepository: Repository<Task>,
         private readonly actionService: ActionService,
-        private readonly utilSevice: UtilService,
+        private readonly utilService: UtilService,
         private readonly userTournamentTimeService: UserTournamentTimeService
     ) { }
 
     async findAll(language: LanguagesEnum): Promise<TaskListDto[]> {
-        const languageType = this.utilSevice.getLanguage(language);
+        const languageType = this.utilService.getLanguage(language);
 
         const instances = await this.taskRepository.find({
             relations: { taskDescription: true }
@@ -43,7 +43,7 @@ export class TaskService {
         userId: number,
         language: LanguagesEnum
     ): Promise<TaskRetrieveDto> {
-        const languageType = this.utilSevice.getLanguage(language);
+        const languageType = this.utilService.getLanguage(language);
 
         console.log("Step 1");
         console.log(`id: ${id}, userId: ${userId}, language: ${languageType}`);

@@ -1,13 +1,8 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { OrderStatus } from '../../common/enums/order.status';
 import { Tournament } from '../tournament/tournament.entity';
 import { User } from '../user/user.entity';
-
-export enum OrderStatus {
-    Created = 'created',
-    Success = 'success',
-    Error = 'error',
-}
 
 @Entity()
 export class Order {

@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UserTournamentTrainingsAdminService } from "./../user.tournament.trainings/user.tournament.trainings.admin.service";
 
 import { MultilingualtextService } from "../multilingualtext/multilingualtext.service";
 import { RouteAdminService } from "../route/route.admin.service";
@@ -22,8 +21,7 @@ export class TournamentAdminService {
         private readonly tournamentTimeAdminService: TournamentTimeAdminService,
         private readonly multilingualTextService: MultilingualtextService,
         private readonly routeAdminService: RouteAdminService,
-        private readonly userTournamentTrainingsAdminService: UserTournamentTrainingsAdminService
-    ) {}
+    ) { }
 
     async findAll(): Promise<TournamentAdminListDto[]> {
         return await this.tournamentRepository.find({

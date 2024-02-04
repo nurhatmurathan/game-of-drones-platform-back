@@ -6,10 +6,12 @@ import { FindOptionsRelations, Repository } from 'typeorm';
 import { Item } from '../item/item.entity';
 import { ItemService } from '../item/item.service';
 import { UserService } from '../user/user.service';
-import { Order, OrderStatus } from './order.entity';
+import { Order } from './order.entity';
 
 import { UtilService } from 'src/utils/util.service';
 import { v4 as uuidv4 } from 'uuid';
+import { LanguagesEnum } from '../../common/enums';
+import { OrderStatus } from '../../common/enums/order.status';
 import { TournamentService } from '../tournament/tournament.service';
 
 
@@ -29,6 +31,8 @@ export class PaymentService {
         const userInstance = await this.userService.findOneById(userId);
         const tournamentInstance = await this.tournamentService.findOneById(tournamentId);
 
+        await this.isExistsSuccessOrderOfUser(userInstance.id, tournamentInstance.id);
+
         const generatedUuid = uuidv4();
         const createdInstance = this.orderRepository.create({
             id: generatedUuid,
@@ -39,7 +43,7 @@ export class PaymentService {
         return await this.orderRepository.save(createdInstance);
     }
 
-    async findOne(payment_id: string, order_id: string, relations?: FindOptionsRelations<Order>): Promise<Order> {
+    async findOneByPaymentId(payment_id: string, order_id: string, relations?: FindOptionsRelations<Order>): Promise<Order> {
         return await this.orderRepository.findOne({
             where: {
                 id: order_id,
@@ -49,12 +53,21 @@ export class PaymentService {
         });
     }
 
-    public async createPayment(userId: number, tournamentId: number) {
-        const orderInstance = await this.createOrder(userId, tournamentId);
+    public async createPayment(language: LanguagesEnum, userId: number, tournamentId: number) {
+        console.log("I'm in createPayment")
+        const languageType = this.utilService.getLanguage(language);
+
         const itemInstance = await this.itemService.findOne(1);
+        const orderInstance = await this.createOrder(userId, tournamentId);
 
         try {
-            const response = await this.sendRequest(orderInstance, itemInstance);
+            const dataObject = await this.createDataObject(
+                languageType,
+                orderInstance,
+                itemInstance,
+            );
+
+            const response = await this.sendRequest(dataObject);
             console.log(response.data)
 
             const decodeData = JSON.parse(await this.utilService.decodeData(response.data.data));
@@ -62,7 +75,6 @@ export class PaymentService {
 
             orderInstance.paymentId = decodeData.payment_id;
             await this.orderRepository.save(orderInstance);
-
             console.log(orderInstance);
 
             return decodeData.payment_page_url;
@@ -71,14 +83,12 @@ export class PaymentService {
         }
     }
 
-    private async sendRequest(orderInstance: Order, itemInstance: Item) {
-        const secretKey = '6430916e7b13180c6772c0c257ba4133c723b345f918bf763279ed4438e3a051';
-        const apiKey = 'a62135f0-6458-4e05-ba0b-b615ca0c556e';
-
-        const dataObject = await this.createDataObject(orderInstance, itemInstance);
-
-        const token = Buffer.from(apiKey).toString('base64');
-        const signature = await this.utilService.generateSignature(dataObject, secretKey);
+    private async sendRequest(dataObject: any) {
+        const token = Buffer.from(process.env.PAYMENT_API_KEY).toString('base64');
+        const signature = await this.utilService.generateSignature(
+            dataObject,
+            process.env.PAYMENT_SECRET_KEY
+        );
         const requestObject = {
             data: Buffer.from(JSON.stringify(dataObject)).toString('base64'),
             sign: signature,
@@ -88,16 +98,23 @@ export class PaymentService {
             'Authorization': `Bearer ${token}`,
         };
 
-        return await lastValueFrom(this.httpService.post('https://api.onevisionpay.com/payment/create', requestObject, { headers }));
+        return await lastValueFrom(this.httpService.post(
+            process.env.PAYMENT_PAGE_CREATE_URL,
+            requestObject, { headers }
+        ));
     }
 
 
-    private createDataObject(order: Order, item: Item): any {
+    private createDataObject(
+        languageType: string,
+        order: Order,
+        item: Item,
+    ) {
         return {
-            amount: 5000,
+            amount: (order?.tournament.price * item.quantity),
             currency: "KZT",
             order_id: order.id,
-            description: "string",
+            description: "ticket for participate in tournament",
             payment_type: "pay",
             payment_method: "ecom",
             items: [{
@@ -106,19 +123,19 @@ export class PaymentService {
                 merchant_name: item.merchantName,
                 name: item.name,
                 quantity: item.quantity,
-                amount_one_pcs: item.amountOnePcs,
-                amount_sum: item.amountSum
+                amount_one_pcs: order?.tournament.price,
+                amount_sum: (order?.tournament.price * item.quantity)
             }],
             user_id: (order?.user.id).toString(),
             email: order?.user.email,
             // phone: "string",
-            success_url: "https://platform.gameofdrones.kz/ru",
-            failure_url: "https://platform.gameofdrones.kz/ru/auth",
-            callback_url: "https://g-of-d-run-dev-era7gcma5a-uc.a.run.app/payment/callback",
-            payment_lifetime: 3600,
+            success_url: process.env.PAYMENT_SUCCESS_URL,
+            failure_url: process.env.PAYMENT_FAILURE_URL,
+            callback_url: process.env.PAYMENT_CALLBACK_URL,
+            payment_lifetime: +process.env.PAYMENT_LIFETIME,
             create_recurrent_profile: false,
             recurrent_profile_lifetime: 0,
-            lang: "ru",
+            lang: languageType,
             extra_params: {}
         };
     }
@@ -146,13 +163,16 @@ export class PaymentService {
         console.log(data);
         console.log(data?.operation_status);
 
-        const instance: Order = await this.findOne(decodeData.payment_id, decodeData.order_id, { user: true, tournament: true });
+        const instance: Order = await this.findOneByPaymentId(
+            decodeData.payment_id,
+            decodeData.order_id,
+            { user: true, tournament: true }
+        );
         this.isExists(instance);
 
         return decodeData?.operation_status === 'error'
             ? await this.handleErrorPayment(instance)
             : await this.handleSuccessPayment(instance);
-
     }
 
     private async handleErrorPayment(instance: Order): Promise<any> {
@@ -177,6 +197,20 @@ export class PaymentService {
     private isExists(instance: Order) {
         if (!instance)
             throw new NotFoundException(`Order not found`);
+    }
+
+    private async isExistsSuccessOrderOfUser(userId: number, tournamentId: number) {
+        const instance = await this.orderRepository.findOne({
+            where: {
+                user: { id: userId },
+                tournament: { id: tournamentId }
+            }
+        });
+
+        if (instance && instance.status === OrderStatus.Success)
+            throw new BadRequestException("User already bought this tournament");
+
+        return instance;
     }
 
 }
