@@ -23,9 +23,16 @@ export class PaymentController {
     async handlePaymentCallback(@Req() request, @Res() response): Promise<any> {
         console.log("I'm in callback");
         console.log(request);
-        console.log(request.body);
+        console.log(request.body.data);
 
+        console.log(JSON.parse(this.decodeData(request.body.data)));
         // return response.redirect('https://platform.gameofdrones.kz/ru/auth/oauth');
+    }
+
+    private decodeData(encodedData: string): string {
+        const buff = Buffer.from(encodedData, 'base64');
+        const decodedData = buff.toString('utf-8');
+        return decodedData;
     }
 
 }
