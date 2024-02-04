@@ -6,7 +6,7 @@ import { UserCoverDto } from "./../../../user/dto/user.cover.dto";
 export class TournamentTimeAdminRetrieveDto {
     @ApiProperty()
     @IsInt()
-    id: number;
+    readonly id: number;
 
     @ApiProperty({ example: Date.now() })
     @IsInt()

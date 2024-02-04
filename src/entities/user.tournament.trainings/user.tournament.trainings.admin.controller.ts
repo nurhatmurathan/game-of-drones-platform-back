@@ -13,7 +13,7 @@ import { UserTournamentTrainings } from "./user.tournament.trainings.entity";
 export class UserTournamentTrainingsAdminController {
     constructor(private readonly userTournamentTrainingsAdminService: UserTournamentTrainingsAdminService) {}
 
-    @Get("/:tournamentId")
+    @Get("users/:tournamentId")
     @ApiOkResponse({ type: UserCoverDto, isArray: true })
     @HttpCode(HttpStatus.ACCEPTED)
     async findTournamentUsers(
