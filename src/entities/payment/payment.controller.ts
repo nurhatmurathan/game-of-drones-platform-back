@@ -1,25 +1,26 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CustomAuthGuard } from 'src/auth/guards';
-import { PaymentService } from './payment.service';
+import { Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Response } from "express";
+import { CustomAuthGuard } from "src/auth/guards";
+import { PaymentService } from "./payment.service";
 
 @ApiTags("Payment")
-@Controller('payment')
+@Controller("payment")
 export class PaymentController {
-    constructor(private readonly paymentService: PaymentService) { }
+    constructor(private readonly paymentService: PaymentService) {}
 
     @Get()
     @ApiBearerAuth()
     @UseGuards(CustomAuthGuard)
-    async buyTournament(@Req() request, @Res() response) {
+    async buyTournament(@Req() request, @Res() response: Response) {
         console.log("I'm in buyTournament");
 
         const url = await this.paymentService.createPayment(request.user.sub);
         console.log(url);
-        return response.redirect(url);
+        return response.json({ url });
     }
 
-    @Post('callback')
+    @Post("callback")
     async handlePaymentCallback(@Req() request, @Res() response): Promise<any> {
         console.log("I'm in callback");
         console.log(request.body.data);
@@ -32,9 +33,8 @@ export class PaymentController {
     }
 
     private decodeData(encodedData: string): string {
-        const buff = Buffer.from(encodedData, 'base64');
-        const decodedData = buff.toString('utf-8');
+        const buff = Buffer.from(encodedData, "base64");
+        const decodedData = buff.toString("utf-8");
         return decodedData;
     }
-
 }

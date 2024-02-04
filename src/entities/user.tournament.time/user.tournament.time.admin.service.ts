@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { UserCoverDto } from "../user/dto";
 import { UserTournamentTime } from "./user.tournament.time.entity";
 
@@ -38,6 +38,13 @@ export class UserTournamentTimeAdminService {
         return await this.userTournamentTimeRepository.remove(userTournamentTimes);
     }
 
+    async removeTournamentTimeUsers(tournamentTimeId: number, usersIds: Set<number>) {
+        return await this.userTournamentTimeRepository.delete({
+            tournamentTime: { id: tournamentTimeId },
+            user: { id: In(Array.from(usersIds)) },
+        });
+    }
+
     async tournamentTimeUsers(tournamentTimeId: number): Promise<UserTournamentTime[]> {
         return await this.userTournamentTimeRepository.find({
             where: { tournamentTime: { id: tournamentTimeId } },
@@ -52,14 +59,10 @@ export class UserTournamentTimeAdminService {
         const existingInstances: UserTournamentTime[] = await this.tournamentTimeUsers(tournamentTimeId);
         const existingUserIds: Set<number> = new Set(existingInstances.map((utt) => utt.user.id));
 
-        const usersToAdd: UserCoverDto[] = users.filter((user) => !existingUserIds.has(user.id));
-        const usersToRemove: UserTournamentTime[] = existingInstances.filter(
-            (utt) => !users.some((user) => user.id === utt.user.id)
-        );
+        const usersToAdd: UserCoverDto[] = users.filter((user) => !existingUserIds.delete(user.id));
 
+        await this.removeTournamentTimeUsers(tournamentTimeId, existingUserIds);
         await this.createTournamentTimeUsers(tournamentTimeId, usersToAdd);
-
-        await this.removeBatch(usersToRemove);
 
         return await this.tournamentTimeUsers(tournamentTimeId);
     }
