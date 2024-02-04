@@ -22,7 +22,9 @@ export class PaymentController {
     @Post('callback')
     async handlePaymentCallback(@Req() request, @Res() response): Promise<any> {
         console.log("I'm in callback");
-        console.log(request.data);
+        console.log(request);
+        console.log(request.body);
+
         // return response.redirect('https://platform.gameofdrones.kz/ru/auth/oauth');
     }
 
