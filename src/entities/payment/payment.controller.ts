@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Response } from "express";
 import { CustomAuthGuard } from "src/auth/guards";
+import { TournamentRegisterDto } from "../tournament/dto";
 import { PaymentService } from "./payment.service";
 
 @ApiTags("Payment")
@@ -9,32 +9,29 @@ import { PaymentService } from "./payment.service";
 export class PaymentController {
     constructor(private readonly paymentService: PaymentService) {}
 
-    @Get()
+    @Post()
     @ApiBearerAuth()
     @UseGuards(CustomAuthGuard)
-    async buyTournament(@Req() request, @Res() response: Response) {
+    async buyTournament(@Req() request, @Res() response, @Body() body: TournamentRegisterDto) {
         console.log("I'm in buyTournament");
 
-        const url = await this.paymentService.createPayment(request.user.sub);
+        const url = await this.paymentService.createPayment(request.user.sub, body.tournamentId);
         console.log(url);
         return response.json({ url });
     }
 
+    // @Post("select")
+    // @HttpCode(HttpStatus.CREATED)
+    // async registerUserToTournament(@Body() body: TournamentRegisterDto, @Request() req): Promise<any> {
+    //     console.log("I'am in registerUserToTournament")
+    //     return await this.tournamentService.registerUserToTournament(req.user.sub, body.tournamentId);
+    // }
+
     @Post("callback")
-    async handlePaymentCallback(@Req() request, @Res() response): Promise<any> {
+    async handlePaymentCallback(@Req() request): Promise<any> {
         console.log("I'm in callback");
-        console.log(request.body.data);
 
-        const data = JSON.parse(this.decodeData(request.body.data));
-
-        console.log(data);
-        console.log(data.operation_status);
+        return await this.paymentService.handlePaymentCallback(request.body.data);
         // return response.redirect('https://platform.gameofdrones.kz/ru/auth/oauth');
-    }
-
-    private decodeData(encodedData: string): string {
-        const buff = Buffer.from(encodedData, "base64");
-        const decodedData = buff.toString("utf-8");
-        return decodedData;
     }
 }
