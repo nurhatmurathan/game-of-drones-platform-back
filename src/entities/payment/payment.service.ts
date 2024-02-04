@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createHmac } from 'crypto';
 import { lastValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 import { Item } from '../item/item.entity';
@@ -9,6 +8,7 @@ import { ItemService } from '../item/item.service';
 import { UserService } from '../user/user.service';
 import { Order } from './order.entity';
 
+import { UtilService } from 'src/utils/util.service';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -17,16 +17,13 @@ export class PaymentService {
     constructor(
         @InjectRepository(Order)
         private readonly orderRepository: Repository<Order>,
+        private readonly utilService: UtilService,
         private readonly httpService: HttpService,
         private readonly userService: UserService,
         private readonly itemService: ItemService
     ) { }
 
-    public async createPayment(userId: number) {
-        const secretKey = '6430916e7b13180c6772c0c257ba4133c723b345f918bf763279ed4438e3a051';
-        const apiKey = 'a62135f0-6458-4e05-ba0b-b615ca0c556e';
-        const token = Buffer.from(apiKey).toString('base64');
-
+    async createOrder(userId: number): Promise<Order> {
         const user = await this.userService.findOneById(userId);
 
         const generatedUuid = uuidv4();
@@ -35,16 +32,25 @@ export class PaymentService {
             user: user
         });
 
-        const savedInstance = await this.orderRepository.save(createdInstance);
+        return await this.orderRepository.save(createdInstance);
+    }
 
-        const item = await this.itemService.findOne(1);
-        const dataObject = this.createDataObject(savedInstance, item);
-        const signature = await this.generateSignature(dataObject, secretKey);
+    public async createPayment(userId: number) {
+        const secretKey = '6430916e7b13180c6772c0c257ba4133c723b345f918bf763279ed4438e3a051';
+        const apiKey = 'a62135f0-6458-4e05-ba0b-b615ca0c556e';
+
+        const orderInstance = await this.createOrder(userId);
+        const itemInstance = await this.itemService.findOne(1);
+
+
+        const dataObject = await this.createDataObject(orderInstance, itemInstance);
+
+        const token = Buffer.from(apiKey).toString('base64');
+        const signature = await this.utilService.generateSignature(dataObject, secretKey);
         const requestObject = {
             data: Buffer.from(JSON.stringify(dataObject)).toString('base64'),
             sign: signature,
         };
-
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
@@ -56,13 +62,13 @@ export class PaymentService {
             const response = await lastValueFrom(this.httpService.post('https://api.onevisionpay.com/payment/create', requestObject, { headers }));
             console.log(response.data)
 
-            const decodeData = JSON.parse(this.decodeData(response.data.data));
+            const decodeData = JSON.parse(await this.utilService.decodeData(response.data.data));
             console.log(decodeData);
 
-            savedInstance.paymentId = response.data.payment_id;
-            await this.orderRepository.save(savedInstance);
+            orderInstance.paymentId = response.data.payment_id;
+            await this.orderRepository.save(orderInstance);
 
-            console.log(savedInstance);
+            console.log(orderInstance);
 
             return decodeData.payment_page_url;
         } catch (error) {
@@ -102,19 +108,6 @@ export class PaymentService {
             extra_params: {}
         };
     }
-
-    private decodeData(encodedData: string): string {
-        const buff = Buffer.from(encodedData, 'base64');
-        const decodedData = buff.toString('utf-8');
-        return decodedData;
-    }
-
-    private async generateSignature(dataObject: any, secretKey: string): Promise<string> {
-        const dataJson = JSON.stringify(dataObject);
-        const dataBase64 = Buffer.from(dataJson).toString('base64');
-        return createHmac('sha512', secretKey).update(dataBase64).digest('hex');
-    }
-
 
     private handleError(error: any) {
         if (error.response) {

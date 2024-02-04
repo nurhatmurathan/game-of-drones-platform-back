@@ -2,6 +2,7 @@ import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "src/auth/auth.module";
+import { UtilModule } from "src/utils/util.module";
 import { ItemModule } from "../item/item.module";
 import { UserModule } from "../user/user.module";
 import { Order } from "./order.entity";
@@ -15,7 +16,8 @@ import { PaymentService } from "./payment.service";
         HttpModule,
         AuthModule,
         UserModule,
-        ItemModule
+        ItemModule,
+        UtilModule
     ],
     controllers: [PaymentController],
     providers: [PaymentService],
