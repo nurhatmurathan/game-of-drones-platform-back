@@ -5,12 +5,12 @@ import { PaymentService } from './payment.service';
 
 @ApiTags("Payment")
 @Controller('payment')
-@ApiBearerAuth()
-@UseGuards(CustomAuthGuard)
 export class PaymentController {
     constructor(private readonly paymentService: PaymentService) { }
 
     @Get()
+    @ApiBearerAuth()
+    @UseGuards(CustomAuthGuard)
     async buyTournament(@Req() request, @Res() response) {
         console.log("I'm in buyTournament");
 
@@ -25,4 +25,5 @@ export class PaymentController {
         console.log(request.data);
         // return response.redirect('https://platform.gameofdrones.kz/ru/auth/oauth');
     }
+
 }
