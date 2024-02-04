@@ -24,7 +24,10 @@ export class PaymentController {
         console.log("I'm in callback");
         console.log(request.body.data);
 
-        console.log(JSON.parse(this.decodeData(request.body.data.operation_status)));
+        const data = JSON.parse(this.decodeData(request.body.data));
+
+        console.log(data);
+        console.log(data.operation_status);
         // return response.redirect('https://platform.gameofdrones.kz/ru/auth/oauth');
     }
 
