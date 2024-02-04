@@ -16,4 +16,6 @@ export class UserTournamentTrainingsAdminService {
             relations: { user: true },
         });
     }
+
+    async updateBatch(a: { tournamentTimeId: number; userId: number; place: number }[]) {}
 }

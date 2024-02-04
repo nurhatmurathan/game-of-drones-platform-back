@@ -1,20 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, ValidateNested } from "class-validator";
-import { UserCoverDto } from "./../../../user/dto/user.cover.dto";
+import { TournamentTimeUsersDto } from "./admin.user.cover.dto";
 
 export class TournamentTimeAdminRetrieveDto {
     @ApiProperty()
     @IsInt()
-    readonly id: number;
+    id: number;
 
     @ApiProperty({ example: Date.now() })
     @IsInt()
     startTime: number;
 
-    @ApiProperty({ type: UserCoverDto })
+    @ApiProperty({ type: TournamentTimeUsersDto, isArray: true })
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => UserCoverDto)
-    users: UserCoverDto[];
+    @Type(() => TournamentTimeUsersDto)
+    users: TournamentTimeUsersDto[];
 }

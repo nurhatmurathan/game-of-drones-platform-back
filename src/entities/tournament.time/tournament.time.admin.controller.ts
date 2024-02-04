@@ -64,7 +64,7 @@ export class TournamentTimeAdminController {
             ...res,
             users: userTournamentTimes.map((userTournamentTimes) => {
                 const { id, email, firstName, lastName } = userTournamentTimes.user;
-                return { id, email, firstName, lastName };
+                return { id, email, firstName, lastName, place: userTournamentTimes.place };
             }),
         };
     }

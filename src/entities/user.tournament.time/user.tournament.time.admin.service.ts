@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, Repository } from "typeorm";
 import { UserCoverDto } from "../user/dto";
+import { TournamentTimeUsersDto } from "./dto";
 import { UserTournamentTime } from "./user.tournament.time.entity";
 
 @Injectable()
@@ -54,7 +55,7 @@ export class UserTournamentTimeAdminService {
 
     async updateTournamentTimeUsers(
         tournamentTimeId: number,
-        users: UserCoverDto[]
+        users: TournamentTimeUsersDto[]
     ): Promise<UserTournamentTime[]> {
         const existingInstances: UserTournamentTime[] = await this.tournamentTimeUsers(tournamentTimeId);
         const existingUserIds: Set<number> = new Set(existingInstances.map((utt) => utt.user.id));
