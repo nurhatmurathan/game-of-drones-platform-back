@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { createHmac } from 'crypto';
 import { Request } from "express";
 import { LanguagesEnum } from "./../common/enums/languages";
 
@@ -22,5 +23,17 @@ export class UtilService {
             return LanguagesEnum.ru;
         }
         return language;
+    }
+
+    async decodeData(encodedData: string): Promise<string> {
+        const buff = Buffer.from(encodedData, 'base64');
+        const decodedData = buff.toString('utf-8');
+        return decodedData;
+    }
+
+    async generateSignature(dataObject: any, secretKey: string): Promise<string> {
+        const dataJson = JSON.stringify(dataObject);
+        const dataBase64 = Buffer.from(dataJson).toString('base64');
+        return createHmac('sha512', secretKey).update(dataBase64).digest('hex');
     }
 }

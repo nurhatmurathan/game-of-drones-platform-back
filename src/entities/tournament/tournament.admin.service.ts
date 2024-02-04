@@ -20,7 +20,7 @@ export class TournamentAdminService {
         private readonly tournamentRepository: Repository<Tournament>,
         private readonly tournamentTimeAdminService: TournamentTimeAdminService,
         private readonly multilingualTextService: MultilingualtextService,
-        private readonly routeAdminService: RouteAdminService
+        private readonly routeAdminService: RouteAdminService,
     ) { }
 
     async findAll(): Promise<TournamentAdminListDto[]> {

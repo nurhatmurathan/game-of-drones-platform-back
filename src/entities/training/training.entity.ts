@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Route } from "../../entities/route/route.entity";
 import { UserTournamentTime } from "../user.tournament.time/user.tournament.time.entity";
 import { UserTournamentTrainings } from "../user.tournament.trainings/user.tournament.trainings.entity";
@@ -22,6 +22,6 @@ export class Training {
     @ManyToMany(() => UserTournamentTime, (userTournamentTime) => userTournamentTime.trainings)
     userTournamentTimes: UserTournamentTime[];
 
-    @ManyToMany(() => UserTournamentTrainings, (userTournamentTrainings) => userTournamentTrainings.trainings)
+    @OneToMany(() => UserTournamentTrainings, (userTournamentTrainings) => userTournamentTrainings.training)
     userTournamentTrainings: UserTournamentTrainings[];
 }

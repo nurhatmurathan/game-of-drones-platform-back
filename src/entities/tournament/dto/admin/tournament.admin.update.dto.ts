@@ -10,12 +10,12 @@ export class TournamentAdminUpdateDto {
     @IsString()
     name: string;
 
-    @ApiProperty({ type: [MultilingualtextUpdateDto] })
+    @ApiProperty({ type: MultilingualtextUpdateDto })
     @ValidateNested()
     @Type(() => MultilingualtextUpdateDto)
     description: MultilingualtextUpdateDto;
 
-    @ApiProperty({ type: [MultilingualtextUpdateDto] })
+    @ApiProperty({ type: MultilingualtextUpdateDto })
     @ValidateNested()
     @Type(() => MultilingualtextUpdateDto)
     coverDescription: MultilingualtextUpdateDto;
