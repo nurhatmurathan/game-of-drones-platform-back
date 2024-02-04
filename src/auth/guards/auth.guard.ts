@@ -15,6 +15,7 @@ export class CustomAuthGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
 
+        console.log("Here in CustomAuthGuard")
         if (!token) {
             console.log("Here CustomAuthGuard 1");
             throw new UnauthorizedException();

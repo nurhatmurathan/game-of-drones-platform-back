@@ -94,7 +94,7 @@ export class PaymentService {
             // phone: "string",
             success_url: "https://platform.gameofdrones.kz/ru",
             failure_url: "https://platform.gameofdrones.kz/ru/auth",
-            callback_url: "http://example.com",
+            callback_url: "https://g-of-d-run-dev-era7gcma5a-uc.a.run.app/payment/callback",
             payment_lifetime: 3600,
             create_recurrent_profile: false,
             recurrent_profile_lifetime: 0,
