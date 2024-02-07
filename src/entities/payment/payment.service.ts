@@ -64,7 +64,7 @@ export class PaymentService {
 
         console.log("Step 3")
         try {
-            const dataObject = await this.createDataObject(
+            const dataObject = this.createDataObject(
                 languageType,
                 orderInstance,
                 itemInstance,
@@ -126,7 +126,7 @@ export class PaymentService {
             payment_type: "pay",
             payment_method: "ecom",
             items: [{
-                merchant_id: item.merchantId,
+                merchant_id: process.env.PAYMENT_MERCHANT_ID,
                 service_id: item.serviceId,
                 merchant_name: item.merchantName,
                 name: item.name,
