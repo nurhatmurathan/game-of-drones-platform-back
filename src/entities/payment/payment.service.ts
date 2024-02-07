@@ -57,22 +57,28 @@ export class PaymentService {
         console.log("I'm in createPayment")
         const languageType = this.utilService.getLanguage(language);
 
+        console.log("Step 1")
         const itemInstance = await this.itemService.findOne(1);
+        console.log("Step 2")
         const orderInstance = await this.createOrder(userId, tournamentId);
 
+        console.log("Step 3")
         try {
             const dataObject = await this.createDataObject(
                 languageType,
                 orderInstance,
                 itemInstance,
             );
+            console.log("Step 4")
 
             const response = await this.sendRequest(dataObject);
             console.log(response.data)
 
+            console.log("Step 5")
             const decodeData = JSON.parse(await this.utilService.decodeData(response.data.data));
             console.log(decodeData);
 
+            console.log("Step 6")
             orderInstance.paymentId = decodeData.payment_id;
             await this.orderRepository.save(orderInstance);
             console.log(orderInstance);
@@ -84,6 +90,7 @@ export class PaymentService {
     }
 
     private async sendRequest(dataObject: any) {
+        console.log("Step in sendRequest")
         const token = Buffer.from(process.env.PAYMENT_API_KEY).toString('base64');
         const signature = await this.utilService.generateSignature(
             dataObject,
@@ -97,6 +104,7 @@ export class PaymentService {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         };
+        console.log("Step 1")
 
         return await lastValueFrom(this.httpService.post(
             process.env.PAYMENT_PAGE_CREATE_URL,
@@ -158,11 +166,14 @@ export class PaymentService {
 
 
     async handlePaymentCallback(data: any): Promise<any> {
+        console.log("Step in handlePaymentCallback")
         const decodeData = JSON.parse(await this.utilService.decodeData(data));
 
-        console.log(data);
-        console.log(data?.operation_status);
+        console.log("Step 1")
+        console.log(decodeData);
+        console.log(decodeData?.operation_status);
 
+        console.log("Step 2")
         const instance: Order = await this.findOneByPaymentId(
             decodeData.payment_id,
             decodeData.order_id,
@@ -170,6 +181,7 @@ export class PaymentService {
         );
         this.isExists(instance);
 
+        console.log("Step 3")
         return decodeData?.operation_status === 'error'
             ? await this.handleErrorPayment(instance)
             : await this.handleSuccessPayment(instance);

@@ -25,7 +25,7 @@ export class TournamentTimeService {
         private readonly droneService: DroneService,
         private readonly userService: UserService,
         private readonly billingAccountService: BillingAccountService
-    ) {}
+    ) { }
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });
@@ -60,6 +60,8 @@ export class TournamentTimeService {
     }
 
     async getOrCreateTournamentTime(userId: number, tournamentInstance: Tournament): Promise<any> {
+        console.log("Step in getOrCreateTournamentTime");
+
         let latestTournamentTime: TournamentTime = tournamentInstance.tournamentTimes[0];
         for (const tournamentTime of tournamentInstance.tournamentTimes) {
             if (tournamentTime.startTime > latestTournamentTime.startTime) {
@@ -67,26 +69,37 @@ export class TournamentTimeService {
             }
         }
 
+        console.log("Step in 1");
+        console.log(latestTournamentTime);
         if (latestTournamentTime.userTournamentTimes.length <= tournamentInstance.maxPLacesInGame) {
+            console.log("Step in if statement");
             return this.registerUserToTournamentTime(userId, latestTournamentTime.id, tournamentInstance.id);
         }
+
+        console.log("Step in 2");
 
         const lastStartTime: Date = new Date(latestTournamentTime.startTime);
         const startTime: number = lastStartTime.setMinutes(lastStartTime.getMinutes() + 10);
 
         const instance: TournamentTime = await this.create(startTime, tournamentInstance);
 
+        console.log("Step in 3");
         return await this.registerUserToTournamentTime(userId, instance.id, tournamentInstance.id);
     }
 
     async registerUserToTournamentTime(userId: number, id: number, tournamentId?: number): Promise<any> {
+        console.log("Step in registerUserToTournamentTime");
         const reservedPlaces = await this.userTournamentTimeService.countReservedPlaces(id);
+        console.log("Step in 1");
         const reserved = await this.reservePlaceInTheTournament(id, reservedPlaces, userId);
 
+        console.log("Step in 2");
         await this.userTournamentTimeService.registerUserToTournamentTime(userId, id);
 
+        console.log("Step in 3");
         if (tournamentId) await this.userTournamentTrainingsService.create(userId, tournamentId);
 
+        console.log("Step in 4");
         return {
             tournamentTimeId: id,
             userId: userId,

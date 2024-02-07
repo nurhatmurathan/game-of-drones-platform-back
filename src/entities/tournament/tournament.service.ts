@@ -83,6 +83,7 @@ export class TournamentService {
             relations: { tournamentTimes: { userTournamentTimes: true } },
         });
 
+        console.log("Step in registerUserToTournament");
         return await this.tournamentTimeService.getOrCreateTournamentTime(userId, instance);
     }
 
