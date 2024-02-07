@@ -170,8 +170,8 @@ export class PaymentService {
         const decodeData = JSON.parse(await this.utilService.decodeData(data));
 
         console.log("Step 1")
-        console.log(data);
-        console.log(data?.operation_status);
+        console.log(decodeData);
+        console.log(decodeData?.operation_status);
 
         console.log("Step 2")
         const instance: Order = await this.findOneByPaymentId(
