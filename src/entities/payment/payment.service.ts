@@ -137,13 +137,13 @@ export class PaymentService {
             user_id: (order?.user.id).toString(),
             email: order?.user.email,
             // phone: "string",
-            success_url: "" + process.env.PAYMENT_SUCCESS_URL,
-            failure_url: "" + process.env.PAYMENT_FAILURE_URL,
-            callback_url: "" + process.env.PAYMENT_CALLBACK_URL,
+            success_url: process.env.PAYMENT_SUCCESS_URL,
+            failure_url: process.env.PAYMENT_FAILURE_URL,
+            callback_url: process.env.PAYMENT_CALLBACK_URL,
             payment_lifetime: +process.env.PAYMENT_LIFETIME,
             create_recurrent_profile: false,
             recurrent_profile_lifetime: 0,
-            lang: "" + languageType,
+            lang: languageType,
             extra_params: {}
         };
     }
