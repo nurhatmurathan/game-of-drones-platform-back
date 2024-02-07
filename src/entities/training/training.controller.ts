@@ -44,7 +44,7 @@ export class TrainingController {
     @ApiBearerAuth()
     @HttpCode(HttpStatus.ACCEPTED)
     @UseGuards(CustomAuthGuard)
-    async validateTournament(@Body() startGameDto: TrainingGameDto, @Request() req): Promise<any> {
+    async validateTraining(@Body() startGameDto: TrainingGameDto, @Request() req): Promise<any> {
         return this.trainingService.trainingStartedAndExistsValidator(
             req.user.sub,
             startGameDto.id,
