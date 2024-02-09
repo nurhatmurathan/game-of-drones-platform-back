@@ -7,32 +7,24 @@ import {
     Param,
     ParseIntPipe,
     Req,
-    UseGuards
+    UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-import { LanguagesEnum } from "src/common/enums";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
-import {
-    TaskListDto,
-    TaskRetrieveDto
-} from "./dto";
+import { LanguagesEnum } from "../../common/enums";
+import { TaskListDto, TaskRetrieveDto } from "./dto";
 import { TaskService } from "./task.service";
-
 
 @ApiTags("Task")
 @Controller("task")
 export class TaskController {
-    constructor(
-        private readonly taskService: TaskService,
-    ) { }
+    constructor(private readonly taskService: TaskService) {}
 
     @Get()
     @ApiBearerAuth()
     @HttpCode(HttpStatus.ACCEPTED)
-    async findAll(
-        @Headers("Accept-Language") language: LanguagesEnum
-    ): Promise<TaskListDto[]> {
+    async findAll(@Headers("Accept-Language") language: LanguagesEnum): Promise<TaskListDto[]> {
         return await this.taskService.findAll(language);
     }
 
@@ -45,7 +37,7 @@ export class TaskController {
         @Param("id", ParseIntPipe) id: number,
         @Req() request
     ): Promise<TaskRetrieveDto> {
-        console.log("In Task controller")
+        console.log("In Task controller");
         return this.taskService.findOne(id, request.user.sub, language);
     }
 }

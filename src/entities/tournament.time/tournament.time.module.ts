@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TournamentTime } from "./tournament.time.entity";
 
-import { AuthModule } from "src/auth/auth.module";
+import { AuthModule } from "../../auth/auth.module";
 import { BillingAccountModule } from "../billing.account/billing.account.module";
 import { DronModule } from "../dron/drone.module";
 import { UserTournamentTimeModule } from "../user.tournament.time/user.tournament.time.module";
@@ -27,4 +27,4 @@ import { TournamentTimeService } from "./tournament.time.service";
     providers: [TournamentTimeService, TournamentTimeAdminService],
     exports: [TournamentTimeService, TournamentTimeAdminService],
 })
-export class TournamentTimeModule { }
+export class TournamentTimeModule {}

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsNumber, IsString, ValidateNested } from "class-validator";
-import { TrainingListDto } from "src/entities/training/dto/user/training.list.dto";
+import { TrainingListDto } from "../../../../entities/training/dto/user/training.list.dto";
 import { LigaRetrieveDto } from "../../../liga/dto";
 import { RouteRetrieveDto } from "../../../route/dto";
 import { TournamentTimeListDtoV2 } from "../../../tournament.time/dto";

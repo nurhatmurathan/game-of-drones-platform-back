@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuthModule } from "src/auth/auth.module";
+import { AuthModule } from "../../auth/auth.module";
 import { UserModule } from "../user/user.module";
-import { DroneController } from './drone.controller';
+import { DroneController } from "./drone.controller";
 import { Drone } from "./drone.entity";
 import { DroneService } from "./drone.service";
 
@@ -12,4 +12,4 @@ import { DroneService } from "./drone.service";
     providers: [DroneService],
     exports: [DroneService],
 })
-export class DronModule { }
+export class DronModule {}

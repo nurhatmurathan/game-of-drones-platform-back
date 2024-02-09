@@ -1,6 +1,6 @@
 import { Body, Controller, Headers, Post, Req, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { CustomAuthGuard } from "src/auth/guards";
+import { CustomAuthGuard } from "../../auth/guards";
 import { LanguagesEnum } from "../../common/enums";
 import { TournamentRegisterDto } from "../tournament/dto";
 import { PaymentService } from "./payment.service";
@@ -8,7 +8,7 @@ import { PaymentService } from "./payment.service";
 @ApiTags("Payment")
 @Controller("payment")
 export class PaymentController {
-    constructor(private readonly paymentService: PaymentService) { }
+    constructor(private readonly paymentService: PaymentService) {}
 
     @Post()
     @ApiBearerAuth()
@@ -16,14 +16,10 @@ export class PaymentController {
     async buyTournament(
         @Req() request,
         @Body() body: TournamentRegisterDto,
-        @Headers("Accept-Language") language: LanguagesEnum,
+        @Headers("Accept-Language") language: LanguagesEnum
     ) {
         console.log("I'm in buyTournament");
-        const url = await this.paymentService.createPayment(
-            language,
-            request.user.sub,
-            body.tournamentId
-        );
+        const url = await this.paymentService.createPayment(language, request.user.sub, body.tournamentId);
 
         console.log(url);
         return { url: url };

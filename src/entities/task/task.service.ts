@@ -2,17 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-
-import { UtilService } from "src/utils/util.service";
 import { LanguagesEnum } from "../../common/enums";
+import { UtilService } from "../../utils/util.service";
 import { ActionService } from "../action/action.service";
 import { UserTournamentTimeService } from "../user.tournament.time/user.tournament.time.service";
-import {
-    TaskListDto,
-    TaskRetrieveDto
-} from "./dto";
+import { TaskListDto, TaskRetrieveDto } from "./dto";
 import { Task } from "./task.entity";
-
 
 @Injectable()
 export class TaskService {
@@ -22,27 +17,23 @@ export class TaskService {
         private readonly actionService: ActionService,
         private readonly utilService: UtilService,
         private readonly userTournamentTimeService: UserTournamentTimeService
-    ) { }
+    ) {}
 
     async findAll(language: LanguagesEnum): Promise<TaskListDto[]> {
         const languageType = this.utilService.getLanguage(language);
 
         const instances = await this.taskRepository.find({
-            relations: { taskDescription: true }
+            relations: { taskDescription: true },
         });
 
         return instances.map((instance) => ({
             id: instance.id,
             name: instance.name,
-            taskDescription: instance.taskDescription[languageType]
+            taskDescription: instance.taskDescription[languageType],
         }));
     }
 
-    async findOne(
-        id: number,
-        userId: number,
-        language: LanguagesEnum
-    ): Promise<TaskRetrieveDto> {
+    async findOne(id: number, userId: number, language: LanguagesEnum): Promise<TaskRetrieveDto> {
         const languageType = this.utilService.getLanguage(language);
 
         console.log("Step 1");
@@ -52,7 +43,7 @@ export class TaskService {
             where: { id: id },
             relations: {
                 description: true,
-                taskDescription: true
+                taskDescription: true,
             },
         });
 
@@ -61,19 +52,18 @@ export class TaskService {
         console.log(userId);
 
         const listOfUserTournamentTimesIdsOfGivenUser =
-            await this.userTournamentTimeService
-                .getListOfUserTournamentTimesIdsOfGivenUser(userId);
+            await this.userTournamentTimeService.getListOfUserTournamentTimesIdsOfGivenUser(userId);
 
         console.log("Step 3");
         const doneCount = instance.inOneGame
             ? await this.actionService.maxActionCountInOneTournament(
-                instance.id,
-                listOfUserTournamentTimesIdsOfGivenUser
-            )
+                  instance.id,
+                  listOfUserTournamentTimesIdsOfGivenUser
+              )
             : await this.actionService.countActionsInAllTournaments(
-                instance.id,
-                listOfUserTournamentTimesIdsOfGivenUser
-            );
+                  instance.id,
+                  listOfUserTournamentTimesIdsOfGivenUser
+              );
 
         const retrieveDto = new TaskRetrieveDto();
         Object.assign(retrieveDto, instance);

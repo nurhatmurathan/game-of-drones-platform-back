@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { AuthService } from "src/auth/auth.service";
 import { FindOptionsRelations, Repository } from "typeorm";
+import { AuthService } from "../../auth/auth.service";
 import { User } from "../user/user.entity";
 import { Drone } from "./drone.entity";
 import { DroneVerifyDto } from "./dto";
@@ -22,10 +22,7 @@ export class DroneService {
         return instances;
     }
 
-    async findOne(
-        id: string,
-        relations?: FindOptionsRelations<Drone>
-    ): Promise<Drone> {
+    async findOne(id: string, relations?: FindOptionsRelations<Drone>): Promise<Drone> {
         return this.dronRepository.findOne({ where: { id }, relations });
     }
 
@@ -61,12 +58,8 @@ export class DroneService {
         return this.dronRepository.save(dron);
     }
 
-    async verifyBindingUserWithDrone(
-        verifyDto: DroneVerifyDto
-    ): Promise<boolean> {
-        const decodedToken = await this.authService.verifyJWTToken(
-            verifyDto.token
-        );
+    async verifyBindingUserWithDrone(verifyDto: DroneVerifyDto): Promise<boolean> {
+        const decodedToken = await this.authService.verifyJWTToken(verifyDto.token);
 
         console.log(decodedToken);
         const instance = await this.dronRepository.findOne({
@@ -80,8 +73,7 @@ export class DroneService {
     }
 
     private isExists(instances: Drone[]): void {
-        if (instances.length === 0)
-            throw new NotFoundException(`No available drones`);
+        if (instances.length === 0) throw new NotFoundException(`No available drones`);
     }
 
     async unbindUser(id: string) {
