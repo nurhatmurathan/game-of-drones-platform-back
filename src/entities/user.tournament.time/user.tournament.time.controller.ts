@@ -13,8 +13,8 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { CustomAuthGuard } from "src/auth/guards/auth.guard";
-import { LanguagesEnum } from "src/common/enums";
+import { CustomAuthGuard } from "../../auth/guards/auth.guard";
+import { LanguagesEnum } from "../../common/enums";
 import { TrainingIdDto } from "../training/dto/user/training.tournamenttime.dto";
 import { UserFutureTournamnetTimeDto } from "./dto";
 import { UserTournamentTimeService } from "./user.tournament.time.service";
@@ -24,7 +24,7 @@ import { UserTournamentTimeService } from "./user.tournament.time.service";
 @ApiBearerAuth()
 @UseGuards(CustomAuthGuard)
 export class UserTournamentTimeController {
-    constructor(private readonly usertournamenttimeService: UserTournamentTimeService) { }
+    constructor(private readonly usertournamenttimeService: UserTournamentTimeService) {}
 
     @ApiResponse({
         status: 200,

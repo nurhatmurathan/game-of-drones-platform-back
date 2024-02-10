@@ -10,7 +10,7 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import { CustomAuthGuard, IsAdminGuard } from "src/auth/guards";
+import { CustomAuthGuard, IsAdminGuard } from "../../auth/guards";
 import { UserTournamentTimeAdminService } from "../user.tournament.time/user.tournament.time.admin.service";
 import { UserTournamentTime } from "../user.tournament.time/user.tournament.time.entity";
 import { TournamentTimeAdminRetrieveDto } from "./dto";

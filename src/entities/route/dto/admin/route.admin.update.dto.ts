@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsString, IsUrl, ValidateNested } from "class-validator";
-import { MultilingualtextUpdateDto } from "src/entities/multilingualtext/dto/multilingualtext.update.dto";
+import { MultilingualtextUpdateDto } from "../../../../entities/multilingualtext/dto/multilingualtext.update.dto";
 
 export class RouteAdminUpdateDto {
     @ApiProperty()

@@ -1,19 +1,18 @@
-import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { lastValueFrom } from 'rxjs';
-import { FindOptionsRelations, Repository } from 'typeorm';
-import { Item } from '../item/item.entity';
-import { ItemService } from '../item/item.service';
-import { UserService } from '../user/user.service';
-import { Order } from './order.entity';
+import { HttpService } from "@nestjs/axios";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { lastValueFrom } from "rxjs";
+import { FindOptionsRelations, Repository } from "typeorm";
+import { Item } from "../item/item.entity";
+import { ItemService } from "../item/item.service";
+import { UserService } from "../user/user.service";
+import { Order } from "./order.entity";
 
-import { UtilService } from 'src/utils/util.service';
-import { v4 as uuidv4 } from 'uuid';
-import { LanguagesEnum } from '../../common/enums';
-import { OrderStatus } from '../../common/enums/order.status';
-import { TournamentService } from '../tournament/tournament.service';
-
+import { v4 as uuidv4 } from "uuid";
+import { LanguagesEnum } from "../../common/enums";
+import { OrderStatus } from "../../common/enums/order.status";
+import { UtilService } from "../../utils/util.service";
+import { TournamentService } from "../tournament/tournament.service";
 
 @Injectable()
 export class PaymentService {
@@ -25,7 +24,7 @@ export class PaymentService {
         private readonly httpService: HttpService,
         private readonly userService: UserService,
         private readonly itemService: ItemService
-    ) { }
+    ) {}
 
     async createOrder(userId: number, tournamentId: number): Promise<Order> {
         const userInstance = await this.userService.findOneById(userId);
@@ -37,48 +36,48 @@ export class PaymentService {
         const createdInstance = this.orderRepository.create({
             id: generatedUuid,
             user: userInstance,
-            tournament: tournamentInstance
+            tournament: tournamentInstance,
         });
 
         return await this.orderRepository.save(createdInstance);
     }
 
-    async findOneByPaymentId(payment_id: string, order_id: string, relations?: FindOptionsRelations<Order>): Promise<Order> {
+    async findOneByPaymentId(
+        payment_id: string,
+        order_id: string,
+        relations?: FindOptionsRelations<Order>
+    ): Promise<Order> {
         return await this.orderRepository.findOne({
             where: {
                 id: order_id,
                 paymentId: payment_id,
             },
-            relations
+            relations,
         });
     }
 
     public async createPayment(language: LanguagesEnum, userId: number, tournamentId: number) {
-        console.log("I'm in createPayment")
+        console.log("I'm in createPayment");
         const languageType = this.utilService.getLanguage(language);
 
-        console.log("Step 1")
+        console.log("Step 1");
         const itemInstance = await this.itemService.findOne(1);
-        console.log("Step 2")
+        console.log("Step 2");
         const orderInstance = await this.createOrder(userId, tournamentId);
 
-        console.log("Step 3")
+        console.log("Step 3");
         try {
-            const dataObject = this.createDataObject(
-                languageType,
-                orderInstance,
-                itemInstance,
-            );
-            console.log("Step 4")
+            const dataObject = this.createDataObject(languageType, orderInstance, itemInstance);
+            console.log("Step 4");
 
             const response = await this.sendRequest(dataObject);
-            console.log(response.data)
+            console.log(response.data);
 
-            console.log("Step 5")
+            console.log("Step 5");
             const decodeData = JSON.parse(await this.utilService.decodeData(response.data.data));
             console.log(decodeData);
 
-            console.log("Step 6")
+            console.log("Step 6");
             orderInstance.paymentId = decodeData.payment_id;
             await this.orderRepository.save(orderInstance);
             console.log(orderInstance);
@@ -90,50 +89,46 @@ export class PaymentService {
     }
 
     private async sendRequest(dataObject: any) {
-        console.log("Step in sendRequest")
-        const token = Buffer.from(process.env.PAYMENT_API_KEY).toString('base64');
+        console.log("Step in sendRequest");
+        const token = Buffer.from(process.env.PAYMENT_API_KEY).toString("base64");
         const signature = await this.utilService.generateSignature(
             dataObject,
             process.env.PAYMENT_SECRET_KEY
         );
         const requestObject = {
-            data: Buffer.from(JSON.stringify(dataObject)).toString('base64'),
+            data: Buffer.from(JSON.stringify(dataObject)).toString("base64"),
             sign: signature,
         };
         const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         };
-        console.log("Step 1")
+        console.log("Step 1");
 
-        return await lastValueFrom(this.httpService.post(
-            process.env.PAYMENT_PAGE_CREATE_URL,
-            requestObject, { headers }
-        ));
+        return await lastValueFrom(
+            this.httpService.post(process.env.PAYMENT_PAGE_CREATE_URL, requestObject, { headers })
+        );
     }
 
-
-    private createDataObject(
-        languageType: string,
-        order: Order,
-        item: Item,
-    ) {
+    private createDataObject(languageType: string, order: Order, item: Item) {
         return {
-            amount: (order?.tournament.price * item.quantity),
+            amount: order?.tournament.price * item.quantity,
             currency: "KZT",
             order_id: order.id,
             description: "ticket for participate in tournament",
             payment_type: "pay",
             payment_method: "ecom",
-            items: [{
-                merchant_id: process.env.PAYMENT_MERCHANT_ID,
-                service_id: item.serviceId,
-                merchant_name: item.merchantName,
-                name: item.name,
-                quantity: item.quantity,
-                amount_one_pcs: order?.tournament.price,
-                amount_sum: (order?.tournament.price * item.quantity)
-            }],
+            items: [
+                {
+                    merchant_id: process.env.PAYMENT_MERCHANT_ID,
+                    service_id: item.serviceId,
+                    merchant_name: item.merchantName,
+                    name: item.name,
+                    quantity: item.quantity,
+                    amount_one_pcs: order?.tournament.price,
+                    amount_sum: order?.tournament.price * item.quantity,
+                },
+            ],
             user_id: (order?.user.id).toString(),
             email: order?.user.email,
             // phone: "string",
@@ -144,45 +139,41 @@ export class PaymentService {
             create_recurrent_profile: false,
             recurrent_profile_lifetime: 0,
             lang: languageType,
-            extra_params: {}
+            extra_params: {},
         };
     }
 
     private handleError(error: any) {
         if (error.response) {
-            console.error('Error response data:', error.response.data);
-            console.error('Error response status:', error.response.status);
-            throw new BadRequestException('Error response data: ', error.response.data.error_msg);
-        }
-        else if (error.request) {
-            console.error('No response:', error.request);
-            throw new BadRequestException('No response:', error.request);
-        }
-        else {
-            console.error('Error message:', error.message);
-            throw new BadRequestException('No response:', error.message);
+            console.error("Error response data:", error.response.data);
+            console.error("Error response status:", error.response.status);
+            throw new BadRequestException("Error response data: ", error.response.data.error_msg);
+        } else if (error.request) {
+            console.error("No response:", error.request);
+            throw new BadRequestException("No response:", error.request);
+        } else {
+            console.error("Error message:", error.message);
+            throw new BadRequestException("No response:", error.message);
         }
     }
 
-
     async handlePaymentCallback(data: any): Promise<any> {
-        console.log("Step in handlePaymentCallback")
+        console.log("Step in handlePaymentCallback");
         const decodeData = JSON.parse(await this.utilService.decodeData(data));
 
-        console.log("Step 1")
+        console.log("Step 1");
         console.log(decodeData);
         console.log(decodeData?.operation_status);
 
-        console.log("Step 2")
-        const instance: Order = await this.findOneByPaymentId(
-            decodeData.payment_id,
-            decodeData.order_id,
-            { user: true, tournament: true }
-        );
+        console.log("Step 2");
+        const instance: Order = await this.findOneByPaymentId(decodeData.payment_id, decodeData.order_id, {
+            user: true,
+            tournament: true,
+        });
         this.isExists(instance);
 
-        console.log("Step 3")
-        return decodeData?.operation_status === 'error'
+        console.log("Step 3");
+        return decodeData?.operation_status === "error"
             ? await this.handleErrorPayment(instance)
             : await this.handleSuccessPayment(instance);
     }
@@ -191,7 +182,7 @@ export class PaymentService {
         console.log("I'm in handleErrorPayment");
 
         this.updateOrderStatus(instance, OrderStatus.Error);
-        return { 'message': "Payment failed" };
+        return { message: "Payment failed" };
     }
 
     private async handleSuccessPayment(instance: Order): Promise<any> {
@@ -207,16 +198,15 @@ export class PaymentService {
     }
 
     private isExists(instance: Order) {
-        if (!instance)
-            throw new NotFoundException(`Order not found`);
+        if (!instance) throw new NotFoundException(`Order not found`);
     }
 
     private async isExistsSuccessOrderOfUser(userId: number, tournamentId: number) {
         const instance = await this.orderRepository.findOne({
             where: {
                 user: { id: userId },
-                tournament: { id: tournamentId }
-            }
+                tournament: { id: tournamentId },
+            },
         });
 
         if (instance && instance.status === OrderStatus.Success)
@@ -224,5 +214,4 @@ export class PaymentService {
 
         return instance;
     }
-
 }

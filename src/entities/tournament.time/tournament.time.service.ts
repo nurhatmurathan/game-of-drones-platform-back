@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { AuthService } from "src/auth/auth.service";
+import { AuthService } from "../../auth/auth.service";
 import { BillingAccountService } from "../billing.account/billing.account.service";
 import { Drone } from "../dron/drone.entity";
 import { DroneService } from "../dron/drone.service";
@@ -25,7 +25,7 @@ export class TournamentTimeService {
         private readonly droneService: DroneService,
         private readonly userService: UserService,
         private readonly billingAccountService: BillingAccountService
-    ) { }
+    ) {}
 
     async findOne(id: number) {
         return await this.tournamentTimeRepository.findOne({ where: { id } });

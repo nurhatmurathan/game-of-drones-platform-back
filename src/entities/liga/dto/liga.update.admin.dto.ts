@@ -1,6 +1,6 @@
-import { IsString } from "class-validator";
-import { MultilingualtextUpdateDto } from "src/entities/multilingualtext/dto/multilingualtext.update.dto";
 import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from "class-validator";
+import { MultilingualtextUpdateDto } from "../../../entities/multilingualtext/dto/multilingualtext.update.dto";
 
 export class LigaUpdateDto {
     @ApiProperty()

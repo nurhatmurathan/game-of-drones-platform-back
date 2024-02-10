@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from "@n
 import { ApiBearerAuth, ApiBody, ApiDefaultResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CustomAuthGuard } from "../../auth/guards/auth.guard";
 
-import { IsAdminGuard } from "src/auth/guards";
+import { IsAdminGuard } from "../../auth/guards";
 import { TrainingAdminCreateDto } from "./dto";
 import { TrainingAdminDto } from "./dto/admin/training.admin.dto";
 import { TrainingAdminService } from "./training.admin.service";
