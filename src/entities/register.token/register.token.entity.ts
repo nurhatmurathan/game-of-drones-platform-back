@@ -14,6 +14,6 @@ export class RegisterToken {
     @Column({ name: "token", type: "varchar", unique: true, default: null })
     token: string;
 
-    @Column({ name: "expiration_date", type: "timestamp" })
-    expirationDate: Date;
+    @Column({ name: "expiration_date", type: "text", nullable: true })
+    expirationDate: string;
 }

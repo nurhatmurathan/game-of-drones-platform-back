@@ -19,22 +19,20 @@ export class UserPasswordresetTokenService {
         const expirationDate = new Date();
         expirationDate.setHours(expirationDate.getHours() + 24);
 
-        const instance: UserPasswordresetToken =
-            this.userPasswordresetTokenRepository.create({
-                user,
-                token,
-                expirationDate,
-            });
+        const instance: UserPasswordresetToken = this.userPasswordresetTokenRepository.create({
+            user,
+            token,
+            expirationDate: expirationDate.toISOString(),
+        });
 
         return await this.userPasswordresetTokenRepository.save(instance);
     }
 
     async getTokenUser(token: string): Promise<User> {
-        const instance: UserPasswordresetToken =
-            await this.userPasswordresetTokenRepository.findOne({
-                where: { token },
-                relations: { user: true },
-            });
+        const instance: UserPasswordresetToken = await this.userPasswordresetTokenRepository.findOne({
+            where: { token },
+            relations: { user: true },
+        });
 
         this.validate(instance);
         return instance.user;
@@ -48,7 +46,6 @@ export class UserPasswordresetTokenService {
         console.log(token);
         console.log(new Date());
         if (!token) throw new BadRequestException("Invalid Token!");
-        if (token.expirationDate < new Date())
-            throw new BadRequestException("Token is expired!");
+        if (new Date(token.expirationDate) < new Date()) throw new BadRequestException("Token is expired!");
     }
 }

@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 
-const config: TypeOrmModuleOptions = {
+const ormConfig: TypeOrmModuleOptions = {
     type: "postgres",
     host: process.env.CLOUD_DATABASE_HOST,
     port: 5432,
@@ -11,7 +11,18 @@ const config: TypeOrmModuleOptions = {
     synchronize: true,
 };
 
+const testOrmConfig: TypeOrmModuleOptions = {
+    type: "sqlite",
+    database: "test.db",
+    entities: [__dirname + "/**/*.entity{.ts,.js}"],
+    synchronize: true,
+};
+
+const config = process.env.NODE_ENV === "test" ? testOrmConfig : ormConfig;
+
 export = config;
 
+console.log(config);
+console.log(process.cwd());
 console.log(process.env.CLOUD_DATABASE_USER);
 console.log(process.env.CLOUD_DATABASE_NAME);
