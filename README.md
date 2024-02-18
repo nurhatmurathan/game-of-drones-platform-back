@@ -2,15 +2,15 @@
 
 ## Overview
 
-Brief description of the project, its purpose, and its key features.
+Brief description of the project, its purpose, and its key featur
 
 ## Getting Started
 
-Instructions on how to get a copy of the project up and running on a local machine for development and testing purposes.
+Copy this repository
 
 ### Prerequisites
 
-List of software and dependencies needed to run the project.
+You should get file `.env` from admin
 
 ### Installation
 

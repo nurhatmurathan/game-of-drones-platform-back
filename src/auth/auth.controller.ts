@@ -91,22 +91,4 @@ export class AuthController {
         const jwt = await this.authService.signInByUserInstance(req.user);
         return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
     }
-
-    @Get("/increment-count")
-    incrementCount(@Req() request: Request, @Res() response: Response): string {
-        // Retrieve the 'count' cookie, defaulting to 0 if not present
-        let count = Number(request.cookies["count"]) || 0;
-
-        // Increment the count
-        count += 1;
-
-        // Log the current count value
-        console.log(`Current count value: ${count}`);
-
-        // Set the updated count cookie in the response, with a 1-hour expiration
-        response.cookie("count", count, { maxAge: 3600000, httpOnly: true });
-
-        // Send a response back to the client
-        response.send(`Count has been incremented to: ${count}`);
-    }
 }
