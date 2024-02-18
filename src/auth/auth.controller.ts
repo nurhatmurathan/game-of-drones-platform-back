@@ -1,14 +1,4 @@
-import {
-    Body,
-    Controller,
-    Get,
-    HttpCode,
-    HttpStatus,
-    Post,
-    Request,
-    Res,
-    UseGuards,
-} from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, Res, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
@@ -25,7 +15,7 @@ import { CustomAuthGuard } from "./guards";
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
-    constructor(private authService: AuthService) { }
+    constructor(private authService: AuthService) {}
 
     @HttpCode(HttpStatus.ACCEPTED)
     @Post("verify/email")
@@ -71,13 +61,13 @@ export class AuthController {
     }
 
     @Get("google")
-    @UseGuards(AuthGuard('google'))
+    @UseGuards(AuthGuard("google"))
     googleAuth(@Request() req) {
         console.log("I'm here in - googleAuth funtion");
     }
 
     @Get("google/callback")
-    @UseGuards(AuthGuard('google'))
+    @UseGuards(AuthGuard("google"))
     async googleAuthRedirect(@Request() req, @Res() res) {
         console.log("I'm in - googleAuthRedirect funtion");
         console.log(req.user);
@@ -86,19 +76,37 @@ export class AuthController {
         return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
     }
 
-    @Get('facebook')
-    @UseGuards(AuthGuard('facebook'))
+    @Get("facebook")
+    @UseGuards(AuthGuard("facebook"))
     async facebookLogin(): Promise<any> {
         console.log("I'm here in - facebookLogin funtion");
     }
 
-    @Get('facebook/callback')
-    @UseGuards(AuthGuard('facebook'))
+    @Get("facebook/callback")
+    @UseGuards(AuthGuard("facebook"))
     async facebookAuthRedirect(@Request() req, @Res() res) {
         console.log("I'm here in - facebookAuthRedirect");
         console.log(req.user);
 
         const jwt = await this.authService.signInByUserInstance(req.user);
         return res.redirect(`${process.env.REDIRECT_URL}?access=${jwt.access}&refresh=${jwt.refresh}`);
+    }
+
+    @Get("/increment-count")
+    incrementCount(@Req() request: Request, @Res() response: Response): string {
+        // Retrieve the 'count' cookie, defaulting to 0 if not present
+        let count = Number(request.cookies["count"]) || 0;
+
+        // Increment the count
+        count += 1;
+
+        // Log the current count value
+        console.log(`Current count value: ${count}`);
+
+        // Set the updated count cookie in the response, with a 1-hour expiration
+        response.cookie("count", count, { maxAge: 3600000, httpOnly: true });
+
+        // Send a response back to the client
+        response.send(`Count has been incremented to: ${count}`);
     }
 }
