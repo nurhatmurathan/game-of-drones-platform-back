@@ -30,7 +30,7 @@ describe('TournamentAdminController (e2e)', () => {
         return request(app.getHttpServer())
             .get('/admin-tournament')
             .expect(HttpStatus.ACCEPTED)
-            .expect((res) => {
+            .then((res) => {
                 expect(Array.isArray(res.body)).toBe(true);
             });
     });
@@ -73,7 +73,7 @@ describe('TournamentAdminController (e2e)', () => {
         return request(app.getHttpServer())
             .get(`/admin-tournament/${testId}`)
             .expect(HttpStatus.ACCEPTED)
-            .expect((res) => {
+            .then((res) => {
                 expect(res.body.id).toEqual(testId);
             });
     });
