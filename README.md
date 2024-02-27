@@ -15,10 +15,6 @@ Platform for organizing tournaments for real cars
 -   Crud operations
 -   Indicate the winner of the race or tournament
 
-## Table of Contents
-
--   [Getting Started](##running-the-app)
-
 ## Getting Started
 
 Copy this repository
