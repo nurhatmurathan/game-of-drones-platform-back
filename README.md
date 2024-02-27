@@ -56,9 +56,18 @@ $ npm run test:e2e
 
 ```
 /src
-├───auth
+├────────────auth
+│              ├────guards
+│              │
+│              ├────strategies 
 │
-├───common
+├──────────common
+│              ├────enums
+│              │
+│              ├────filters
+│              │
+│              ├────validations
+│ 
 │
 ├───database
 │
@@ -96,9 +105,14 @@ $ npm run test:e2e
 │              ├───user.tournament.time
 │              │
 │              └───user.tournament.trainings
-├───mail
 │
-└───utils
+│
+├────────────mail
+│              ├────templates
+│
+├────utils
+│
+└────test
 ```
 
 ## Module Reference
