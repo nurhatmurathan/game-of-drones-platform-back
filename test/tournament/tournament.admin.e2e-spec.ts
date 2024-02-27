@@ -60,10 +60,8 @@ describe('TournamentAdminController (e2e)', () => {
             .post('/admin-tournament')
             .send(createDto)
             .expect(HttpStatus.CREATED)
-            .expect((res) => {
-                expect(res.body.name).toEqual(createDto.name);
-            });
 
+        expect(response.body.name).toMatchObject(createDto);
 
         testId = response.body.id
         return response;

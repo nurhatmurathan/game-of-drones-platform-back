@@ -1,13 +1,13 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { CustomAuthGuard } from '../../src/auth/guards';
-import { AppModule } from "./../../src/app.module";
+import { AppModule } from "../../src/app.module";
+import { CustomAuthGuard } from "../../src/auth/guards";
 
-describe('TournamentController (e2e)', () => {
+describe('TaskController (e2e)', () => {
     let app: INestApplication;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
         })
@@ -23,24 +23,26 @@ describe('TournamentController (e2e)', () => {
         await app.close();
     });
 
-    it('/tournament (GET)', async () => {
+    it('/task (GET)', async () => {
         return request(app.getHttpServer())
-            .get('/tournament')
+            .get('/task')
+            .set('Accept-Language', 'en')
             .expect(HttpStatus.ACCEPTED)
             .then((res) => {
                 expect(Array.isArray(res.body)).toBe(true);
             });
     });
 
-    it('/tournament/:id (GET)', async () => {
-        const testId = 1; // Assuming this ID exists in your database
+    it('/task/:id (GET)', async () => {
+        const testId = 1;
         return request(app.getHttpServer())
-            .get(`/tournament/${testId}`)
+            .get(`/task/${testId}`)
             .set('Accept-Language', 'en')
             .expect(HttpStatus.ACCEPTED)
             .then((res) => {
                 expect(res.body.id).toEqual(testId);
             });
     });
+
 
 });

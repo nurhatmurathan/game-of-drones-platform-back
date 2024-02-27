@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from "../../src/app.module";
 import { CustomAuthGuard, IsAdminGuard } from "../../src/auth/guards";
 
-describe('RouteAdminController (e2e)', () => {
+describe('TaskAdminController (e2e)', () => {
     let app: INestApplication;
     let testId: number;
 
@@ -26,66 +26,76 @@ describe('RouteAdminController (e2e)', () => {
         await app.close();
     });
 
-    it('/admin-route (GET)', async () => {
+    it('/admin-task (GET)', async () => {
         return request(app.getHttpServer())
-            .get('/admin-route')
-            .expect(HttpStatus.CREATED)
+            .get('/admin-task')
+            .expect(HttpStatus.ACCEPTED)
             .then((res) => {
-                expect(Array.isArray(res.body)).toBeTruthy();
+                expect(Array.isArray(res.body)).toBe(true);
             });
     });
 
-    it('/admin-route (POST)', async () => {
+    it('/admin-task (POST)', async () => {
         const createDto = {
-            name: 'New Route',
+            name: 'New Task',
+            maxCount: 100,
+            inOneGame: false,
             description:
             {
-                en: "New Route Description",
-                kz: "New Route Description",
-                ru: "New Route Description"
+                en: 'New task description',
+                kz: 'New task description',
+                ru: 'New task description'
             },
-            length: '10km',
-            bestTime: 3600,
-            map: 'http://example.com/route/map',
+            taskDescription: {
+                en: 'New task detailed description',
+                kz: 'New task detailed description',
+                ru: 'New task detailed description'
+            },
+            reward: 'Reward for new task',
         };
 
         const response = await request(app.getHttpServer())
-            .post('/admin-route')
+            .post('/admin-task')
             .send(createDto)
             .expect(HttpStatus.CREATED)
 
-        expect(response.body).toMatchObject(createDto);
+        expect(response.body.name).toMatchObject(createDto);
 
         testId = response.body.id;
         return response;
     });
 
 
-    it('/admin-route/:id (GET)', async () => {
+
+    it('/admin-task/:id (GET)', async () => {
         return request(app.getHttpServer())
-            .get(`/admin-route/${testId}`)
+            .get(`/admin-task/${testId}`)
             .expect(HttpStatus.ACCEPTED)
             .then((res) => {
                 expect(res.body.id).toEqual(testId);
             });
     });
 
-    it('/admin-route/:id (PUT)', async () => {
+    it('/admin-task/:id (PUT)', async () => {
         const updateDto = {
-            name: 'Updated Route',
+            name: 'Updated Task',
+            maxCount: 200,
+            inOneGame: true,
             description:
             {
-                en: "Updated Description",
-                kz: "Updated Description",
-                ru: "Updated Description"
+                en: 'Updated task description',
+                kz: 'Updated task description',
+                ru: 'Updated task description'
             },
-            length: '15km',
-            bestTime: 5400,
-            map: 'http://example.com/route/updatedmap',
+            taskDescription: {
+                en: 'Updated task detailed description',
+                kz: 'Updated task detailed description',
+                ru: 'Updated task detailed description'
+            },
+            reward: 'Updated reward',
         };
-
         return request(app.getHttpServer())
-            .put(`/admin-route/${testId}`)
+            .put(`/admin-task/${testId}`)
             .send(updateDto)
             .expect(HttpStatus.ACCEPTED)
             .then((res) => {
@@ -94,9 +104,10 @@ describe('RouteAdminController (e2e)', () => {
             });
     });
 
-    it('/admin-route/:id (DELETE)', async () => {
+
+    it('/admin-task/:id (DELETE)', async () => {
         return request(app.getHttpServer())
-            .delete(`/admin-route/${testId}`)
+            .delete(`/admin-task/${testId}`)
             .expect(HttpStatus.NO_CONTENT);
     });
 
