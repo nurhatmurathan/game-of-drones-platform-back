@@ -1,5 +1,5 @@
 # Game of Drones Api
-
+ 
 Platform for organizing tournaments for real cars
 
 ## Overview
